@@ -2,12 +2,12 @@ import mongoose from "mongoose";
 
 const vendorBillModel = new mongoose.Schema({
   vendorName: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Vendor",
+    type: String,
+    required : true,
   },
   items: [
     {
-      product: { type: mongoose.Schema.Types.ObjectId, ref: "Products" },
+      productName: String,
       quantity: Number,
       price: Number,
     },

@@ -5,7 +5,7 @@ import adminRoutes from "./routes/adminRoutes.js"
 import vendorRoutes from './routes/vendorRoutes.js'
 import customerRoutes from './routes/customerRoutes.js'
 // import customerBillRoutes from './routes/customerBillRoutes.js'
-// import vendorBillRoutes from './routes/vendorBillRoutes.js'
+import vendorBillRoutes from './routes/vendorBillRoutes.js'
 import { connectDB } from './utils/connectDB.js'
 
 dotenv.config()
@@ -22,7 +22,7 @@ app.use('/api/auth', adminRoutes)
 app.use('/api/vendor', vendorRoutes)
 app.use('/api/customer', customerRoutes)
 // app.use('/api/customer-bill', customerBillRoutes)
-// app.use('/api/vendor-bill', vendorBillRoutes)
+app.use('/api/vendor-bill', vendorBillRoutes)
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`)

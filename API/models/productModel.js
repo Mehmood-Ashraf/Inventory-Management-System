@@ -6,7 +6,8 @@ const productModel = new mongoose.Schema({
     required : true
   },
   purchasePrice : {
-    type : Number
+    type : Number,
+    required : true
   },
   salePrice : {
     type : Number
