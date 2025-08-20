@@ -1,12 +1,13 @@
-// import { Router } from "express";
-// import { addCustomer, deleteCustomer, getAllCustomers, getSingleCustomer } from "../controllers/customerControllers.js";
+import { Router } from "express";
+import { addCustomer, deleteCustomer, getAllCustomers, getSingleCustomer } from "../controllers/customerControllers.js";
+import { verifyToken } from "../middlewares/verifyToken.js";
 
 
-// const router = Router()
+const router = Router()
 
-// router.post('/add', addCustomer)
-// router.get('/:id', getSingleCustomer)
-// router.get('/all', getAllCustomers)
-// router.delete('/:id', deleteCustomer)
+router.post('/add', addCustomer)
+router.get('/all', verifyToken, getAllCustomers)
+router.get('/:id', getSingleCustomer)
+router.delete('/:id', deleteCustomer)
 
-// export default router
+export default router

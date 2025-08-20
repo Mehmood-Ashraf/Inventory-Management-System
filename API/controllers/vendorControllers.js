@@ -1,7 +1,7 @@
 // import vendorModel from "../models/vendorModel"
 import { errorHandler, successHandler } from "../utils/responseHandler.js"
 import Vendor from '../models/vendorModel.js'
-
+    
 export const addVendor = async (req, res) => {
     const {vendorName, contact, address} = req.body
     console.log(req.body)

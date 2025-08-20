@@ -1,11 +1,12 @@
-// import { Router } from "express";
+import { Router } from "express";
+import { addVendorBill } from "../controllers/vendorBillControllers";
 
 
-// const router = Router()
+const router = Router()
 
-// router.post('/add',)
+router.post('/add', addVendorBill)
 // router.get('/:id',)
 // router.get('/all',)
 // router.delete('/:id',)
 
-// export default router
+export default router
