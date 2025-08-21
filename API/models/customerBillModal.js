@@ -2,7 +2,10 @@ import mongoose from "mongoose";
 
 const customerBillModel = new mongoose.Schema({
   customerType: { type: String, enum: ["walkin", "regular"], required: true },
-  customer: { type: mongoose.Schema.Types.ObjectId, ref: "Customer" },
+  customer: { 
+    type : String,
+    required : true
+   },
   items: [
     {
       product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
@@ -10,6 +13,9 @@ const customerBillModel = new mongoose.Schema({
       price: Number
     }
   ],
+  billNumber : {
+    unique : true,
+  },
   totalAmount: Number,
   date: { type: Date, default: Date.now() }
 });

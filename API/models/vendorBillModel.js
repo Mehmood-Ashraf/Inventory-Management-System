@@ -5,6 +5,10 @@ const vendorBillModel = new mongoose.Schema({
     type: String,
     required : true,
   },
+  billNumber : {
+    type : Number,
+    required : true
+  },
   items: [
     {
       productName: String,

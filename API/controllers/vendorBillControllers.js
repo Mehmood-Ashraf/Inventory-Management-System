@@ -6,18 +6,18 @@ import Products from "../models/productModel.js";
 export const addVendorBill = async (req, res) => {
   try {
     //bill aya vendorname aur items destructure kia
-    const { vendorName, items } = req.body;
+    const { vendorName, items, billNumber } = req.body;
     //total amount destructure kia
     let { totalAmount } = req.body;
     //aagar vendorname aur items nahi hai to return error
-    if (!vendorName || !items) {
+    if (!vendorName || !items || !billNumber) {
       return errorHandler(res, 400, "Missing Fields");
     }
 
     // billITems ka empty array create kia
     let billItems = [];
-    
-    //jo Items user ne add kiye vendor bill k un per loop chala kar check kia agar Prodcuts k data me already item exist karta hai to Product k data me us ki quantity update ki agar nahi hai to naya product create kia Product data me... 
+
+    //jo Items user ne add kiye vendor bill k un per loop chala kar check kia agar Prodcuts k data me already item exist karta hai to Product k data me us ki quantity update ki agar nahi hai to naya product create kia Product data me...
     for (let item of items) {
       let product = await Products.findOne({ productName: item.productName });
 
@@ -25,17 +25,17 @@ export const addVendorBill = async (req, res) => {
         product = await Products.create({
           productName: item.productName,
           purchasePrice: item.price,
-          stockInHand : item.quantity,
-          salePrice : item.salePrice
+          stockInHand: item.quantity
+          // salePrice: item.salePrice,
         });
-      }else {
-        product.stockInHand += item.quantity
-        await product.save()
+      } else {
+        product.stockInHand += item.quantity;
+        await product.save();
       }
-      //bill Items k array me 
+      //bill Items k array me
       billItems.push({
         product: product._id,
-        productName : item.productName,
+        productName: item.productName,
         quantity: item.quantity,
         price: item.price,
       });
@@ -60,6 +60,7 @@ export const addVendorBill = async (req, res) => {
       vendorName,
       items: billItems,
       totalAmount,
+      billNumber
     });
 
     const newBill = await bill.save();
@@ -74,3 +75,77 @@ export const addVendorBill = async (req, res) => {
     return errorHandler(res, 400, "Error in Add Vendor Bill");
   }
 };
+
+
+
+export const getAllVendorBills = async (req, res) => {
+  try {
+    let filters = {};
+
+    if (req.query.vendorName) {
+      filters.vendorName = req.query.vendorName;
+    }
+    const vendorBills = await VendorBill.find(filters);
+
+    if (!vendorBills || vendorBills.length === 0) {
+      return errorHandler(res, 400, "No data in Vendor Bills");
+    }
+
+    return successHandler(
+      res,
+      200,
+      "VendorBills Fetched Successfully",
+      vendorBills
+    );
+  } catch (error) {
+    return errorHandler(
+      res,
+      400,
+      "Something went wrong during fetch vendor bills"
+    );
+  }
+};
+
+export const getSingleVendorBill = async (req, res) => {
+  try {
+    const { vendorName, billNumber } = req.params;
+
+    if (!vendorName || !billNumber) {
+      return errorHandler(res, 400, "vendor name or bill number not available!");
+    }
+
+    const vendorBill = await VendorBill.findOne({ vendorName: vendorName, billNumber : Number(billNumber) });
+
+    if (!vendorBill || vendorBill.length === 0) {
+      return errorHandler(res, 404, "No bills found for this vendor");
+    }
+
+    return successHandler(
+      res,
+      200,
+      "Vendor Bill fetched successfully",
+      vendorBill
+    );
+  } catch (error) {
+    return errorHandler(res, 400, "Something went wrong while fetching")
+  }
+};
+
+
+
+export const deleteVendorBill = async (req, res) => {
+  try {
+          const { id } = req.params
+  
+          const deletedVendorBill = await Vendor.findByIdAndDelete(id)
+          if(!deletedVendorBill) {
+              return errorHandler(res, 404, "Vendor bill not found")
+          }
+  
+          return successHandler(res, 200, "Vendor bill Deleted successfully", deletedVendorBill)
+      } catch (error) {
+          return errorHandler(res, 500, "Something went wrong")
+      }
+};
+
+export const updateVendorBill = async (req, res) => {};

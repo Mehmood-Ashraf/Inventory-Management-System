@@ -53,8 +53,11 @@ export const getSingleVendor = async (req, res) => {
 export const getAllVendors = async (req, res) => {
     // console.log("Get all vendor chala")
     try {
-        const vendors = await Vendor.find()
-
+        let filters={};
+        if (req.query?.vendorName) {
+            filters.vendorName = { $regex: new RegExp(req.query.vendorName, "i") }; // case-insensitive partial
+  }
+            const vendors = await Vendor.find(filters)
         if(!vendors || vendors.length === 0){
             return errorHandler(res, 404, "No vendors found")
         }
@@ -68,7 +71,7 @@ export const getAllVendors = async (req, res) => {
 
 export const deleteVendor = async (req, res) => {
     try {
-        const { id } = req.params
+        const { id } = req.params;
 
         const deletedVendor = await Vendor.findByIdAndDelete(id)
         if(!deletedVendor) {

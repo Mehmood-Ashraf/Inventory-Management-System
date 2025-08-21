@@ -1,12 +1,13 @@
 import { Router } from "express";
-import { addVendorBill } from "../controllers/vendorBillControllers.js";
+import { addVendorBill, deleteVendorBill, getAllVendorBills, getSingleVendorBill, updateVendorBill } from "../controllers/vendorBillControllers.js";
 
 
 const router = Router()
 
 router.post('/add', addVendorBill)
-// router.get('/:id',)
-// router.get('/all',)
-// router.delete('/:id',)
+router.get('/all', getAllVendorBills)
+router.get('/:vendorName/:billNumber', getSingleVendorBill)
+router.delete('/:id', deleteVendorBill)
+router.put('/:id', updateVendorBill)
 
 export default router

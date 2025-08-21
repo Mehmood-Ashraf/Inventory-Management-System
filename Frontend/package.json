@@ -1,5 +1,5 @@
 {
-  "name": "shop-app",
+  "name": "frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,13 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.1.11",
-    "lucide-react": "^0.539.0",
+    "@reduxjs/toolkit": "^2.8.2",
+    "@tailwindcss/vite": "^4.1.12",
+    "axios": "^1.11.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-icons": "^5.5.0",
-    "react-router-dom": "^7.8.0",
-    "tailwindcss": "^4.1.11"
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.8.1",
+    "react-toastify": "^11.0.5",
+    "tailwindcss": "^4.1.12"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
