@@ -13,6 +13,8 @@ import Card from "../components/Card";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchVendors } from "../redux/slice/vendorSlice";
 // import { formatCurrency } from '../utils/calculations';
 
 const Vendors = ({
@@ -33,25 +35,33 @@ const Vendors = ({
     address: "",
     totalTurnover: 0,
   });
-  const [vendorsData, setVendorsData] = useState([]);
+  const dispatch = useDispatch()
+  const { vendors, loading, error } = useSelector((state) => state.vendor)
 
-  useEffect(() => {
-    const res = async () => {
-      try {
-        const res = await axios.get(
-          `http://localhost:3000/api/vendor/all?vendorName=${searchInput}`
-        );
-        setVendorsData(res.data.data);
-        console.log(res.data.data);
-      } catch (error) {
-        setVendorsData([]);
-        console.log(error);
-      }
-    };
-    res();
-  }, [searchInput]);
 
-  const filteredVendors = vendorsData;
+
+//   useEffect(() => {
+//     const res = async () => {
+//       try {
+//         const res = await axios.get(
+//           `http://localhost:3000/api/vendor/all?vendorName=${searchInput}`
+//         );
+//         setVendorsData(res.data.data);
+//         console.log(res.data.data);
+//       } catch (error) {
+//         setVendorsData([]);
+//         console.log(error);
+//       }
+//     };
+//     res();
+//   }, [searchInput]);
+
+
+useEffect(() => {
+    dispatch(fetchVendors(searchInput))
+}, [searchInput])
+
+  const filteredVendors = vendors;
   //   vendors?.filter(vendor =>
   //     vendor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
   //     vendor.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -120,7 +130,7 @@ const Vendors = ({
           />
         </div>
         <Button onClick={() => setShowAddModal(true)}>
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="h-4 w-4 mr-2 cursor-pointer" />
           Add Vendor
         </Button>
       </div>
@@ -130,7 +140,7 @@ const Vendors = ({
         <div className="divide-y divide-gray-200">
           {filteredVendors?.map((vendor) => (
             <li
-              key={vendor.id}
+              key={vendor._id}
               className="py-4 px-6 hover:bg-gray-50 cursor-pointer transition-colors list-none"
               onClick={() => handleVendorClick(vendor)}
             >
@@ -159,7 +169,7 @@ const Vendors = ({
                       e.stopPropagation();
                       handleEdit(vendor);
                     }}
-                    className="text-indigo-600 hover:text-indigo-900 p-1"
+                    className="text-indigo-600 hover:text-indigo-900 p-1 cursor-pointer"
                   >
                     <Edit className="h-4 w-4" />
                   </button>
@@ -168,7 +178,7 @@ const Vendors = ({
                       e.stopPropagation();
                       onDeleteVendor(vendor._id);
                     }}
-                    className="text-red-600 hover:text-red-900 p-1"
+                    className="text-red-600 hover:text-red-900 p-1 cursor-pointer"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -332,7 +342,7 @@ const Vendors = ({
                 required
                 value={formData.vendorName}
                 onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
+                  setFormData({ ...formData, vendorName: e.target.value })
                 }
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
@@ -362,7 +372,7 @@ const Vendors = ({
                 required
                 value={formData.contact}
                 onChange={(e) =>
-                  setFormData({ ...formData, phone: e.target.value })
+                  setFormData({ ...formData, contact: e.target.value })
                 }
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
@@ -394,7 +404,7 @@ const Vendors = ({
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    totalPurchases: parseFloat(e.target.value),
+                    totalTurnover: parseFloat(e.target.value),
                   })
                 }
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -402,14 +412,14 @@ const Vendors = ({
             </div>
 
             <div className="flex space-x-3 pt-4">
-              <Button type="submit" className="flex-1">
+              <Button type="submit" className="flex-1 cursor-pointer">
                 {editingVendor ? "Update Vendor" : "Add Vendor"}
               </Button>
               <Button
                 type="button"
                 variant="secondary"
                 onClick={handleCloseModal}
-                className="flex-1"
+                className="flex-1 cursor-pointer"
               >
                 Cancel
               </Button>

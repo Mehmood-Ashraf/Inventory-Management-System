@@ -11,10 +11,10 @@ const initialState = {
 // API call thunk
 export const fetchVendors = createAsyncThunk(
   "vendor/fetchVendors",
-  async (searchTerm, thunkAPI) => {
+  async (searchInput, thunkAPI) => {
     try {
       const res = await axios.get(
-        `http://localhost:3000/api/vendor/all?vendorName=${searchTerm}`
+        `http://localhost:3000/api/vendor/all?vendorName=${searchInput}`
       );
       return res.data.data;
     } catch (error) {
