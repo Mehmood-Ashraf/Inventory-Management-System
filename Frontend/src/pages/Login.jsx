@@ -4,11 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginAdmin } from "../redux/slice/authSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { Loader } from "../components/Loader";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showLoader, setShowLoader] = useState(false)
   const dispatch = useDispatch();
+
   const { loading, token, error } = useSelector((state) => state.auth);
 
   const navigate = useNavigate()
@@ -20,27 +23,24 @@ export default function Login() {
       const res = await dispatch(loginAdmin({ email, password })).unwrap();
       toast.success("Login successfull");
 
+      setShowLoader(true)
+
       setTimeout(() => {
+        setShowLoader(false)
           navigate('/dashboard')
       }, 3000)
     } catch (error) {
       toast.error("Invalid Credentials!");
     }
-    // try {
-    //   const res = await axios.post(`http://localhost:3000/api/auth/login`, {
-    //     email: email,
-    //     password: password,
-    //   });
-    //   console.log(res.data.data.token);
-    //   console.log("Email:", email);
-    //   console.log("Password:", password);
-    //   localStorage.setItem("Token", res.data.data.token)
-    // } catch (error) {
-    //     console.log(error)
-    // }
   };
 
+  
+  if(loading || showLoader){
+    return <Loader />
+  }
+
   return (
+
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
