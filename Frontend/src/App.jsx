@@ -11,6 +11,7 @@ import Layout from "./components/Layout";
 import Vendors1 from "./pages/Vendors";
 import VendorBills from "./pages/VendorBills";
 import VendorBills1 from "./pages/VendorBills";
+import Customers from "./pages/Customers";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/vendors" element={<Vendors1 />} />
             <Route path="/vendors/:id/bills" element={<VendorBills1 />}/>
+            <Route path="/customers" element={<Customers />} />
           </Route>
         </Route>
       </Routes>

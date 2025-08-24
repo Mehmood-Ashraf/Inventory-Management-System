@@ -32,7 +32,7 @@ const customerModel = new mongoose.Schema({
         type : Number,
         default : 0
     },
-    totalPaid : {
+    totalRecieved : {
     type : Number,
     default : 0
   },

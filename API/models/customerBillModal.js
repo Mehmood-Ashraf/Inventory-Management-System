@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const customerBillModel = new mongoose.Schema({
   customerType: { type: String, enum: ["walkin", "regular"], required: true },
-  customer: { 
+  customerName: { 
     type : String,
     required : true
    },
