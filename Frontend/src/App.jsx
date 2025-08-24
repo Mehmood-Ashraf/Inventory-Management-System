@@ -8,11 +8,17 @@ import AuthRoutes from "./routes/AuthRoutes";
 import PrivateRoutes from "./routes/PrivateRoutes";
 import Vendors from "./pages/Vendors";
 import Layout from "./components/Layout";
+import Vendors1 from "./pages/Vendors";
+import VendorBills from "./pages/VendorBills";
+import VendorBills1 from "./pages/VendorBills";
 
 function App() {
   return (
     <>
+    
+
       <Routes>
+      <Route path="/" element={<Login />}/>
         <Route element={<AuthRoutes />}>
           <Route path="/login" element={<Login />} />
         </Route>
@@ -20,7 +26,8 @@ function App() {
         <Route element={<PrivateRoutes />}>
           <Route element={<Layout />}>
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/vendors" element={<Vendors />} />
+            <Route path="/vendors" element={<Vendors1 />} />
+            <Route path="/vendors/:id/bills" element={<VendorBills1 />}/>
           </Route>
         </Route>
       </Routes>

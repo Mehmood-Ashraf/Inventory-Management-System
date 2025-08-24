@@ -14,6 +14,7 @@ const vendorBillModel = new mongoose.Schema({
       productName: String,
       quantity: Number,
       price: Number,
+      total : Number
     },
   ],
   totalAmount: {

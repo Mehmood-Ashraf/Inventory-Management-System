@@ -1,85 +1,93 @@
 // import vendorModel from "../models/vendorModel"
-import { errorHandler, successHandler } from "../utils/responseHandler.js"
-import Vendor from '../models/vendorModel.js'
-    
+import { errorHandler, successHandler } from "../utils/responseHandler.js";
+import Vendor from "../models/vendorModel.js";
+
+//add vendor
 export const addVendor = async (req, res) => {
-    const {vendorName, contact, address} = req.body
-    console.log(req.body)
+  const { vendorName, contact, address } = req.body;
+  console.log(req.body);
 
-    if(!vendorName){
-        return errorHandler(res, 500, "Missing Fields!")
-    }
+  if (!vendorName) {
+    return errorHandler(res, 500, "Missing Fields!");
+  }
 
-    const existingVendor = await Vendor.findOne({vendorName})
-    if(existingVendor){
-        return errorHandler(res, 500, "Vendor already Exist!!")
-    }
+  const existingVendor = await Vendor.findOne({ vendorName });
+  if (existingVendor) {
+    return errorHandler(res, 500, "Vendor already Exist!!");
+  }
 
-    try {
-        const newVendor = new Vendor({
-        vendorName,
-        contact,
-        address,
-        vendorBills : []
+  try {
+    const newVendor = new Vendor({
+      vendorName,
+      contact,
+      address,
+      vendorBills: [],
     });
 
-    console.log("New Vendor", newVendor)
+    console.log("New Vendor", newVendor);
 
-    const vendor = await newVendor.save()
+    const vendor = await newVendor.save();
 
-    return successHandler(res, 200, "New Vendor Added", vendor)
-    } catch (error) {
-        console.log("error in addVendorController")
-        return errorHandler(res, 500, error)
-    }
-}
-
-
-export const getSingleVendor = async (req, res) => {
-    try {
-        const {id} = req.params
-
-        const vendor = await Vendor.findById(id)
-        if(!vendor){
-            return errorHandler(res, 404, "Vendor not found")
-        }
-
-        return successHandler(res, 200, "Vendor fetched successfully", vendor)
-    } catch (error) {
-        return errorHandler(res, 500, error)
-    }
-}
-
-export const getAllVendors = async (req, res) => {
-    // console.log("Get all vendor chala")
-    try {
-        let filters={};
-        if (req.query?.vendorName) {
-            filters.vendorName = { $regex: new RegExp(req.query.vendorName, "i") }; // case-insensitive partial
+    return successHandler(res, 200, "New Vendor Added", vendor);
+  } catch (error) {
+    console.log("error in addVendorController");
+    return errorHandler(res, 500, error);
   }
-            const vendors = await Vendor.find(filters)
-        if(!vendors || vendors.length === 0){
-            return errorHandler(res, 404, "No vendors found")
-        }
+};
 
-        return successHandler(res, 200, "Vendors fetched successfully", vendors)
-    } catch (error) {
-        console.log("Error in get all vendors", error)
-        return errorHandler(res, 500, "Vendors Fetched Failed")
+//get single vendor
+export const getSingleVendor = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const vendor = await Vendor.findById(id).populate("vendorBills").populate("payments");
+    if (!vendor) {
+      return errorHandler(res, 404, "Vendor not found");
     }
-}
 
+    return successHandler(res, 200, "Vendor fetched successfully", vendor);
+  } catch (error) {
+    return errorHandler(res, 500, error);
+  }
+};
+
+//get all vendors
+export const getAllVendors = async (req, res) => {
+  // console.log("Get all vendor chala")
+  try {
+    let filters = {};
+    if (req.query?.vendorName) {
+      filters.vendorName = { $regex: new RegExp(req.query.vendorName, "i") }; // case-insensitive partial
+    }
+    const vendors = await Vendor.find(filters).select("vendorName contact balance");
+    if (!vendors || vendors.length === 0) {
+      return errorHandler(res, 404, "No vendors found");
+    }
+
+    return successHandler(res, 200, "Vendors fetched successfully", vendors);
+  } catch (error) {
+    console.log("Error in get all vendors", error);
+    return errorHandler(res, 500, "Vendors Fetched Failed");
+  }
+};
+
+//delete vendor
 export const deleteVendor = async (req, res) => {
-    try {
-        const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-        const deletedVendor = await Vendor.findByIdAndDelete(id)
-        if(!deletedVendor) {
-            return errorHandler(res, 404, "Vendor not found")
-        }
-
-        return successHandler(res, 200, "Vendor Deleted successfully", deletedVendor)
-    } catch (error) {
-        return errorHandler(res, 500, "Something went wrong")
+    const deletedVendor = await Vendor.findByIdAndDelete(id);
+    if (!deletedVendor) {
+      return errorHandler(res, 404, "Vendor not found");
     }
-}
+
+    return successHandler(
+      res,
+      200,
+      "Vendor Deleted successfully",
+      deletedVendor
+    );
+  } catch (error) {
+    return errorHandler(res, 500, "Something went wrong");
+  }
+};

@@ -38,6 +38,7 @@ export const addVendorBill = async (req, res) => {
         productName: item.productName,
         quantity: item.quantity,
         price: item.price,
+        total : item.total || item.quantity * item.price
       });
     }
 
