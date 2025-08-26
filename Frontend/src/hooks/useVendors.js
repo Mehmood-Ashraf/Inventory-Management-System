@@ -15,6 +15,7 @@ const useVendors = () => {
   const [showDetailModal, setShowDetailModal] = useState(false)
   const [showBillDetailsModal, setShowBillDetailsModal] = useState(false)
   const [selectedBill, setSelectedBill] = useState(null)
+  const [addVendorBillModalOpen, setAddVendorBillModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     vendorName: "",
     email: "",
@@ -22,6 +23,16 @@ const useVendors = () => {
     address: "",
     totalTurnover: "",
   }); 
+
+  const saveVendorBill = async (billData) => {
+        try {
+          await axios.post("http://localhost:3000/api/vendorBills/add", billData);
+          alert("Bill Added Successfully!");
+        } catch (error) {
+          console.error(error);
+          alert("Error while saving bill");
+        }
+      };
 
   const resetForm = () => {
     setFormData({
@@ -62,6 +73,8 @@ const useVendors = () => {
     }
   }
 
+
+ //For open edit Modal 
   const handleEditVendor = (vendor) => {
     setEditingVendor(vendor);
     setFormData({
@@ -73,10 +86,12 @@ const useVendors = () => {
     });
     setShowAddModal(true);
     setShowDetailModal(false)
+    localStorage.removeItem("VendorID")
   }
 
 
 
+  //For edit or Add vendor
   const handleSubmit = (e, editingVendor, onClose) => {
     e.preventDefault();
     try {
@@ -105,7 +120,8 @@ const useVendors = () => {
     editingVendor,
     setEditingVendor,
     showAddModal,
-    setShowAddModal, showDetailModal, setShowDetailModal, handleVendorClick, deleteVendorHandler, selectedBill, showBillDetailsModal, handleViewBillDetails, editVendorBill, setShowBillDetailsModal, setSelectedBill
+    setShowAddModal, showDetailModal, setShowDetailModal, handleVendorClick, deleteVendorHandler, selectedBill, showBillDetailsModal, handleViewBillDetails, editVendorBill, setShowBillDetailsModal, setSelectedBill, addVendorBillModalOpen, setAddVendorBillModalOpen,
+    saveVendorBill
   };
 };
 

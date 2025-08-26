@@ -24,7 +24,7 @@ const Customers = ({
     address: ''
   });
 
-  const filteredCustomers = customers.filter(customer => {
+  const filteredCustomers = customers?.filter(customer => {
     const matchesSearch = customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          customer.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          customer.phone?.includes(searchTerm);
@@ -133,7 +133,7 @@ const Customers = ({
       {/* Customers List */}
       <Card>
         <div className="divide-y divide-gray-200">
-          {filteredCustomers.map((customer) => (
+          {filteredCustomers?.map((customer) => (
             <li 
               key={customer.id} 
               className="py-4 px-6 hover:bg-gray-50 cursor-pointer transition-colors list-none"
@@ -190,7 +190,7 @@ const Customers = ({
         </div>
       </Card>
 
-      {filteredCustomers.length === 0 && (
+      {filteredCustomers?.length === 0 && (
         <div className="text-center py-12">
           <User className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">No customers found</h3>

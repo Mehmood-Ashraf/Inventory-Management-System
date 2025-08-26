@@ -7,13 +7,15 @@ import useVendors from "../hooks/useVendors";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSingleVendor } from "../redux/slice/vendorSlice";
 import VendorBillDetailsModal from "../components/vendors/VendorBillDetailsModal";
+import VendorBillModal from "../components/vendors/VendorBillModal";
 
 const VendorBills = () => {
   const [searchInput, setSearchInput] = useState("");
   const singleVendor = useSelector((state) => state.vendor.singleVendor);
   const vendorBills = singleVendor?.vendorBills;
   const dispatch = useDispatch();
-  const { handleViewBillDetails, showBillDetailsModal, selectedBill, setShowBillDetailsModal } = useVendors();
+  const { handleViewBillDetails, showBillDetailsModal, selectedBill, setShowBillDetailsModal, setShowAddModal, addVendorBillModalOpen, setAddVendorBillModalOpen, saveVendorBill } = useVendors();
+
 
   useEffect(() => {
     const savedID = localStorage.getItem("VendorID");
@@ -51,9 +53,9 @@ const VendorBills = () => {
             </select>
           </div>
 
-          <Button onClick={() => setShowAddModal(true)}>
+          <Button onClick={() => setAddVendorBillModalOpen(true)}>
             <Plus className="h-4 w-4 mr-2" />
-            Create Bill
+            Add Bill
           </Button>
         </div>
         {/* Bills Table */}
@@ -194,6 +196,19 @@ const VendorBills = () => {
             )}
           </Modal>
         )}
+
+
+        {addVendorBillModalOpen && (
+          <Modal
+          title={"Add Vendor Bill"}
+          onClose={() => setAddVendorBillModalOpen(false)}
+          >
+            
+          </Modal> 
+          
+        )}
+
+
         ;
       </div>
     </div>

@@ -28,11 +28,26 @@ const Vendors = () => {
     handleVendorClick,
     showDetailModal,
     setShowDetailModal,
-    deleteVendorHandler
+    deleteVendorHandler,
+    addVendorBillModalOpen,
+    setAddVendorBillModalOpen,
+    saveVendorBill
   } = useVendors();
 
+  
+
   useEffect(() => {
-    dispatch(fetchAllVendors(searchInput));
+    if(searchInput){
+      const handler = setTimeout(() => {
+        dispatch(fetchAllVendors(searchInput));
+      }, 1000)
+
+      return () => {
+        clearTimeout(handler)
+      }
+    }else{
+      dispatch(fetchAllVendors(searchInput))
+    }
 
     const savedID = localStorage.getItem("VendorID")
     if(savedID){
@@ -94,14 +109,6 @@ const Vendors = () => {
                     <span className="text-xs text-gray-500 truncate max-w-48">
                         {vendor.contact}
                       </span>
-                    {/* <div className="flex items-center space-x-2 mt-1"> */}
-                      {/* <span className="text-xs text-blue-600 font-medium">
-                        PKR {vendor.totalTurnover} total purchases
-                      </span> */}
-                      {/* <span className="text-xs text-gray-500 truncate max-w-48">
-                        {vendor.contact}
-                      </span> */}
-                    {/* </div> */}
                   </div>
                 </div>
 
@@ -167,6 +174,9 @@ const Vendors = () => {
           {singleVendor && <VendorDetailsModal handleEditVendor={handleEditVendor} selectedVendor={singleVendor} setShowDetailModal={setShowDetailModal} />}
         </Modal>
       )}
+
+
+      {}
     </div>
   );
 };

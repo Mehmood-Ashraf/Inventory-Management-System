@@ -40,7 +40,9 @@ export const getSingleVendor = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const vendor = await Vendor.findById(id).populate("vendorBills").populate("payments");
+    const vendor = await Vendor.findById(id)
+      .populate("vendorBills")
+      .populate("payments");
     if (!vendor) {
       return errorHandler(res, 404, "Vendor not found");
     }
@@ -59,7 +61,9 @@ export const getAllVendors = async (req, res) => {
     if (req.query?.vendorName) {
       filters.vendorName = { $regex: new RegExp(req.query.vendorName, "i") }; // case-insensitive partial
     }
-    const vendors = await Vendor.find(filters).select("vendorName contact balance");
+    const vendors = await Vendor.find(filters).select(
+      "vendorName contact balance"
+    );
     if (!vendors || vendors.length === 0) {
       return errorHandler(res, 404, "No vendors found");
     }
@@ -90,4 +94,26 @@ export const deleteVendor = async (req, res) => {
   } catch (error) {
     return errorHandler(res, 500, "Something went wrong");
   }
+};
+
+export const updateVendor = async (req, res) => {
+  try {
+      const { id } = req.params;
+
+  const updateData = req.body;
+
+  const updatedVendor = await Vendor.findByIdAndUpdate(id, updateData, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!updatedVendor) {
+    return errorHandler(res, 404, "Vendor not found!");
+  }
+
+  return successHandler(res, 200, "Vendor updated successfully", updatedVendor);
+  } catch (error) {
+    return errorHandler(res, 500, error?.message)
+  }
+
 };

@@ -17,7 +17,7 @@ export const addVendorBill = async (req, res) => {
     // billITems ka empty array create kia
     let billItems = [];
 
-    //jo Items user ne add kiye vendor bill k un per loop chala kar check kia agar Prodcuts k data me already item exist karta hai to Product k data me us ki quantity update ki agar nahi hai to naya product create kia Product data me...
+    //Jo Items user ne add kiye vendor bill k un per loop chala kar check kia agar Prodcuts k data me already item exist karta hai to Product k data me us ki quantity update ki agar nahi hai to naya product create kia Product data me...
     for (let item of items) {
       let product = await Products.findOne({ productName: item.productName });
 
@@ -78,14 +78,21 @@ export const addVendorBill = async (req, res) => {
 };
 
 
-
 export const getAllVendorBills = async (req, res) => {
   try {
-    let filters = {};
 
-    if (req.query.vendorName) {
-      filters.vendorName = req.query.vendorName;
+    const { billNumber, vendorName, date } = req.query;
+    let filters = {};
+    if(billNumber){
+      filters.billNumber = billNumber
     }
+    if (vendorName) {
+      filters.vendorName = { $regex: vendorName, $options: "i" };
+    }
+    if(date){
+      filters.date = new Date(date)
+    }
+
     const vendorBills = await VendorBill.find(filters);
 
     if (!vendorBills || vendorBills.length === 0) {
@@ -107,15 +114,16 @@ export const getAllVendorBills = async (req, res) => {
   }
 };
 
+
 export const getSingleVendorBill = async (req, res) => {
   try {
-    const { vendorName, billNumber } = req.params;
+    const { id } = req.params;
 
-    if (!vendorName || !billNumber) {
-      return errorHandler(res, 400, "vendor name or bill number not available!");
+    if (!id) {
+      return errorHandler(res, 400, "vendor ID not available!");
     }
 
-    const vendorBill = await VendorBill.findOne({ vendorName: vendorName, billNumber : Number(billNumber) });
+    const vendorBill = await VendorBill.findById(id);
 
     if (!vendorBill || vendorBill.length === 0) {
       return errorHandler(res, 404, "No bills found for this vendor");
@@ -148,5 +156,6 @@ export const deleteVendorBill = async (req, res) => {
           return errorHandler(res, 500, "Something went wrong")
       }
 };
+
 
 export const updateVendorBill = async (req, res) => {};

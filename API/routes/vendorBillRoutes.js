@@ -6,7 +6,7 @@ const router = Router()
 
 router.post('/add', addVendorBill)
 router.get('/all', getAllVendorBills)
-router.get('/:vendorName/:billNumber', getSingleVendorBill)
+router.get('/:id', getSingleVendorBill)
 router.delete('/:id', deleteVendorBill)
 router.put('/:id', updateVendorBill)
 

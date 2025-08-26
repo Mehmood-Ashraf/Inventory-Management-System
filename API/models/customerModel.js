@@ -39,10 +39,9 @@ const customerModel = new mongoose.Schema({
   payments : [
     {
       amount : {type : Number},
-      data : {type : Date, default : Date.now()},
+      date : {type : Date, default : Date.now()},
       method : {type : String, enum : ["cash", "bank", "online"], default : "cash"}
     }
   ]
 }, {timestamps : true})
-
-export default mongoose.model("Customer", customerModel) 
+export default mongoose.model("Customer", customerModel)

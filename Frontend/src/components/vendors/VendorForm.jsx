@@ -85,7 +85,7 @@ const VendorForm = ({ formData, setFormData, editingVendor, handleSubmit, handle
             </div>
 
             <div className="flex space-x-3 pt-4">
-              <Button type="submit" className="flex-1 cursor-pointer">
+              <Button type="submit" className="flex-1 cursor-pointer" onClick={handleSubmit}>
                 {editingVendor ? "Update Vendor" : "Add Vendor"}
               </Button>
               <Button

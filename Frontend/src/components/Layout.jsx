@@ -18,7 +18,7 @@ const Layout = () => {
     { path: "dashboard", icon: BarChart3, label: "Dashboard" },
     { path: "inventory", icon: Package, label: "Inventory" },
     { path: "customers", icon: Users, label: "Customers" },
-    { path: "billing", icon: FileText, label: "Billing" },
+    { path: "all_vendor_bills", icon: FileText, label: "Vendor Bills" },
     { path: "vendors", icon: Truck, label: "Vendors" },
     { path: "reports", icon: TrendingUp, label: "Reports" },
   ];

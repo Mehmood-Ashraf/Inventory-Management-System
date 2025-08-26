@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, autoBatchEnhancer } from "@reduxjs/toolkit";
 import axios from "axios";
 import { Satellite } from "lucide-react";
+import api from "../../utils/api";
 
 
 const initialState = {
@@ -14,10 +15,10 @@ const initialState = {
 // getAllVendors API
 export const fetchAllVendors = createAsyncThunk(
   "vendor/fetchVendors",
-  async (searchInput, thunkAPI) => {
+  async (searchInput, billNumber, thunkAPI) => {
     try {
-      const res = await axios.get(
-        `http://localhost:3000/api/vendor/all?vendorName=${searchInput}`
+      const res = await api.get(
+        `/vendor/all?vendorName=${searchInput}&billNumber=${billNumber}`
       );
       return res.data.data;
     } catch (error) {
@@ -29,11 +30,11 @@ export const fetchAllVendors = createAsyncThunk(
 
 // getSingleVendors API
 export const fetchSingleVendor = createAsyncThunk(
-  "vendor.fetchSingleVendor",
+  "vendor/fetchSingleVendor",
   async (id, thunkAPI) => {
     try {
-      const res = await axios.get(
-        `http://localhost:3000/api/vendor/${id}`
+      const res = await api.get(
+        `/vendor/${id}`
       )
       return res.data.data
     } catch (error) {
@@ -60,7 +61,7 @@ export const updateVendor = createAsyncThunk(
   "vendor/updataVendor",
   async({ id, vendorData }, thunkAPI) => {
     try {
-      const res = await axios.put(`http://localhost:3000/api/vendor/${id}`, vendorData);
+      const res = await axios.put(`http://localhost:3000/api/vendor/update/${id}`, vendorData);
       return res.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data?.message || "Error updating vendor")
