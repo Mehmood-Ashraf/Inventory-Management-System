@@ -16,7 +16,9 @@ app.use(express.json())
 
 const port = process.env.PORT
 
-app.use(cors())
+app.use(cors(
+    "http://localhost:5173"
+))
 
 app.use('/api/auth', adminRoutes)
 app.use('/api/vendor', vendorRoutes)
