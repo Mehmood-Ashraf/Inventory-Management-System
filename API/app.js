@@ -24,6 +24,9 @@ app.use('/api/customer', customerRoutes)
 // app.use('/api/customer-bill', customerBillRoutes)
 app.use('/api/vendor-bill', vendorBillRoutes)
 
-app.listen(port, () => {
-    console.log(`Server is running on port: ${port}`)
-})
+if (process.env.MODE === "development") {
+    
+    app.listen(port, () => {
+        console.log(`Server is running on port: ${port}`)
+    })
+}
