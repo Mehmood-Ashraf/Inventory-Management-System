@@ -11,6 +11,9 @@ const vendorModel = new mongoose.Schema({
   address: {
     type: String,
   },
+  city : {
+    type : String
+  },
   vendorBills: [
     {
       type: mongoose.Schema.Types.ObjectId,

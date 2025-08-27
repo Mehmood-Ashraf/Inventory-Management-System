@@ -37,6 +37,11 @@ const Vendors = () => {
   
 
   useEffect(() => {
+
+    const vendorId = localStorage.getItem("VendorID")
+    if(vendorId){
+      localStorage.removeItem("VendorID")
+    }
     if(searchInput){
       const handler = setTimeout(() => {
         dispatch(fetchAllVendors(searchInput));

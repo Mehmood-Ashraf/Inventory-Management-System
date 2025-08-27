@@ -3,10 +3,13 @@ import React from "react";
 import Button from "../Button";
 import useVendors from "../../hooks/useVendors";
 import { useNavigate } from "react-router-dom";
+import { deleteVendor } from "../../redux/slice/vendorSlice";
+import { useDispatch } from "react-redux";
 
 const VendorDetailsModal = ({ selectedVendor, handleEditVendor, setShowDetailModal }) => {
   // const { handleEditVendor, setShowDetailModal } = useVendors();
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   return (
     <div>
       <div className="space-y-6">
@@ -138,7 +141,7 @@ const VendorDetailsModal = ({ selectedVendor, handleEditVendor, setShowDetailMod
             variant="danger"
             onClick={() => {
               setShowDetailModal(false);
-              onDeleteVendor(selectedVendor._id);
+              dispatch(deleteVendor(selectedVendor._id));
             }}
             className="flex-1 cursor-pointer"
           >

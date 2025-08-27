@@ -10,10 +10,14 @@ import {
   X,
 } from "lucide-react";
 import { Outlet, NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
 const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  const [showCalendar, setShowCalendar] = useState(false);
+  const adminName = useSelector((state) => state.auth.adminName);
   const menuItems = [
     { path: "dashboard", icon: BarChart3, label: "Dashboard" },
     { path: "inventory", icon: Package, label: "Inventory" },
@@ -92,15 +96,24 @@ const Layout = () => {
             </h2>
 
             <div className="flex items-center space-x-4">
-              <div className="text-sm text-gray-500">
-                <span className="hidden md:inline">
+              <div className="relative">
+                <button
+                  className="text-sm text-gray-500 cursor-pointer"
+                  onClick={() => setShowCalendar(!showCalendar)}
+                >
                   {new Date().toLocaleDateString("en-US", {
-                    weekday: "long",
+                    // weekday: "long",
                     year: "numeric",
                     month: "long",
                     day: "numeric",
                   })}
-                </span>
+                </button>
+
+                {showCalendar && (
+                  <div className="absolute right-0 mt-2 bg-white shadow-lg rounded-lg z-50">
+                    <Calendar />
+                  </div>
+                )}
 
                 <span className="md:hidden">
                   {new Date().toLocaleDateString("en-US", {
@@ -109,6 +122,13 @@ const Layout = () => {
                     day: "numeric",
                   })}
                 </span>
+              </div>
+
+              <div className="space-x-2 flex items-center">
+                <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold">
+                  {adminName ? adminName.charAt(0).toUpperCase() : "A"}
+                </div>
+                <span className="text-gray-700 font-medium">{adminName}</span>
               </div>
             </div>
           </div>

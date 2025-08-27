@@ -64,9 +64,9 @@ const useVendors = () => {
   }
 
 
-  const deleteVendorHandler = (vendorID) => {
+  const deleteVendorHandler = async (vendorID) => {
     try {
-      dispatch(deleteVendor(vendorID))
+       await dispatch(deleteVendor(vendorID)).unwrap()
       toast.success("Vendor deleted Successfully!")
     } catch (error) {
       toast.error(error?.message || " Vendor not deleted Something went wrong!")
@@ -92,14 +92,14 @@ const useVendors = () => {
 
 
   //For edit or Add vendor
-  const handleSubmit = (e, editingVendor, onClose) => {
+  const handleSubmit = async (e, editingVendor, onClose) => {
     e.preventDefault();
     try {
       if (editingVendor) {
-        dispatch(updateVendor({ id: editingVendor._id, vendorData : formData }));
+        await dispatch(updateVendor({ id: editingVendor._id, vendorData : formData })).unwrap();
         toast.success("Vendor updated Successfully")
       } else {
-        dispatch(addVendor(formData));
+        await dispatch(addVendor(formData)).unwrap();
         toast.success("Vendor added Successfully")
       }
       resetForm();

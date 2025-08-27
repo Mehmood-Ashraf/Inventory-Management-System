@@ -60,7 +60,7 @@ export const login = async (req, res) => {
     if (!admin) {
       return errorHandler(res, 500, "User not found!");
     }
-
+    
     const matchPassword = await bcrypt.compare(password, admin.password);
 
     if (!matchPassword) {

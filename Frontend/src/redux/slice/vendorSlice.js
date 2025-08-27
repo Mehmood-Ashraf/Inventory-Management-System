@@ -48,7 +48,8 @@ export const addVendor = createAsyncThunk(
   "vendor/addVendor",
   async (vendorData, thunkAPI) => {
     try {
-      const res = await axios.post(`http://localhost:3000/api/vendor/add`, vendorData)
+      const res = await api.post(`/vendor/add`, vendorData)
+      console.log(res?.data)
       return res.data.data
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data?.message || "Error adding vendor")
@@ -61,7 +62,7 @@ export const updateVendor = createAsyncThunk(
   "vendor/updataVendor",
   async({ id, vendorData }, thunkAPI) => {
     try {
-      const res = await axios.put(`http://localhost:3000/api/vendor/update/${id}`, vendorData);
+      const res = await api.put(`/vendor/update/${id}`, vendorData);
       return res.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data?.message || "Error updating vendor")
@@ -73,7 +74,7 @@ export const deleteVendor = createAsyncThunk(
   "vendor/deleteVendor",
   async (id, thunkAPI) => {
     try {
-      await axios.delete(`http://localhost:3000/api/vendor/${id}`);
+      await api.delete(`/vendor/${id}`);
       return id;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data?.message || "Error deleting vendor")

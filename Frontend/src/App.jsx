@@ -17,10 +17,8 @@ import AllVendorBills from "./pages/AllVendorBills";
 function App() {
   return (
     <>
-    
-
       <Routes>
-      <Route path="/" element={<Login />}/>
+        <Route path="/" element={<Login />} />
         <Route element={<AuthRoutes />}>
           <Route path="/login" element={<Login />} />
         </Route>
@@ -29,7 +27,7 @@ function App() {
           <Route element={<Layout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/vendors" element={<Vendors1 />} />
-            <Route path="/vendors/:id/bills" element={<VendorBills1 />}/>
+            <Route path="/vendors/:id/bills" element={<VendorBills1 />} />
             <Route path="/customers" element={<Customers />} />
             <Route path="/all_vendor_bills" element={<AllVendorBills />} />
           </Route>
