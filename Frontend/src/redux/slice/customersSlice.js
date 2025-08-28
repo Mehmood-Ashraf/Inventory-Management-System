@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import api from "../../utils/api"
 
 
 const initialState = {
@@ -13,7 +14,7 @@ export const fetchAllCustomers = createAsyncThunk(
     "customer/fetchAllCustomers",
     async (searchInput, thunkAPI) => {
         try {
-            const res = await axios.get(`http://localhost:3000/api/customer/all?customerName=${searchInput}`)
+            const res = await api.get(`/customer/all?customerName=${searchInput}`)
             return res?.data?.data
         } catch (error) {
             return thunkAPI.rejectWithValue(error?.response?.data?.message || "Error fetching customers")
@@ -25,6 +26,7 @@ export const fetchAllCustomers = createAsyncThunk(
 
 const customerSlice = createSlice({
     name : "customer",
+    initialState,
     reducers : {},
     extraReducers : (builder) => {
         builder.addCase(fetchAllCustomers.pending, (state) => {

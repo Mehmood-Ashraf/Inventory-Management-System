@@ -6,7 +6,7 @@ import { verifyToken } from "../middlewares/verifyToken.js";
 const router = Router()
 
 router.post('/add', addCustomer)
-router.get('/all', verifyToken, getAllCustomers)
+router.get('/all',  getAllCustomers)
 router.get('/:id', getSingleCustomer)
 router.delete('/:id', deleteCustomer)
 

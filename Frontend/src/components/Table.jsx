@@ -29,8 +29,12 @@
 
 import { Edit, Eye, Trash2 } from "lucide-react";
 import React from "react";
+import {Loader} from '../components/Loader'
 
-function Table({ title, subTitle, headers = [], data = [], showActions = false, onEdit, onDelete, onView }) {
+
+
+function Table({ title, subTitle, headers = [], data = [], showActions = false, onEdit, onDelete, onView, loading }) {
+  console.log(data)
   // const title1 = "Recent Transictions";
   const listHeaders = [
     { key : "type", label : "Type"},
@@ -89,6 +93,10 @@ function Table({ title, subTitle, headers = [], data = [], showActions = false, 
       </div>
     );
   }
+
+  if (loading) {
+    return <Loader />;
+  }
   return (
     <>
       <h2 className="text-[#0d141c] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-5">
@@ -120,21 +128,21 @@ function Table({ title, subTitle, headers = [], data = [], showActions = false, 
             <tbody>
               {data?.map((i, index) => (
                 <tr key={index} className="border-t border-t-[#cedbe8]">
-                {listHeaders.map((header) => (
-                  <td key={header.key} className="h-[72px] px-4 py-2 w-[400px] text-[#49719c] text-sm font-normal leading-normal">
-                    {i[header.key]}
+                {headers.map((header) => (
+                  <td key={header?.key} className="h-[72px] px-4 py-2 w-[400px] text-[#49719c]  text-sm font-normal leading-normal">
+                    {i[header?.key]}
                   </td>
                 )
               )}
                   {showActions && (
                     <td className="h-[72px] px-4 py-2 w-[400px] text-[#49719c] text-sm font-normal leading-normal">
-                      <button className="text-indigo-600 hover:text-indigo-900 p-1 cursor-pointer" onClick={onView}>
+                      <button className="text-indigo-600 hover:text-indigo-900 p-1 cursor-pointer" onClick={() => onView(i._id)}>
                         <Eye className="h-4 w-4" />
                       </button>
-                      <button className="text-indigo-600 hover:text-indigo-900 p-1 cursor-pointer" onClick={onEdit}>
+                      <button className="text-indigo-600 hover:text-indigo-900 p-1 cursor-pointer" onClick={() => onEdit(i)}>
                         <Edit className="h-4 w-4" />
                       </button>
-                      <button className="text-red-600 hover:text-red-900 p-1 cursor-pointer" onClick={onDelete}>
+                      <button className="text-red-600 hover:text-red-900 p-1 cursor-pointer" onClick={() => onDelete(i._id)}>
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </td>

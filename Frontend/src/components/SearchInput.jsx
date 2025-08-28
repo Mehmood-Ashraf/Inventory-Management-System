@@ -16,4 +16,4 @@ const SearchInput = ({ value, placeholder, onChange}) => {
   );
 };
 
-export default SearchInput;
+export default React.memo(SearchInput);
