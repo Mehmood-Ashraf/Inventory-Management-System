@@ -69,7 +69,7 @@ export const getAllCustomers = async (req, res) => {
 
     return successHandler(
       res,
-      400,
+      200,
       "Customers fetched successfully",
       customers
     );
