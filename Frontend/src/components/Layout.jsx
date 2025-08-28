@@ -9,7 +9,7 @@ import {
   Menu,
   X,
 } from "lucide-react";
-import { Outlet, NavLink } from "react-router-dom";
+import { Outlet, NavLink, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -18,6 +18,8 @@ const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const adminName = useSelector((state) => state.auth.adminName);
+  const location = useLocation();
+
   const menuItems = [
     { path: "dashboard", icon: BarChart3, label: "Dashboard" },
     { path: "inventory", icon: Package, label: "Inventory" },
@@ -26,6 +28,9 @@ const Layout = () => {
     { path: "vendors", icon: Truck, label: "Vendors" },
     { path: "reports", icon: TrendingUp, label: "Reports" },
   ];
+
+  const currentPath = location.pathname.replace("/", "");
+  const currentPage = menuItems.find((item) => item.path === currentPath);
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -76,14 +81,22 @@ const Layout = () => {
               {item.label}
             </NavLink>
           ))}
+
+          
         </nav>
+        <div className="flex items-center px-6 py-4 space-x-2 border-b border-gray-200 lg:hidden">
+            <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold">
+              {adminName ? adminName.charAt(0).toUpperCase() : "A"}
+            </div>
+            <span className="text-gray-700 font-medium">{adminName}</span>
+          </div>
       </div>
 
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
         <header className="bg-white shadow-sm border-b border-gray-200">
-          <div className="flex items-center justify-between h-16 px-6">
+          <div className="flex items-center justify-between h-16 px-3 md:px-6">
             <button
               onClick={() => setSidebarOpen(true)}
               className="lg:hidden cursor-pointer"
@@ -92,7 +105,7 @@ const Layout = () => {
             </button>
 
             <h2 className="text-lg font-semibold text-gray-900 capitalize">
-              Dashboard
+              {currentPage ? currentPage.label : "Dashboard"}
             </h2>
 
             <div className="flex items-center space-x-4">
@@ -115,16 +128,16 @@ const Layout = () => {
                   </div>
                 )}
 
-                <span className="md:hidden">
+                {/* <span className="md:hidden">
                   {new Date().toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
                   })}
-                </span>
+                </span> */}
               </div>
 
-              <div className="space-x-2 flex items-center">
+              <div className="space-x-2 lg:flex items-center hidden">
                 <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold">
                   {adminName ? adminName.charAt(0).toUpperCase() : "A"}
                 </div>

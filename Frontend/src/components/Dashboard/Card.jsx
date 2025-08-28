@@ -9,10 +9,7 @@ const Card = ({ title, value }) => {
 
       <div className="flex items-center justify-between mt-2">
         <p className="text-2xl font-bold text-gray-700">
-          {showValue ? value.toLocaleString("en-US", {
-            style: "currency",
-            currency: "PKR",
-          }) : "PKR ••••••"}
+          {showValue ? value : "••••••"}
         </p>
         <button onClick={() => setShowValue(!showValue)} className="cursor-pointer">
           {showValue ? <EyeOff className="w-5 h-5 text-gray-600" /> : <Eye className="w-5 h-5 text-gray-600" />}

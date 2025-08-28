@@ -1,15 +1,15 @@
 export const cardData = [
     {title : "Total Payable", value: 1000000},
     {title : "Total Recievable", value: 2000000},
-    {title : "Todays's Sale", value: 200000}
+    {title : "Todays's Sale", value: 200000},
+    {title : "Total Customers", value : 100},
+    {title : "Total Products", value : 60},
+    {title : "Total Vendors", value : 20}
 ]
+
+const pkrCards = ["Total Payable", "Total Recievable", "Todays's Sale"]
 
 export const formattedCardData = cardData.map((item) => ({
   ...item,
-  formattedValue: item.value.toLocaleString("en-US", {
-    style : "currency",
-    currency : "PKR",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }),
-}));
+  formattedValue: pkrCards.includes(item.title) ? `PKR ${item.value.toLocaleString("en-US")}` : item.value.toLocaleString()
+}));  

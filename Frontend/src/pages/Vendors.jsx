@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { clearSingleVendor, fetchAllVendors, fetchSingleVendor } from "../redux/slice/vendorSlice";
+import {
+  clearSingleVendor,
+  fetchAllVendors,
+  fetchSingleVendor,
+} from "../redux/slice/vendorSlice";
 import Button from "../components/Button";
 import { Edit, Loader, Plus, Search, Trash2, Truck } from "lucide-react";
 import Modal from "../components/Modal";
@@ -8,6 +12,8 @@ import VendorForm from "../components/vendors/VendorForm";
 import Card from "../components/Card";
 import useVendors from "../hooks/useVendors";
 import VendorDetailsModal from "../components/vendors/VendorDetailsModal";
+import SearchInput from "../components/SearchInput";
+import Table from "../components/Table";
 
 const Vendors = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -31,33 +37,30 @@ const Vendors = () => {
     deleteVendorHandler,
     addVendorBillModalOpen,
     setAddVendorBillModalOpen,
-    saveVendorBill
+    saveVendorBill,
   } = useVendors();
 
-  
-
   useEffect(() => {
-
-    const vendorId = localStorage.getItem("VendorID")
-    if(vendorId){
-      localStorage.removeItem("VendorID")
+    const vendorId = localStorage.getItem("VendorID");
+    if (vendorId) {
+      localStorage.removeItem("VendorID");
     }
-    if(searchInput){
+    if (searchInput) {
       const handler = setTimeout(() => {
         dispatch(fetchAllVendors(searchInput));
-      }, 1000)
+      }, 1000);
 
       return () => {
-        clearTimeout(handler)
-      }
-    }else{
-      dispatch(fetchAllVendors(searchInput))
+        clearTimeout(handler);
+      };
+    } else {
+      dispatch(fetchAllVendors(searchInput));
     }
 
-    const savedID = localStorage.getItem("VendorID")
-    if(savedID){
-      dispatch(fetchSingleVendor(savedID))
-      setShowDetailModal(true)
+    const savedID = localStorage.getItem("VendorID");
+    if (savedID) {
+      dispatch(fetchSingleVendor(savedID));
+      setShowDetailModal(true);
     }
   }, [searchInput, dispatch]);
 
@@ -67,17 +70,25 @@ const Vendors = () => {
     resetForm();
   };
 
-  if(loading){
-    return (
-      <Loader />
-    )
+  if (loading) {
+    return <Loader />;
   }
 
+  const vendorsListHeaders = [
+    { key: "vendorName", label: "Vendor Name" },
+    { key: "contact", label: "Contact" },
+    { key: "balance", label: "Balance" },
+  ];
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center gap-4">
-        <div className="relative flex-1 max-w-md">
+        <SearchInput
+          value={searchInput}
+          placeholder={"Search vendors...."}
+          onChange={setSearchInput}
+        />
+        {/* <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
           <input
             type="text"
@@ -86,14 +97,14 @@ const Vendors = () => {
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
           />
-        </div>
+        </div> */}
         <Button onClick={() => setShowAddModal(true)}>
           <Plus className="h-4 w-4 mr-2" />
           Add Vendor
         </Button>
       </div>
 
-      <Card title={"All Vendors"} subtitle={"Easily track vendor information and account balances."}>
+      {/* <Card title={"All Vendors"} subtitle={"Easily track vendor information and account balances."}>
         <div className="divide-y divide-gray-200">
           {vendors?.map((vendor) => (
             <li
@@ -146,6 +157,15 @@ const Vendors = () => {
           ))}
         </div>
       </Card>
+       */}
+      <div>
+        <Table
+          title={"All Vendors"}
+          subTitle={"Easily track vendor information and account balances."}
+          data={vendors}
+          headers={vendorsListHeaders}
+        />
+      </div>
 
       {showAddModal && (
         <Modal
@@ -172,14 +192,19 @@ const Vendors = () => {
           title={"Vendor Details"}
           onClose={() => {
             setShowDetailModal(false);
-            dispatch(clearSingleVendor())
-          localStorage.removeItem("VendorID");
+            dispatch(clearSingleVendor());
+            localStorage.removeItem("VendorID");
           }}
         >
-          {singleVendor && <VendorDetailsModal handleEditVendor={handleEditVendor} selectedVendor={singleVendor} setShowDetailModal={setShowDetailModal} />}
+          {singleVendor && (
+            <VendorDetailsModal
+              handleEditVendor={handleEditVendor}
+              selectedVendor={singleVendor}
+              setShowDetailModal={setShowDetailModal}
+            />
+          )}
         </Modal>
       )}
-
 
       {}
     </div>
