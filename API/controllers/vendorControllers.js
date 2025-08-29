@@ -98,22 +98,26 @@ export const deleteVendor = async (req, res) => {
 
 export const updateVendor = async (req, res) => {
   try {
-      const { id } = req.params;
+    const { id } = req.params;
 
-  const updateData = req.body;
+    const updateData = req.body;
 
-  const updatedVendor = await Vendor.findByIdAndUpdate(id, updateData, {
-    new: true,
-    runValidators: true,
-  });
+    const updatedVendor = await Vendor.findByIdAndUpdate(id, updateData, {
+      new: true,
+      runValidators: true,
+    });
 
-  if (!updatedVendor) {
-    return errorHandler(res, 404, "Vendor not found!");
-  }
+    if (!updatedVendor) {
+      return errorHandler(res, 404, "Vendor not found!");
+    }
 
-  return successHandler(res, 200, "Vendor updated successfully", updatedVendor);
+    return successHandler(
+      res,
+      200,
+      "Vendor updated successfully",
+      updatedVendor
+    );
   } catch (error) {
-    return errorHandler(res, 500, error?.message)
+    return errorHandler(res, 500, error?.message);
   }
-
 };

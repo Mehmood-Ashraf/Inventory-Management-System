@@ -51,7 +51,7 @@ export const getAllCustomers = async (req, res) => {
     const filters = {};
 
     if (req.query?.type) {
-      filters.customerType = { $regex: new RegExp(req.query.type, "i") };;
+      filters.customerType = { $regex: new RegExp(req.query.type, "i") };
     }
 
     if (req.query.city) {
@@ -59,7 +59,9 @@ export const getAllCustomers = async (req, res) => {
     }
 
     if (req.query.customerName) {
-      filters.customerName = { $regex: new RegExp(req.query.customerName, "i") }; // case-insensitive partial
+      filters.customerName = {
+        $regex: new RegExp(req.query.customerName, "i"),
+      }; // case-insensitive partial
     }
 
     const customers = await Customer.find(filters);
@@ -99,5 +101,33 @@ export const deleteCustomer = async (req, res) => {
       400,
       "something went wrong while deleting customer"
     );
+  }
+};
+
+
+
+export const updateCustomer = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const updatedCustomerData = req.body;
+
+    const updatedCustomer = await Customer.findByIdAndUpdate(
+      id,
+      updatedCustomerData
+    );
+
+    if (!updatedCustomer) {
+      return errorHandler(res, 404, "Customer not found!");
+    }
+
+    return successHandler(
+      res,
+      200,
+      "Customer updated successfully",
+      updatedCustomer
+    );
+  } catch (error) {
+    return errorHandler(res, 400, error?.message)
   }
 };

@@ -20,10 +20,10 @@ const VendorDetailsModal = ({ selectedVendor, handleEditVendor, setShowDetailMod
           </div>
           <div>
             <h3 className="text-xl font-semibold text-gray-900">
-              {selectedVendor.vendorName}
+              {selectedVendor?.customerName}
             </h3>
             <p className="text-lg text-blue-600 font-medium mt-1">
-              Total Turnover: PKR {selectedVendor.totalTurnover}
+              Total Turnover: PKR {selectedVendor?.totalTurnover}
             </p>
           </div>
         </div>
@@ -38,7 +38,7 @@ const VendorDetailsModal = ({ selectedVendor, handleEditVendor, setShowDetailMod
               <Mail className="h-5 w-5 text-gray-400" />
               <div>
                 <p className="text-sm font-medium text-gray-500">Email</p>
-                <p className="text-sm text-gray-900">{selectedVendor.email}</p>
+                <p className="text-sm text-gray-900">{selectedVendor?.email}</p>
               </div>
             </div>
             <div className="flex items-center space-x-3">
@@ -46,7 +46,7 @@ const VendorDetailsModal = ({ selectedVendor, handleEditVendor, setShowDetailMod
               <div>
                 <p className="text-sm font-medium text-gray-500">Phone</p>
                 <p className="text-sm text-gray-900">
-                  {selectedVendor.contact}
+                  {selectedVendor?.contact}
                 </p>
               </div>
             </div>
@@ -61,7 +61,7 @@ const VendorDetailsModal = ({ selectedVendor, handleEditVendor, setShowDetailMod
                   Business Address
                 </p>
                 <p className="text-sm text-gray-900 leading-relaxed">
-                  {selectedVendor.address}
+                  {selectedVendor?.address}
                 </p>
               </div>
             </div>
@@ -74,7 +74,7 @@ const VendorDetailsModal = ({ selectedVendor, handleEditVendor, setShowDetailMod
             <div>
               <p className="text-sm font-medium text-gray-500">Vendor Since</p>
               <p className="text-sm text-gray-900">
-                {new Date(selectedVendor.createdAt).toLocaleDateString(
+                {new Date(selectedVendor?.createdAt).toLocaleDateString(
                   "en-US",
                   {
                     year: "numeric",
@@ -89,19 +89,19 @@ const VendorDetailsModal = ({ selectedVendor, handleEditVendor, setShowDetailMod
                 Purchase Volume
               </p>
               <p className="text-sm text-gray-900 font-medium">
-                PKR {selectedVendor.totalTurnover}
+                PKR {selectedVendor?.totalTurnover}
               </p>
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500">Total Paid</p>
               <p className="text-sm text-green-600 font-medium">
-                PKR {selectedVendor.totalPaid}
+                PKR {selectedVendor?.totalPaid}
               </p>
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500">Balance</p>
               <p className="text-sm text-red-600 font-medium">
-                PKR {selectedVendor.balance}
+                PKR {selectedVendor?.balance}
               </p>
             </div>
           </div>
@@ -111,7 +111,7 @@ const VendorDetailsModal = ({ selectedVendor, handleEditVendor, setShowDetailMod
           <Button
             onClick={() => {
               setShowDetailModal(false)
-              navigate(`/vendors/${selectedVendor._id}/bills`)
+              navigate(`/vendors/${selectedVendor?._id}/bills`)
             }}
             className="flex-1 cursor-pointer"
           >
@@ -141,7 +141,7 @@ const VendorDetailsModal = ({ selectedVendor, handleEditVendor, setShowDetailMod
             variant="danger"
             onClick={() => {
               setShowDetailModal(false);
-              dispatch(deleteVendor(selectedVendor._id));
+              dispatch(deleteVendor(selectedVendor?._id));
             }}
             className="flex-1 cursor-pointer"
           >

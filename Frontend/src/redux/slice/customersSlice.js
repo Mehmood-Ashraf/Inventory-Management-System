@@ -22,7 +22,54 @@ export const fetchAllCustomers = createAsyncThunk(
     }
 )
 
+export const fetchSingleCustomer = createAsyncThunk(
+    "customer/fetchSingleCustomer",
+    async(id, thunkAPI) => {
+        try {
+            const res = await api.get(`/customer/${id}`)
+            return res?.data?.data
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error?.response?.data?.message || "Error fetching customer")
+            
+        }
+    }
+)
 
+export const deleteCustomer = createAsyncThunk(
+    "customer/deleteCustomer",
+    async (id, thunkAPI) => {
+        try {
+            const res = await api.delete(`/customer/${id}`)
+        } catch (error) {
+            return thunkAPI,rejectWithValue(error?.response?.data?.message || "Error delete customer")
+        }
+    }
+)
+
+export const addCustomer = createAsyncThunk(
+  "customer/addCustomer",
+  async (customerData, thunkAPI) => {
+    try {
+      const res = await api.post(`/vendor/add`, vendorData)
+      console.log(res?.data)
+      return res.data.data
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data?.message || "Error adding vendor")
+    }
+  }
+)
+
+export const updateCustomer = createAsyncThunk(
+  "Customer/updataCustomer",
+  async({ id, CustomerData }, thunkAPI) => {
+    try {
+      const res = await api.put(`/Customer/update/${id}`, CustomerData);
+      return res.data.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data?.message || "Error updating Customer")
+    }
+  }
+)
 
 const customerSlice = createSlice({
     name : "customer",
@@ -41,6 +88,21 @@ const customerSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
             state.allCustomers = []
+        })
+        .addCase(fetchSingleCustomer.fulfilled, (state, action) => {
+            state.loading = false,
+            state.singleCustomer = action.payload,
+            state.error = null
+        })
+        .addCase(updateCustomer.fulfilled, (state, action) => {
+            state.loading = false,
+            state.singleCustomer = action.payload,
+            state.error = null
+        })
+        .addCase(deleteCustomer.fulfilled, (state) => {
+            state.loading = false,
+            state.singleCustomer = null,
+            state.error = null
         })
     }
 }

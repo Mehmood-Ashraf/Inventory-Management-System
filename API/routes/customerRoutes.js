@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addCustomer, deleteCustomer, getAllCustomers, getSingleCustomer } from "../controllers/customerControllers.js";
+import { addCustomer, deleteCustomer, getAllCustomers, getSingleCustomer, updateCustomer } from "../controllers/customerControllers.js";
 import { verifyToken } from "../middlewares/verifyToken.js";
 
 
@@ -9,5 +9,7 @@ router.post('/add', addCustomer)
 router.get('/all',  getAllCustomers)
 router.get('/:id', getSingleCustomer)
 router.delete('/:id', deleteCustomer)
+router.put('/update/:id', updateCustomer)
+
 
 export default router

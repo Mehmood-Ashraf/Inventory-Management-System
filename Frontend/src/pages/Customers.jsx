@@ -14,7 +14,8 @@ import useVendors from "../hooks/useVendors";
 import VendorDetailsModal from "../components/vendors/VendorDetailsModal";
 import SearchInput from "../components/SearchInput";
 import Table from "../components/Table";
-import { fetchAllCustomers } from "../redux/slice/customersSlice";
+import { fetchAllCustomers, fetchSingleCustomer } from "../redux/slice/customersSlice";
+import useCustomers from "../hooks/useCustomers.js";
 
 const Customers = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -27,7 +28,7 @@ const Customers = () => {
   const {
     formData,
     setFormData,
-    handleSubmit,
+    // handleSubmit,
     resetForm,
     showAddModal,
     setShowAddModal,
@@ -35,13 +36,14 @@ const Customers = () => {
     setEditingVendor,
     handleEditVendor,
     handleVendorClick,
-    showDetailModal,
-    setShowDetailModal,
+    // showDetailModal,
+    // setShowDetailModal,
     deleteVendorHandler,
     addVendorBillModalOpen,
     setAddVendorBillModalOpen,
     saveVendorBill,
   } = useVendors();
+  const {handleCustomerClick ,handleSubmit ,deleteCustomerHandler , handleEditCustomer, showDetailModal, setShowDetailModal} = useCustomers()
 
   useEffect(() => {
     const customerId = localStorage.getItem("customerID");
@@ -61,11 +63,11 @@ const Customers = () => {
     }
     console.log(allCustomers);
 
-    // const savedID = localStorage.getItem("customerID");
-    // if (savedID) {
-    //   dispatch(fetchSingleVendor(savedID));
-    //   setShowDetailModal(true);
-    // }
+    const savedID = localStorage.getItem("customerID");
+    if (savedID) {
+      dispatch(fetchSingleCustomer(savedID));
+      setShowDetailModal(true);
+    }
   }, [searchInput, dispatch]);
 
   const handleCloseModal = () => {
@@ -103,9 +105,9 @@ const Customers = () => {
             headers={customersListHeaders}
             showActions={true}
             loading={loading}
-            onEdit={handleEditVendor}
-            onView={handleVendorClick}
-            onDelete={deleteVendorHandler}
+            onEdit={handleEditCustomer}
+            onView={handleCustomerClick}
+            onDelete={deleteCustomerHandler}
           />
         )}
       </div>
@@ -132,22 +134,23 @@ const Customers = () => {
 
       {showDetailModal && (
         <Modal
-          title={"Vendor Details"}
+          title={"Customer Details"}
           onClose={() => {
             setShowDetailModal(false);
-            dispatch(clearSingleVendor());
-            localStorage.removeItem("VendorID");
+            // dispatch(clearSingleVendor());
+            localStorage.removeItem("CustomerID");
           }}
         >
-          {singleVendor && (
+          {singleCustomer && (
             <VendorDetailsModal
               handleEditVendor={handleEditVendor}
-              selectedVendor={singleVendor}
+              // selectedVendor={singleVendor}
               setShowDetailModal={setShowDetailModal}
             />
           )}
         </Modal>
       )}
+
 
       {}
     </div>
