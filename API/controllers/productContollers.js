@@ -91,7 +91,7 @@ export const getAllProducts = async (req, res) => {
     if(companyName) filters.companyName = { $regex: companyName, $options: "i" };
     if(category) filters.category = category
 
-    const products = await Product.find(filters)
+    const products = await Product.find(filters).populate("companyName")
 
     if(!products || products.length == 0) {
         return errorHandler(res, 400, "No products found with given details")
