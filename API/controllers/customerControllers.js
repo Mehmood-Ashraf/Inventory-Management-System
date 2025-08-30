@@ -1,6 +1,7 @@
 import { errorHandler, successHandler } from "../utils/responseHandler.js";
 import Customer from "../models/customerModel.js";
 
+
 export const addCustomer = async (req, res) => {
   const { customerName, customerType, contact, address, city } = req.body;
   if (!customerName || !customerType) {
@@ -35,7 +36,7 @@ export const getSingleCustomer = async (req, res) => {
     if (!customer) {
       return errorHandler(res, 400, "Customer not found by given id");
     }
-
+    
     return successHandler(res, 200, "Customer Fetched successfully", customer);
   } catch (error) {
     return errorHandler(
@@ -79,6 +80,7 @@ export const getAllCustomers = async (req, res) => {
     return errorHandler(res, 400, error);
   }
 };
+
 
 export const deleteCustomer = async (req, res) => {
   try {

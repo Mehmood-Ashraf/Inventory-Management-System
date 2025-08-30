@@ -84,6 +84,12 @@ function Table({ title, subTitle, headers = [], data = [], showActions = false, 
     },
   ];
 
+
+  
+  if (loading) {
+    return <Loader />;
+  }
+
   if (!data || data.length === 0) {
     return (
       <div className="border rounded-lg p-4">
@@ -94,9 +100,6 @@ function Table({ title, subTitle, headers = [], data = [], showActions = false, 
     );
   }
 
-  if (loading) {
-    return <Loader />;
-  }
   return (
     <>
       <h2 className="text-[#0d141c] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-5">
@@ -157,4 +160,4 @@ function Table({ title, subTitle, headers = [], data = [], showActions = false, 
   );
 }
 
-export default Table;
+export default React.memo(Table);

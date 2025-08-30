@@ -129,7 +129,7 @@ const Vendors = () => {
         </Modal>
       )}
 
-      {showDetailModal && (
+      {showDetailModal && singleVendor && (
         <Modal
           title={"Vendor Details"}
           onClose={() => {
@@ -138,13 +138,11 @@ const Vendors = () => {
             localStorage.removeItem("VendorID");
           }}
         >
-          {singleVendor && (
-            <VendorDetailsModal
-              handleEditVendor={handleEditVendor}
-              selectedVendor={singleVendor}
-              setShowDetailModal={setShowDetailModal}
-            />
-          )}
+          <VendorDetailsModal
+            handleEditVendor={handleEditVendor}
+            selectedVendor={singleVendor}
+            setShowDetailModal={setShowDetailModal}
+          />
         </Modal>
       )}
 

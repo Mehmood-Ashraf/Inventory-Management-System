@@ -15,6 +15,7 @@ const customerBillModel = new mongoose.Schema({
     }
   ],
   billNumber : {
+    type : String,
     unique : true,
   },
   totalAmount: Number,
