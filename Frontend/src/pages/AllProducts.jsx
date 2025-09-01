@@ -35,12 +35,14 @@ const AllProducts = () => {
     }
   }, [searchInput]);
 
+  const companyName = allProducts?.companyName?.companyName
+
   const productListHeaders = [
     { key: "productName", label: "Product Name" },
     { key: "modelName", label: "Model" },
     { key: "quantity", label: "Qauntity" },
     { key: "sellPrice", label: "Sell Price" },
-    { key: "companyName", label: "Company Name" },
+    { key: companyName, label: "Company Name" },
   ];
 
   return (

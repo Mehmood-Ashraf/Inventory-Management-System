@@ -113,6 +113,9 @@ export const updateCustomer = async (req, res) => {
     const { id } = req.params;
 
     const updatedCustomerData = req.body;
+    if(!id){
+      return errorHandler(res, 400, "Id not available")
+    }
 
     const updatedCustomer = await Customer.findByIdAndUpdate(
       id,

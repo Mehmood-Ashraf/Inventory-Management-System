@@ -50,7 +50,7 @@ export const addCustomer = createAsyncThunk(
   "customer/addCustomer",
   async (customerData, thunkAPI) => {
     try {
-      const res = await api.post(`/vendor/add`, vendorData)
+      const res = await api.post(`/vendor/add`, customerData)
       console.log(res?.data)
       return res.data.data
     } catch (error) {
@@ -63,7 +63,7 @@ export const updateCustomer = createAsyncThunk(
   "Customer/updataCustomer",
   async({ id, CustomerData }, thunkAPI) => {
     try {
-      const res = await api.put(`/Customer/update/${id}`, CustomerData);
+      const res = await api.put(`/customer/update/${id}`, CustomerData);
       return res.data.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data?.message || "Error updating Customer")

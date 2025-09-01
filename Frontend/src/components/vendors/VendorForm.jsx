@@ -10,7 +10,7 @@ const VendorForm = ({ formData, setFormData, editingVendor, handleSubmit, handle
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Vendor Name
-              </label>
+              </label>  
               <input
                 type="text"
                 required
@@ -70,7 +70,7 @@ const VendorForm = ({ formData, setFormData, editingVendor, handleSubmit, handle
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Total Turnover
               </label>
-              <input
+              <input  
                 type="number"
                 step="0.01"
                 value={formData.totalTurnover}

@@ -31,7 +31,7 @@ export const addProduct = async (req, res) => {
       companyName = company._id;
     }
 
-    // ✅ convert category (string) -> ObjectId
+    // convert category into ObjectId
     if (category && typeof category === "string") {
       let cat = await Category.findOne({ categoryName: category });
       if (!cat) {
@@ -40,7 +40,7 @@ export const addProduct = async (req, res) => {
       category = cat._id;
     }
 
-    // ✅ convert vendorName (string) -> ObjectId
+    // convert vendorName in to ObjectId
     if (vendorName && typeof vendorName === "string") {
       let vendor = await Vendors.findOne({ vendorName: vendorName });
       if (!vendor) {

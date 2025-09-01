@@ -16,6 +16,8 @@ import SearchInput from "../components/SearchInput";
 import Table from "../components/Table";
 import { fetchAllCustomers, fetchSingleCustomer } from "../redux/slice/customersSlice";
 import useCustomers from "../hooks/useCustomers.js";
+import Form from "../components/Form.jsx";
+import { addCustomerInputs } from "../formSource.js";
 
 const Customers = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -42,7 +44,7 @@ const Customers = () => {
     addVendorBillModalOpen,
     setAddVendorBillModalOpen,
     saveVendorBill,
-  } = useVendors();
+  } = useCustomers();
   const {handleCustomerClick ,handleSubmit ,deleteCustomerHandler , handleEditCustomer, showDetailModal, setShowDetailModal} = useCustomers()
 
   useEffect(() => {
@@ -120,7 +122,7 @@ const Customers = () => {
             resetForm();
           }}
         >
-          <VendorForm
+          {/* <VendorForm
             formData={formData}
             setFormData={setFormData}
             handleSubmit={(e) => {
@@ -128,7 +130,8 @@ const Customers = () => {
             }}
             handleCloseModal={handleCloseModal}
             editingVendor={editingVendor}
-          />
+          /> */}
+          <Form inputsData={addCustomerInputs} formData={formData} setFormData={setFormData} handleClose={handleCloseModal} submitLabel={"Add Customer"} handleSubmit={(e) => handleSubmit(e, handleCloseModal)}/>
         </Modal>
       )}
 

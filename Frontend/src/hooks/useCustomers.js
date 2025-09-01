@@ -6,13 +6,15 @@ import {
   updateCustomer,
 } from "../redux/slice/customersSlice";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 
 const useCustomers = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false)
   const [editingCustomer, setEditingCustomer] = useState(null);
     const [formData, setFormData] = useState({
-    vendorName: "",
+    customerName: "",
     email: "",
     contact: "",
     address: "",
@@ -41,22 +43,24 @@ const useCustomers = () => {
    const handleEditCustomer = (vendor) => {
     setEditingCustomer(vendor);
     setFormData({
-      vendorName: vendor.vendorName,
-      email: vendor.email,
-      contact: vendor.contact,
-      address: vendor.address,
-      totalTurnover: vendor.totalTurnover,
+      customerName: customer.customerName,
+      email: customer.email,
+      contact: customer.contact,
+      address: customer.address,
+      totalTurnover: customer.totalTurnover,
     });
     setShowAddModal(true);
     setShowDetailModal(false)
     localStorage.removeItem("VendorID")
   }
+
+
   //For edit or Add customer
   const handleSubmit = async (e, editingCustomer, onClose) => {
     e.preventDefault();
     try {
       if (editingCustomer) {
-        await dispatch(
+        await dispatch( 
           updateCustomer({ id: editingCustomer._id, CustomerData: formData })
         ).unwrap();
         toast.success("Customer updated Successfully");
@@ -71,7 +75,7 @@ const useCustomers = () => {
     }
   };
 
-  return { handleCustomerClick, deleteCustomerHandler, handleSubmit, handleEditCustomer, showDetailModal, setShowDetailModal };
+  return { handleCustomerClick, deleteCustomerHandler, showAddModal, setShowAddModal, handleSubmit, formData, setFormData, handleEditCustomer, showDetailModal, setShowDetailModal };
 };
 
 export default useCustomers;
