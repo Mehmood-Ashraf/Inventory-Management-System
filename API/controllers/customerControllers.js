@@ -4,11 +4,13 @@ import Customer from "../models/customerModel.js";
 
 export const addCustomer = async (req, res) => {
   const { customerName, customerType, contact, address, city } = req.body;
+
   if (!customerName || !customerType) {
     return errorHandler(res, 404, "Missing Fields!");
   }
+
   try {
-    const isExist = await Customer.findOne({ customerName });
+    const isExist = await Customer.findOne({ customerName }); 
     if (isExist) {
       return errorHandler(res, 400, "Customer already exist");
     }
@@ -24,9 +26,11 @@ export const addCustomer = async (req, res) => {
 
     return successHandler(res, 200, "Customer addedd successfully", customer);
   } catch (error) {
-    return errorHandler(res, 400, error);
+    return errorHandler(res, 400, error.message);
   }
 };
+
+
 
 export const getSingleCustomer = async (req, res) => {
   try {
@@ -46,6 +50,8 @@ export const getSingleCustomer = async (req, res) => {
     );
   }
 };
+
+
 
 export const getAllCustomers = async (req, res) => {
   try {

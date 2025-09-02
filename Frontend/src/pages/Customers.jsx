@@ -27,31 +27,15 @@ const Customers = () => {
   );
 
   console.log(useSelector((state) => state.customer));
-  const {
-    formData,
-    setFormData,
-    // handleSubmit,
-    resetForm,
-    showAddModal,
-    setShowAddModal,
-    editingVendor,
-    setEditingVendor,
-    handleEditVendor,
-    handleVendorClick,
-    // showDetailModal,
-    // setShowDetailModal,
-    deleteVendorHandler,
-    addVendorBillModalOpen,
-    setAddVendorBillModalOpen,
-    saveVendorBill,
-  } = useCustomers();
-  const {handleCustomerClick ,handleSubmit ,deleteCustomerHandler , handleEditCustomer, showDetailModal, setShowDetailModal} = useCustomers()
+
+  const {handleCustomerClick, formData, setFormData, handleSubmit ,deleteCustomerHandler , handleEditCustomer, showDetailModal, setShowDetailModal, showAddModal, setShowAddModal } = useCustomers()
 
   useEffect(() => {
     const customerId = localStorage.getItem("customerID");
     if (customerId) {
       localStorage.removeItem("customerID");
-    }
+    };
+    
     if (searchInput) {
       const handler = setTimeout(() => {
         dispatch(fetchAllCustomers(searchInput));
@@ -116,7 +100,7 @@ const Customers = () => {
 
       {showAddModal && (
         <Modal
-          title={editingVendor ? "Edit Vendor" : "Add Vendor"}
+          // title={editingVendor ? "Edit Vendor" : "Add Vendor"}
           onClose={() => {
             setShowAddModal(false);
             resetForm();

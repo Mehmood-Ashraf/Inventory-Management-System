@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import {
-    addCustomer,
+  addCustomer,
   deleteCustomer,
   fetchSingleCustomer,
   updateCustomer,
@@ -8,18 +8,17 @@ import {
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-
 const useCustomers = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
-  const [showAddModal, setShowAddModal] = useState(false)
+  const [showAddModal, setShowAddModal] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState(null);
-    const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({
     customerName: "",
-    email: "",
     contact: "",
     address: "",
-    totalTurnover: "",
-  }); 
+    customerType: "",
+    city : ""
+  });
 
   const dispatch = useDispatch();
 
@@ -40,7 +39,7 @@ const useCustomers = () => {
     }
   };
 
-   const handleEditCustomer = (vendor) => {
+  const handleEditCustomer = (vendor) => {
     setEditingCustomer(vendor);
     setFormData({
       customerName: customer.customerName,
@@ -50,32 +49,59 @@ const useCustomers = () => {
       totalTurnover: customer.totalTurnover,
     });
     setShowAddModal(true);
-    setShowDetailModal(false)
-    localStorage.removeItem("VendorID")
-  }
-
+    setShowDetailModal(false);
+    localStorage.removeItem("VendorID");
+  };
 
   //For edit or Add customer
-  const handleSubmit = async (e, editingCustomer, onClose) => {
+  // const handleSubmit = async (e, editingCustomer, onClose) => {
+  //   e.preventDefault();
+  //   try {
+  //     if (editingCustomer) {
+  //       await dispatch(
+  //         updateCustomer({ id: editingCustomer._id, CustomerData: formData })
+  //       ).unwrap();
+  //       toast.success("Customer updated Successfully");
+  //     } else {
+  //       await dispatch(addCustomer(formData)).unwrap();
+  //       toast.success("Customer added Successfully");
+  //     }
+  //     resetForm();
+  //     onClose();
+  //   } catch (error) {
+  //     toast.error(error?.message || "Something went wrong!");
+  //   }
+  // };
+
+  const handleSubmit = async (e, onClose) => {
     e.preventDefault();
+    console.log(formData);
     try {
-      if (editingCustomer) {
-        await dispatch( 
-          updateCustomer({ id: editingCustomer._id, CustomerData: formData })
-        ).unwrap();
-        toast.success("Customer updated Successfully");
-      } else {
-        await dispatch(addCustomer(formData)).unwrap();
-        toast.success("Customer added Successfully");
+      if(!formData.customerType){
+        alert("Select")
+        return
       }
-      resetForm();
+      const res = await dispatch(addCustomer(formData)).unwrap();
+      console.log(res);
+      toast.success("Customer added Successfully");
       onClose();
     } catch (error) {
-      toast.error(error?.message || "Something went wrong!");
+      toast.error(error?.message);
     }
   };
 
-  return { handleCustomerClick, deleteCustomerHandler, showAddModal, setShowAddModal, handleSubmit, formData, setFormData, handleEditCustomer, showDetailModal, setShowDetailModal };
+  return {
+    handleCustomerClick,
+    deleteCustomerHandler,
+    showAddModal,
+    setShowAddModal,
+    handleSubmit,
+    formData,
+    setFormData,
+    handleEditCustomer,
+    showDetailModal,
+    setShowDetailModal,
+  };
 };
 
 export default useCustomers;
