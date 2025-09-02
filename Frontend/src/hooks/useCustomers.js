@@ -34,6 +34,7 @@ const useCustomers = () => {
     try {
       await dispatch(deleteCustomer(customerID)).unwrap();
       toast.success("customer deleted Successfully!");
+      setShowDetailModal(false)
       await dispatch(fetchAllCustomers()).unwrap()
     } catch (error) {
       toast.error(

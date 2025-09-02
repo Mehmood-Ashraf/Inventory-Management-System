@@ -152,7 +152,7 @@ const DetailModal = ({ type, data, handleEdit, setShowDetailModal, onDelete }) =
         </Button>
         <Button
           variant="danger"
-          onClick={onDelete}
+          onClick={() => onDelete(data._id)}
           className="flex-1 cursor-pointer"
         >
           <Trash2 className="h-4 w-4 mr-2" />

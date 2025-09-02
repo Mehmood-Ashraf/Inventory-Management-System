@@ -46,6 +46,7 @@ export const deleteCustomer = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const res = await api.delete(`/customer/${id}`);
+      return res?.data
     } catch (error) {
       return (
         thunkAPI,

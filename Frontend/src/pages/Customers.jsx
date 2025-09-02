@@ -124,7 +124,7 @@ const Customers = () => {
           onClose={() => {
             setShowDetailModal(false);
             // dispatch(clearSingleVendor());
-            localStorage.removeItem("CustomerID");
+            localStorage.removeItem("customerID");
           }}
         >
           {singleCustomer && (
