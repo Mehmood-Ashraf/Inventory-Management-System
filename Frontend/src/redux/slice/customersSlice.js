@@ -61,7 +61,7 @@ export const addCustomer = createAsyncThunk(
   "customer/addCustomer",
   async (customerData, thunkAPI) => {
     try {
-      const res = await api.post(`/vendor/add`, customerData);
+      const res = await api.post(`/customer/add`, customerData);
       console.log(res?.data);
       return res.data.data;
     } catch (error) {
@@ -105,10 +105,18 @@ const customerSlice = createSlice({
         state.error = action.payload;
         state.allCustomers = [];
       })
+      .addCase(fetchSingleCustomer.pending, (state) => {
+        (state.loading = true), (state.error = null);
+      })
       .addCase(fetchSingleCustomer.fulfilled, (state, action) => {
         (state.loading = false),
           (state.singleCustomer = action.payload),
           (state.error = null);
+      })
+      .addCase(fetchSingleCustomer.rejected, (state, action) => {
+        state.loading = false;
+        state.singleCustomer = null;
+        state.error = action.payload;
       })
       .addCase(updateCustomer.fulfilled, (state, action) => {
         (state.loading = false),

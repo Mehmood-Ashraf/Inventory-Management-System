@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import {
   addCustomer,
   deleteCustomer,
+  fetchAllCustomers,
   fetchSingleCustomer,
   updateCustomer,
 } from "../redux/slice/customersSlice";
@@ -17,7 +18,7 @@ const useCustomers = () => {
     contact: "",
     address: "",
     customerType: "",
-    city : ""
+    city: "",
   });
 
   const dispatch = useDispatch();
@@ -28,10 +29,12 @@ const useCustomers = () => {
     localStorage.setItem("customerID", customerID);
   };
 
+
   const deleteCustomerHandler = async (customerID) => {
     try {
       await dispatch(deleteCustomer(customerID)).unwrap();
       toast.success("customer deleted Successfully!");
+      await dispatch(fetchAllCustomers()).unwrap()
     } catch (error) {
       toast.error(
         error?.message || " Vendor not deleted Something went wrong!"
@@ -39,18 +42,18 @@ const useCustomers = () => {
     }
   };
 
-  const handleEditCustomer = (vendor) => {
-    setEditingCustomer(vendor);
+  const handleEditCustomer = (customer) => {
+    setEditingCustomer(customer);
     setFormData({
       customerName: customer.customerName,
-      email: customer.email,
       contact: customer.contact,
       address: customer.address,
-      totalTurnover: customer.totalTurnover,
+      city : customer.city,
+      customerType : customer.customerType
     });
     setShowAddModal(true);
     setShowDetailModal(false);
-    localStorage.removeItem("VendorID");
+    localStorage.removeItem("CustomerID");
   };
 
   //For edit or Add customer
@@ -73,24 +76,37 @@ const useCustomers = () => {
   //   }
   // };
 
+  const resetForm = () => {
+    setFormData({
+      customerName: "",
+      contact: "",
+      address: "",
+      customerType: "",
+      city: "",
+    });
+  };
+
   const handleSubmit = async (e, onClose) => {
     e.preventDefault();
     console.log(formData);
     try {
-      if(!formData.customerType){
-        alert("Select")
-        return
+      if (!formData.customerType) {
+        alert("Select");
+        return;
       }
       const res = await dispatch(addCustomer(formData)).unwrap();
       console.log(res);
       toast.success("Customer added Successfully");
+      resetForm()
       onClose();
     } catch (error) {
+      console.log(error);
       toast.error(error?.message);
     }
   };
 
   return {
+    resetForm,
     handleCustomerClick,
     deleteCustomerHandler,
     showAddModal,
@@ -101,6 +117,8 @@ const useCustomers = () => {
     handleEditCustomer,
     showDetailModal,
     setShowDetailModal,
+    editingCustomer,
+    setEditingCustomer
   };
 };
 

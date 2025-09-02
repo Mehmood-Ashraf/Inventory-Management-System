@@ -18,6 +18,7 @@ import { fetchAllCustomers, fetchSingleCustomer } from "../redux/slice/customers
 import useCustomers from "../hooks/useCustomers.js";
 import Form from "../components/Form.jsx";
 import { addCustomerInputs } from "../formSource.js";
+import DetailModal from "../components/DetailModal.jsx";
 
 const Customers = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -28,13 +29,13 @@ const Customers = () => {
 
   console.log(useSelector((state) => state.customer));
 
-  const {handleCustomerClick, formData, setFormData, handleSubmit ,deleteCustomerHandler , handleEditCustomer, showDetailModal, setShowDetailModal, showAddModal, setShowAddModal } = useCustomers()
+  const {handleCustomerClick, formData, setFormData, handleSubmit ,deleteCustomerHandler , handleEditCustomer, showDetailModal, setShowDetailModal, showAddModal, setShowAddModal, resetForm, editingCustomer, setEditingCustomer } = useCustomers()
 
   useEffect(() => {
-    const customerId = localStorage.getItem("customerID");
-    if (customerId) {
-      localStorage.removeItem("customerID");
-    };
+    // const customerId = localStorage.getItem("customerID");
+    // if (customerId) {
+    //   localStorage.removeItem("customerID");
+    // };
     
     if (searchInput) {
       const handler = setTimeout(() => {
@@ -58,8 +59,9 @@ const Customers = () => {
 
   const handleCloseModal = () => {
     setShowAddModal(false);
-    setEditingVendor(null);
+    setEditingCustomer(null);
     resetForm();
+    localStorage.removeItem("customerID")
   };
 
   const customersListHeaders = [
@@ -100,11 +102,8 @@ const Customers = () => {
 
       {showAddModal && (
         <Modal
-          // title={editingVendor ? "Edit Vendor" : "Add Vendor"}
-          onClose={() => {
-            setShowAddModal(false);
-            resetForm();
-          }}
+          title={editingCustomer ? "Edit Customer" : "Add Customer"}
+          onClose={handleCloseModal}
         >
           {/* <VendorForm
             formData={formData}
@@ -115,7 +114,7 @@ const Customers = () => {
             handleCloseModal={handleCloseModal}
             editingVendor={editingVendor}
           /> */}
-          <Form inputsData={addCustomerInputs} formData={formData} setFormData={setFormData} handleClose={handleCloseModal} submitLabel={"Add Customer"} handleSubmit={(e) => handleSubmit(e, handleCloseModal)}/>
+          <Form inputsData={addCustomerInputs} formData={formData} setFormData={setFormData} handleClose={handleCloseModal} submitLabel={editingCustomer ? "Update Customer" : "Add Customer"} handleSubmit={(e) => handleSubmit(e, handleCloseModal)}/>
         </Modal>
       )}
 
@@ -129,10 +128,12 @@ const Customers = () => {
           }}
         >
           {singleCustomer && (
-            <VendorDetailsModal
-              handleEditVendor={handleEditVendor}
-              // selectedVendor={singleVendor}
+            <DetailModal
+              type={"customer"}
+              data={singleCustomer}
               setShowDetailModal={setShowDetailModal}
+              handleEdit={handleEditCustomer}
+              onDelete={deleteCustomerHandler}
             />
           )}
         </Modal>

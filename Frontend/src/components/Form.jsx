@@ -50,7 +50,7 @@ const Form = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">Customer Type</option>
-                {input.options.map((opt) => (
+                 {input.options.map((opt) => (
                   <option key={opt} value={opt}>
                     {opt}
                   </option>

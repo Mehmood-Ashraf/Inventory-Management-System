@@ -3,9 +3,11 @@ import Customer from "../models/customerModel.js";
 
 
 export const addCustomer = async (req, res) => {
+  console.log(req.body, "=========> Add Customer")
   const { customerName, customerType, contact, address, city } = req.body;
 
   if (!customerName || !customerType) {
+    console.log(customerName, customerType)
     return errorHandler(res, 404, "Missing Fields!");
   }
 
