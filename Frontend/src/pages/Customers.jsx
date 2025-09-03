@@ -118,7 +118,7 @@ const Customers = () => {
         </Modal>
       )}
 
-      {showDetailModal && (
+      {showDetailModal && singleCustomer && (
         <Modal
           title={"Customer Details"}
           onClose={() => {

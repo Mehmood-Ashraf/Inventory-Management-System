@@ -135,7 +135,10 @@ const DetailModal = ({ type, data, handleEdit, setShowDetailModal, onDelete }) =
       {/* Action Buttons */}
           <div className="border-t flex space-x-3 pt-4">
             <Button className="flex-1 cursor-pointer">
-
+              View Bills
+            </Button>
+            <Button className="flex-1 cursor-pointer">
+              View Payments
             </Button>
           </div>
 

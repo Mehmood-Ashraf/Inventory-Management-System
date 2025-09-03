@@ -41,19 +41,19 @@ productModel.pre("save", async function (next){
     const category = mongoose.model("Category");
 
     if(!this.companyName){
-        let genericCompany = await Company.findOne({ name : "Generic Company"})
+        let genericCompany = await Company.findOne({ companyName : "Generic Company"})
 
         if(!genericCompany){
-          genericCompany = await Company.create({ CompanyName : "Generic Company"})
+          genericCompany = await Company.create({ companyName : "Generic Company"})
         }
         this.companyName = genericCompany._id
     }
 
     if(!this.category){
-      let defaultCatogory = await Category.findOne({ name : "Uncategorized"})
+      let defaultCatogory = await Category.findOne({ categoryName : "Uncategorized"})
 
       if(!defaultCatogory){
-        defaultCatogory = await Category.create({ name : "Uncategorized"})
+        defaultCatogory = await Category.create({ categoryName : "Uncategorized"})
       }
       this.category = defaultCatogory._id
     }
