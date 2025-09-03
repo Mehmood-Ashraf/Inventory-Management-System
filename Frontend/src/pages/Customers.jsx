@@ -49,7 +49,7 @@ const Customers = () => {
       dispatch(fetchAllCustomers(searchInput));
     }
     console.log(allCustomers);
-
+    
     const savedID = localStorage.getItem("customerID");
     if (savedID) {
       dispatch(fetchSingleCustomer(savedID));

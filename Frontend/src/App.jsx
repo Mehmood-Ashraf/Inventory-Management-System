@@ -14,6 +14,7 @@ import VendorBills1 from "./pages/VendorBills";
 import Customers from "./pages/Customers";
 import AllVendorBills from "./pages/AllVendorBills";
 import AllProducts from "./pages/AllProducts";
+import AllCustomerBills from "./pages/AllCustomerBills";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             <Route path="/customers" element={<Customers />} />
             <Route path="/all_vendor_bills" element={<AllVendorBills />} />
             <Route path="/inventory" element={<AllProducts />} />
+            <Route path="/all_customer_bills" element={<AllCustomerBills />} />
           </Route>
         </Route>
       </Routes>

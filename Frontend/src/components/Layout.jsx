@@ -27,6 +27,7 @@ const Layout = () => {
     { path: "all_vendor_bills", icon: FileText, label: "Vendor Bills" },
     { path: "vendors", icon: Truck, label: "Vendors" },
     { path: "reports", icon: TrendingUp, label: "Reports" },
+    { path : "all_customer_bills", icon : FileText, label : "Customer Bills"}
   ];
 
   const currentPath = location.pathname.replace("/", "");
