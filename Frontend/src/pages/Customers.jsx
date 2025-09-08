@@ -6,7 +6,7 @@ import {
   fetchSingleVendor,
 } from "../redux/slice/vendorSlice";
 import Button from "../components/Button";
-import { Edit, Loader, Plus, Search, Trash2, Truck } from "lucide-react";
+import { Edit, Loader, Plus, Search, Trash2, Truck, Users } from "lucide-react";
 import Modal from "../components/Modal";
 import VendorForm from "../components/vendors/VendorForm";
 import Card from "../components/Card";
@@ -96,6 +96,7 @@ const Customers = () => {
             onEdit={handleEditCustomer}
             onView={handleCustomerClick}
             onDelete={deleteCustomerHandler}
+            Icon={Users}
           />
         )}
       </div>

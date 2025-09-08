@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Card from "../components/Dashboard/Card";
-import { cardData, formattedCardData } from "../mockData/cardData";
+import { formattedCardData } from "../mockData/cardData";
 import Button from "../components/Button";
 import Table from "../components/Table";
 import Card1 from "../components/Card";

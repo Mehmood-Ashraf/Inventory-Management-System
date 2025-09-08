@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import SearchInput from "../components/SearchInput";
-import { Plus } from "lucide-react";
+import { FileText, Plus } from "lucide-react";
 import Button from "../components/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllCustomerBills } from "../redux/slice/customerBillSlice";
@@ -9,6 +9,8 @@ import { useCustomersBills } from "../hooks/useCustomersBills";
 import Modal from "../components/Modal";
 import BillForm from "../components/BillForm";
 import { customerBillsInputs } from "../formSource";
+import Card from "../components/Dashboard/Card";
+import { customerBillsCardData } from "../mockData/cardData";
 
 const AllCustomerBills = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -45,6 +47,8 @@ const AllCustomerBills = () => {
     date: formatDate(bill.date),
   }));
 
+  const billsCardsData = customerBillsCardData(allCustomerBills);
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center gap-4">
@@ -60,6 +64,12 @@ const AllCustomerBills = () => {
         </Button>
       </div>
 
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 items-center">
+        {billsCardsData?.map((item, index) => (
+          <Card key={index} title={item.title} value={item.value} />
+        ))}
+      </div>
+
       <div>
         {formattedBills && (
           <Table
@@ -67,6 +77,7 @@ const AllCustomerBills = () => {
             subTitle={
               "Easily track customers bills information and Bill details."
             }
+            Icon={FileText}
             data={formattedBills}
             headers={customerBillsListHeaders}
             showActions={true}

@@ -27,14 +27,23 @@
 
 // export default Table
 
-import { Edit, Eye, Trash2 } from "lucide-react";
+import { Edit, Eye, FileText, Trash2 } from "lucide-react";
 import React from "react";
-import {Loader} from '../components/Loader'
+import { Loader } from "../components/Loader";
 
-
-
-function Table({ title, subTitle, headers = [], data = [], showActions = false, onEdit, onDelete, onView, loading }) {
-  console.log(data)
+function Table({
+  title,
+  subTitle,
+  headers = [],
+  data = [],
+  showActions = false,
+  onEdit,
+  onDelete,
+  onView,
+  loading,
+  Icon
+}) {
+  console.log(data);
   // const title1 = "Recent Transictions";
   // const listHeaders = [
   //   { key : "type", label : "Type"},
@@ -84,8 +93,6 @@ function Table({ title, subTitle, headers = [], data = [], showActions = false, 
   //   },
   // ];
 
-
-  
   if (loading) {
     return <Loader />;
   }
@@ -102,12 +109,15 @@ function Table({ title, subTitle, headers = [], data = [], showActions = false, 
 
   return (
     <>
-      <h2 className="text-[#0d141c] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-5">
-        {title}
-      </h2>
-      <h2 className="text-sm text-gray-500 px-4 pb-3">
-        {subTitle}
-      </h2>
+      <div className="flex items-center px-4">
+        <Icon className="h-10 w-10"/>
+        <div>
+          <h2 className="text-[#0d141c] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-2">
+            {title}
+          </h2>
+          <h2 className="text-sm text-gray-500 px-4 pb-3">{subTitle}</h2>
+        </div>
+      </div>
       <div className="px-4 py-3">
         <div className="flex overflow-hidden rounded-xl border border-[#cedbe8] bg-slate-50">
           <table className="flex-1">
@@ -131,21 +141,32 @@ function Table({ title, subTitle, headers = [], data = [], showActions = false, 
             <tbody>
               {data?.map((i, index) => (
                 <tr key={index} className="border-t border-t-[#cedbe8]">
-                {headers.map((header) => (
-                  <td key={header?.key} className="h-[72px] px-4 py-2 w-[400px] text-[#49719c]  text-sm font-normal leading-normal">
-                    {i[header?.key]}
-                  </td>
-                )
-              )}
+                  {headers.map((header) => (
+                    <td
+                      key={header?.key}
+                      className="h-[72px] px-4 py-2 w-[400px] text-[#49719c]  text-sm font-normal leading-normal"
+                    >
+                      {i[header?.key]}
+                    </td>
+                  ))}
                   {showActions && (
                     <td className="h-[72px] px-4 py-2 w-[400px] text-[#49719c] text-sm font-normal leading-normal">
-                      <button className="text-indigo-600 hover:text-indigo-900 p-1 cursor-pointer" onClick={() => onView(i._id)}>
+                      <button
+                        className="text-indigo-600 hover:text-indigo-900 p-1 cursor-pointer"
+                        onClick={() => onView(i._id)}
+                      >
                         <Eye className="h-4 w-4" />
                       </button>
-                      <button className="text-indigo-600 hover:text-indigo-900 p-1 cursor-pointer" onClick={() => onEdit(i)}>
+                      <button
+                        className="text-indigo-600 hover:text-indigo-900 p-1 cursor-pointer"
+                        onClick={() => onEdit(i)}
+                      >
                         <Edit className="h-4 w-4" />
                       </button>
-                      <button className="text-red-600 hover:text-red-900 p-1 cursor-pointer" onClick={() => onDelete(i._id)}>
+                      <button
+                        className="text-red-600 hover:text-red-900 p-1 cursor-pointer"
+                        onClick={() => onDelete(i._id)}
+                      >
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </td>

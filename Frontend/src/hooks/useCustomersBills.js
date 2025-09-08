@@ -18,6 +18,9 @@ export const useCustomersBills = () => {
         
     }
 
+    const deleteCustomerBill = (billId) => {
+        
+    }
 
     return {addCustomerBillModal, setAddCustomerBillModal, formData, setFormData, handleCloseModal}
 };

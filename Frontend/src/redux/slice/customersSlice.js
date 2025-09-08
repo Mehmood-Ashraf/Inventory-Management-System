@@ -126,8 +126,8 @@ const customerSlice = createSlice({
       })
       .addCase(deleteCustomer.fulfilled, (state) => {
         (state.loading = false),
-          (state.singleCustomer = null),
-          (state.error = null);
+        (state.singleCustomer = null),
+        (state.error = null);
       });
   },
 });

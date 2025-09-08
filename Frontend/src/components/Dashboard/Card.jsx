@@ -12,7 +12,7 @@ const Card = ({ title, value }) => {
           {showValue ? value : "••••••"}
         </p>
         <button onClick={() => setShowValue(!showValue)} className="cursor-pointer">
-          {showValue ? <EyeOff className="w-5 h-5 text-gray-600" /> : <Eye className="w-5 h-5 text-gray-600" />}
+          {showValue ? <EyeOff className="w-5 h-5 text-gray-600" /> : <Eye className="w-5 h-5 text-gray-600" />}  
         </button>
       </div>
     </div>

@@ -136,3 +136,20 @@ export const getAllCustomerBills = async (req, res) => {
     return errorHandler(res, 400, error?.message);
   }
 };
+
+
+export const deleteCustomerBill = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedBill = await CustomerBill.findByIdAndDelete(id)
+
+    if(!deletedBill){
+      return errorHandler(res, 400, "Bill not found!")
+    }
+
+    return successHandler(res, 200, "BIll Deleted Successfully", deletedBill)
+  } catch (error) {
+    return errorHandler(res, 400, error?.message)
+  }
+}

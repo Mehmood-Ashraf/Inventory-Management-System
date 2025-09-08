@@ -32,10 +32,19 @@ export const addCustomerBill = createAsyncThunk(
     } catch (error) {
       return thunkApi.rejectWithValue(error?.response?.data?.message || "Something went wrong in addBill")
     }
-  }
-    
+  });
 
-);
+  export const deleteCustomerBill = createAsyncThunk(
+    "customerBills/deleteCustomerBill",
+    async (billID, thunkApi) => {
+      try {
+        const deletedCustomer = await api.post(`/customer-bill/${billID}`)
+        return res?.data
+      } catch (error) {
+          return thunkApi.rejectWithValue(error?.response?.data?.message)        
+      }
+    }
+  )
 
 
 const customerBillsSlice = createSlice({
@@ -68,6 +77,13 @@ const customerBillsSlice = createSlice({
         .addCase(addCustomerBill.rejected, (state, action) => {
           state.loading = false;
           state.error = action.payload
+        })
+        .addCase(deleteCustomerBill.pending, (state) => {
+          state.loading = true;
+          state.error = null
+        })
+        .addCase(deleteCustomerBill.fulfilled, (state, payload) => {
+          state.loading = false
         })
     }
 })
