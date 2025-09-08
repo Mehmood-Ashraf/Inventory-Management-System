@@ -9,6 +9,8 @@ const Form = ({
   handleClose,
   submitLabel = "Submit",
 }) => {
+
+
   const handleChange = (e) => {
     const { name, value, type } = e.target;
     console.log(name, value);

@@ -5,6 +5,7 @@ const initialState = {
   allCustomerBills: [],
   singleCustomerBills: [],
   singleBill: null,
+  addSingleBill : null,
   loading: false,
   error: null,
 };
@@ -20,6 +21,20 @@ export const fetchAllCustomerBills = createAsyncThunk(
         return thunkApi.rejectWithValue(error?.response?.data?.message || "Error Fetching all customer bills")
     }
   }
+);
+
+export const addCustomerBill = createAsyncThunk(
+  "customerBills/addCustomerBill",
+  async (billDetails, thunkApi) => {
+    try {
+      const res = await api.post(`/customer-bill/add`, billDetails)
+      return res?.data?.data
+    } catch (error) {
+      return thunkApi.rejectWithValue(error?.response?.data?.message || "Something went wrong in addBill")
+    }
+  }
+    
+
 );
 
 
@@ -40,6 +55,19 @@ const customerBillsSlice = createSlice({
             state.loading = false;
             state.allCustomerBills = [];
             state.error = action.payload
+        })
+        .addCase(addCustomerBill.pending, (state) => {
+          state.loading = true;
+          state.error = null;
+        })
+        .addCase(addCustomerBill.fulfilled, (state, action) => {
+          state.loading = false;
+          state.addSingleBill = action.payload;
+          state.error = null
+        })
+        .addCase(addCustomerBill.rejected, (state, action) => {
+          state.loading = false;
+          state.error = action.payload
         })
     }
 })

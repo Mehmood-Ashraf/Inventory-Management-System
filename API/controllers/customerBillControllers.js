@@ -27,6 +27,14 @@ export const addCustomerBill = async (req, res) => {
         return errorHandler(res, 400, "Product not found");
       }
 
+      if (i.quantity <= 0) {
+        return errorHandler(
+          res,
+          400,
+          `Invalid quantity for Product: ${product.productName}`
+        );
+      }
+
       //agar stock available na ho ya quantity se kam ho
       if (product.quantity < i.quantity) {
         return errorHandler(
@@ -36,9 +44,11 @@ export const addCustomerBill = async (req, res) => {
         );
       }
 
+      const price = i.price || product.sellPrice;
+
       // har item ka total price calculate karna (quantity * price)
       // agar frontend se total aa gaya hai to use karenge warna calculate karenge
-      const itemTotal = i.total || i.price * i.quantity;
+      const itemTotal = i.total || price * i.quantity;
 
       // stock update karna (jitni quantity le li gayi utni kam karni)
       product.quantity -= i.quantity;
@@ -48,7 +58,7 @@ export const addCustomerBill = async (req, res) => {
       updatedItems.push({
         product: i.product,
         quantity: i.quantity,
-        price: i.price,
+        price,
         total: itemTotal,
       });
 
@@ -56,14 +66,22 @@ export const addCustomerBill = async (req, res) => {
       totalAmount += itemTotal;
     }
 
-    // bill number unique banane ke liye timestamp ke sath generate karna
-    const billNumber = "Bill-" + Date.now();
+    //last bill number check karna
+    const lastBill = await CustomerBill.findOne().sort({ createdAt: -1 });
+    let newBillNumber = "Bill-001";
+
+    if (lastBill) {
+      const lastNumber = parseInt(lastBill.billNumber.split("-")[1]);
+      const nextNumber = (lastNumber + 1).toString().padStart(3, "0");
+      newBillNumber = `Bill-${nextNumber}`;
+    }
+
     // naya bill object banaya CustomerBill model ke through
     const newBill = new CustomerBill({
       customerType,
       customerName,
       items: updatedItems,
-      billNumber,
+      billNumber: newBillNumber,
       totalAmount,
     });
 
@@ -102,14 +120,19 @@ export const getAllCustomerBills = async (req, res) => {
       filters.date = new Date(date);
     }
 
-    const customerBills = await CustomerBill.find(filters)
+    const customerBills = await CustomerBill.find(filters);
 
-    if(!customerBills || customerBills.length === 0){
-        return errorHandler(res, 400, "No data in customer Bills")
+    if (!customerBills || customerBills.length === 0) {
+      return errorHandler(res, 400, "No data in customer Bills");
     }
 
-    return successHandler(res, 200, "Customer bills fetched successfully", customerBills)
+    return successHandler(
+      res,
+      200,
+      "Customer bills fetched successfully",
+      customerBills
+    );
   } catch (error) {
-    return errorHandler(res, 400, error?.message)
+    return errorHandler(res, 400, error?.message);
   }
 };

@@ -31,7 +31,8 @@ const productModel = new mongoose.Schema({
   },
   quantity : {
     type : Number,
-    default : 0
+    default : 0,
+    min : [0, "Quantity cannot be less than 0"]
   }
 })
 

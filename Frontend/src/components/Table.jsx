@@ -36,53 +36,53 @@ import {Loader} from '../components/Loader'
 function Table({ title, subTitle, headers = [], data = [], showActions = false, onEdit, onDelete, onView, loading }) {
   console.log(data)
   // const title1 = "Recent Transictions";
-  const listHeaders = [
-    { key : "type", label : "Type"},
-    { key : "date", label : "Date"},
-    { key : "detail", label : "Detail"},
-    { key : "amount", label : "Amount"}
-  ];
-  const dummyData = [
-    {
-      type: " New Order Received",
-      date: "2023-08-15",
-      detail: "Order #12345 from Emily Carter",
-      amount: 5000,
-    },
-    {
-      type: " Product Added",
-      date: "2023-08-14",
-      detail: "Added Product X to inventory",
-      amount: 6000,
-    },
+  // const listHeaders = [
+  //   { key : "type", label : "Type"},
+  //   { key : "date", label : "Date"},
+  //   { key : "detail", label : "Detail"},
+  //   { key : "amount", label : "Amount"}
+  // ];
+  // const dummyData = [
+  //   {
+  //     type: " New Order Received",
+  //     date: "2023-08-15",
+  //     detail: "Order #12345 from Emily Carter",
+  //     amount: 5000,
+  //   },
+  //   {
+  //     type: " Product Added",
+  //     date: "2023-08-14",
+  //     detail: "Added Product X to inventory",
+  //     amount: 6000,
+  //   },
 
-    {
-      type: "Customer Registered",
-      date: "2023-08-12",
-      detail: "New customer, Ethan Chen, registered",
-      amount: 1000,
-    },
+  //   {
+  //     type: "Customer Registered",
+  //     date: "2023-08-12",
+  //     detail: "New customer, Ethan Chen, registered",
+  //     amount: 1000,
+  //   },
 
-    {
-      type: " New Order Received",
-      date: "2023-08-15",
-      detail: "Order #12345 from Emily Carter",
-      amount: 2500,
-    },
-    {
-      type: " Product Added",
-      date: "2023-08-14",
-      detail: "Added Product X to inventory",
-      amount: 1500,
-    },
+  //   {
+  //     type: " New Order Received",
+  //     date: "2023-08-15",
+  //     detail: "Order #12345 from Emily Carter",
+  //     amount: 2500,
+  //   },
+  //   {
+  //     type: " Product Added",
+  //     date: "2023-08-14",
+  //     detail: "Added Product X to inventory",
+  //     amount: 1500,
+  //   },
 
-    {
-      type: "Customer Registered",
-      date: "2023-08-12",
-      detail: "New customer, Ethan Chen, registered",
-      amount: 200,
-    },
-  ];
+  //   {
+  //     type: "Customer Registered",
+  //     date: "2023-08-12",
+  //     detail: "New customer, Ethan Chen, registered",
+  //     amount: 200,
+  //   },
+  // ];
 
 
   
