@@ -11,6 +11,7 @@ import BillForm from "../components/BillForm";
 import { customerBillsInputs } from "../formSource";
 import Card from "../components/Dashboard/Card";
 import { customerBillsCardData } from "../mockData/cardData";
+import { toast } from "react-toastify";
 
 const AllCustomerBills = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -24,6 +25,7 @@ const AllCustomerBills = () => {
     formData,
     setFormData,
     handleCloseModal,
+    deleteCustomerBillHander,
   } = useCustomersBills();
 
   const customerBillsListHeaders = [
@@ -38,11 +40,39 @@ const AllCustomerBills = () => {
     return date.toLocaleDateString("en-GB");
   };
 
-  useEffect(() => {
-    dispatch(fetchAllCustomerBills({ customerName: searchInput }));
-  }, [searchInput]);
+  const filteredBills =
+  searchInput.trim === "" ? allCustomerBills :
+  allCustomerBills.filter((bill) =>{
+    const search = searchInput.toLowerCase();
+    return(
+      bill.customerName.toLowerCase().includes(search) ||
+      bill.billNumber?.toString().includes(search)
+    )}
+  );
+  console.log(filteredBills);
 
-  const formattedBills = allCustomerBills?.map((bill) => ({
+  // useEffect(() => {
+  //   const loadCustomerBills = () => {
+  //     try {
+  //       if(searchInput){
+  //         dispatch(fetchAllCustomerBills({ customerName: searchInput }));
+  //       }else{
+  //         dispatch(fetchAllCustomerBills())
+  //         toast.success("Fetched All Customers Bills successfully!")
+  //       }
+  //     } catch (error) {
+  //       toast.error(error?.message)
+  //     }
+
+  //   };
+  //   loadCustomerBills();
+  // }, [searchInput, dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchAllCustomerBills());
+  }, []);
+
+  const formattedBills = filteredBills?.map((bill) => ({
     ...bill,
     date: formatDate(bill.date),
   }));
@@ -82,6 +112,7 @@ const AllCustomerBills = () => {
             headers={customerBillsListHeaders}
             showActions={true}
             loading={loading}
+            onDelete={deleteCustomerBillHander}
           />
         )}
       </div>

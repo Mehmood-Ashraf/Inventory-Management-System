@@ -68,12 +68,12 @@ export const addCustomerBill = async (req, res) => {
 
     //last bill number check karna
     const lastBill = await CustomerBill.findOne().sort({ createdAt: -1 });
-    let newBillNumber = "Bill-001";
+    let newBillNumber = "001";
 
     if (lastBill) {
-      const lastNumber = parseInt(lastBill.billNumber.split("-")[1]);
+      const lastNumber = parseInt(lastBill.billNumber, 10);
       const nextNumber = (lastNumber + 1).toString().padStart(3, "0");
-      newBillNumber = `Bill-${nextNumber}`;
+      newBillNumber = `${nextNumber}`;
     }
 
     // naya bill object banaya CustomerBill model ke through
@@ -105,6 +105,8 @@ export const addCustomerBill = async (req, res) => {
   }
 };
 
+
+// get all customers bills
 export const getAllCustomerBills = async (req, res) => {
   try {
     const { customerName, billNumber, date } = req.query;
@@ -138,6 +140,7 @@ export const getAllCustomerBills = async (req, res) => {
 };
 
 
+//Delete customer bill handler
 export const deleteCustomerBill = async (req, res) => {
   try {
     const { id } = req.params;

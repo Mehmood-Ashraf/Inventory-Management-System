@@ -38,8 +38,8 @@ export const addCustomerBill = createAsyncThunk(
     "customerBills/deleteCustomerBill",
     async (billID, thunkApi) => {
       try {
-        const deletedCustomer = await api.post(`/customer-bill/${billID}`)
-        return res?.data
+        const deletedCustomer = await api.delete(`/customer-bill/${billID}`)
+        return deletedCustomer?.data
       } catch (error) {
           return thunkApi.rejectWithValue(error?.response?.data?.message)        
       }
