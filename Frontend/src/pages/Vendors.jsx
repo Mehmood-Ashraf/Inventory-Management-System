@@ -105,6 +105,7 @@ const Vendors = () => {
             onEdit={handleEditVendor}
             onView={handleVendorClick}
             onDelete={deleteVendorHandler}
+            Icon={Truck}
           />
         )}
       </div>

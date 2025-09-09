@@ -3,7 +3,7 @@ import SearchInput from "../components/SearchInput";
 import { FileText, Plus } from "lucide-react";
 import Button from "../components/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllCustomerBills } from "../redux/slice/customerBillSlice";
+import { fetchAllCustomerBills, fetchSingleCustomerBills } from "../redux/slice/customerBillSlice";
 import Table from "../components/Table";
 import { useCustomersBills } from "../hooks/useCustomersBills";
 import Modal from "../components/Modal";
@@ -12,13 +12,18 @@ import { customerBillsInputs } from "../formSource";
 import Card from "../components/Dashboard/Card";
 import { customerBillsCardData } from "../mockData/cardData";
 import { toast } from "react-toastify";
+import BillDetailsModal from "../components/BillDetailsModal";
+import { useLocation } from "react-router-dom";
 
 const AllCustomerBills = () => {
   const [searchInput, setSearchInput] = useState("");
   const dispatch = useDispatch();
-  const { allCustomerBills, loading, error } = useSelector(
+  const { allCustomerBills, singleBill, loading, error } = useSelector(
     (state) => state.customerBills
   );
+  const location = useLocation();
+  const customerId = location.state?.customerId;
+  console.log(customerId)
   const {
     addCustomerBillModal,
     setAddCustomerBillModal,
@@ -26,6 +31,10 @@ const AllCustomerBills = () => {
     setFormData,
     handleCloseModal,
     deleteCustomerBillHander,
+    showBillDetailsModal,
+    setShowBillDetailsModal,
+    billDetailsHandler,
+    handleCloseDetailModal
   } = useCustomersBills();
 
   const customerBillsListHeaders = [
@@ -41,14 +50,15 @@ const AllCustomerBills = () => {
   };
 
   const filteredBills =
-  searchInput.trim === "" ? allCustomerBills :
-  allCustomerBills.filter((bill) =>{
-    const search = searchInput.toLowerCase();
-    return(
-      bill.customerName.toLowerCase().includes(search) ||
-      bill.billNumber?.toString().includes(search)
-    )}
-  );
+    searchInput.trim === ""
+      ? allCustomerBills
+      : allCustomerBills.filter((bill) => {
+          const search = searchInput.toLowerCase();
+          return (
+            bill.customerName.toLowerCase().includes(search) ||
+            bill.billNumber?.toString().includes(search)
+          );
+        });
   console.log(filteredBills);
 
   // useEffect(() => {
@@ -69,8 +79,12 @@ const AllCustomerBills = () => {
   // }, [searchInput, dispatch]);
 
   useEffect(() => {
-    dispatch(fetchAllCustomerBills());
-  }, []);
+    if(customerId){
+      dispatch(fetchSingleCustomerBills(customerId))
+    }else{
+      dispatch(fetchAllCustomerBills());
+    }
+  }, [customerId, dispatch]);
 
   const formattedBills = filteredBills?.map((bill) => ({
     ...bill,
@@ -113,6 +127,7 @@ const AllCustomerBills = () => {
             showActions={true}
             loading={loading}
             onDelete={deleteCustomerBillHander}
+            onView={billDetailsHandler}
           />
         )}
       </div>
@@ -130,6 +145,18 @@ const AllCustomerBills = () => {
             setFormData={setFormData}
             submitLabel={"Save Bill"}
             handleClose={handleCloseModal}
+          />
+        </Modal>
+      )}
+
+      {showBillDetailsModal && (
+        <Modal
+        title={"Customer Bill Details"}
+        onClose={handleCloseDetailModal}
+        >
+          <BillDetailsModal
+          type={"customer"}
+          selectedBill={singleBill}
           />
         </Modal>
       )}

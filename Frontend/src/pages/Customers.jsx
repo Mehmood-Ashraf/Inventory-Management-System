@@ -29,7 +29,7 @@ const Customers = () => {
 
   console.log(useSelector((state) => state.customer));
 
-  const {handleCustomerClick, formData, setFormData, handleSubmit ,deleteCustomerHandler , handleEditCustomer, showDetailModal, setShowDetailModal, showAddModal, setShowAddModal, resetForm, editingCustomer, setEditingCustomer } = useCustomers()
+  const {handleCustomerClick, formData, setFormData, handleSubmit ,deleteCustomerHandler , handleEditCustomer, showDetailModal, setShowDetailModal, showAddModal, setShowAddModal, resetForm, editingCustomer, setEditingCustomer, viewBillsHandler } = useCustomers()
 
   useEffect(() => {
     // const customerId = localStorage.getItem("customerID");
@@ -135,6 +135,7 @@ const Customers = () => {
               setShowDetailModal={setShowDetailModal}
               handleEdit={handleEditCustomer}
               onDelete={deleteCustomerHandler}
+              viewBills={viewBillsHandler}
             />
           )}
         </Modal>

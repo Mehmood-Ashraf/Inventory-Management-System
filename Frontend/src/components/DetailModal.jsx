@@ -6,7 +6,7 @@ import { deleteCustomer } from "../redux/slice/customersSlice";
 import { Edit, Mail, MapPin, Phone, Trash2, Truck, User } from "lucide-react";
 import Button from "./Button";
 
-const DetailModal = ({ type, data, handleEdit, setShowDetailModal, onDelete }) => {
+const DetailModal = ({ type, data, handleEdit, setShowDetailModal, onDelete, viewBills }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -134,7 +134,7 @@ const DetailModal = ({ type, data, handleEdit, setShowDetailModal, onDelete }) =
 
       {/* Action Buttons */}
           <div className="border-t flex space-x-3 pt-4">
-            <Button className="flex-1 cursor-pointer">
+            <Button className="flex-1 cursor-pointer" onClick={viewBills}>
               View Bills
             </Button>
             <Button className="flex-1 cursor-pointer">

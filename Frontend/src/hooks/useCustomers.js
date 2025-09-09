@@ -1,4 +1,4 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   addCustomer,
   deleteCustomer,
@@ -8,11 +8,13 @@ import {
 } from "../redux/slice/customersSlice";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const useCustomers = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState(null);
+  const { singleCustomer } = useSelector((state) => state.customer);
   const [formData, setFormData] = useState({
     customerName: "",
     contact: "",
@@ -20,6 +22,8 @@ const useCustomers = () => {
     customerType: "",
     city: "",
   });
+
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
@@ -29,13 +33,22 @@ const useCustomers = () => {
     localStorage.setItem("customerID", customerID);
   };
 
+  const viewBillsHandler = () => {
+    localStorage.removeItem("customerID")
+    setShowDetailModal(false);
+    setTimeout(() => {
+      navigate("/all_customer_bills", {
+        state: { customerId: singleCustomer._id },
+      });
+    }, 200);
+  };
 
   const deleteCustomerHandler = async (customerID) => {
     try {
       await dispatch(deleteCustomer(customerID)).unwrap();
       toast.success("customer deleted Successfully!");
-      setShowDetailModal(false)
-      await dispatch(fetchAllCustomers()).unwrap()
+      setShowDetailModal(false);
+      await dispatch(fetchAllCustomers()).unwrap();
     } catch (error) {
       toast.error(
         error?.message || " Vendor not deleted Something went wrong!"
@@ -49,8 +62,8 @@ const useCustomers = () => {
       customerName: customer.customerName,
       contact: customer.contact,
       address: customer.address,
-      city : customer.city,
-      customerType : customer.customerType
+      city: customer.city,
+      customerType: customer.customerType,
     });
     setShowAddModal(true);
     setShowDetailModal(false);
@@ -98,7 +111,7 @@ const useCustomers = () => {
       const res = await dispatch(addCustomer(formData)).unwrap();
       console.log(res);
       toast.success("Customer added Successfully");
-      resetForm()
+      resetForm();
       onClose();
     } catch (error) {
       console.log(error);
@@ -119,7 +132,8 @@ const useCustomers = () => {
     showDetailModal,
     setShowDetailModal,
     editingCustomer,
-    setEditingCustomer
+    setEditingCustomer,
+    viewBillsHandler,
   };
 };
 

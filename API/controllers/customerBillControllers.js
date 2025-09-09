@@ -76,9 +76,18 @@ export const addCustomerBill = async (req, res) => {
       newBillNumber = `${nextNumber}`;
     }
 
+    let customerId = null;
+    if(customerType === "regular"){
+      const customer = await Customer.findOne({ customerName })
+      if(customer){
+        customerId = customer._id
+      }
+    }
+
     // naya bill object banaya CustomerBill model ke through
     const newBill = new CustomerBill({
       customerType,
+      customerId,
       customerName,
       items: updatedItems,
       billNumber: newBillNumber,
@@ -95,6 +104,7 @@ export const addCustomerBill = async (req, res) => {
       if (customer) {
         // uske bills array me savedBill ka id push karna
         customer.bills.push(savedBill._id);
+        customer.balance += totalAmount
         await customer.save();
       }
     }
@@ -121,7 +131,6 @@ export const getAllCustomerBills = async (req, res) => {
     if (date) {
       filters.date = new Date(date);
     }
-
     const customerBills = await CustomerBill.find(filters);
 
     if (!customerBills || customerBills.length === 0) {
@@ -138,6 +147,40 @@ export const getAllCustomerBills = async (req, res) => {
     return errorHandler(res, 400, error?.message);
   }
 };
+
+
+//get singleCustomerBill
+export const getSingleCustomerBill = async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const singleBill = await CustomerBill.findById(id).populate("items.product")
+    if(!singleBill){
+      return errorHandler(res, 400, "Bill not found by given ID")
+    }
+
+    return successHandler(res, 200, "Bill Found", singleBill)
+  } catch (error) {
+    return errorHandler(res, 400, error?.message)
+  }
+}
+
+
+export const getSingleCustomerBills = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const bills = await CustomerBill.find({ customerId : id })
+    if(!bills || bills.length === 0){
+      return errorHandler(res, 400, "Customer Bills Not found")
+    }
+
+    return successHandler(res, 200, "Single customer Bills fetched", bills)
+  } catch (error) {
+    return errorHandler(res, 400, error?.message)
+  }
+}
+
 
 
 //Delete customer bill handler

@@ -6,6 +6,10 @@ const customerBillModel = new mongoose.Schema({
     type : String,
     required : true
    },
+   customerId : {
+    type : mongoose.Schema.Types.ObjectId,
+    ref : "Customer"
+   },
   items: [
     {
       product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
