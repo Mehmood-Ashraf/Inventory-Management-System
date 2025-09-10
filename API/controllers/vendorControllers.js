@@ -4,34 +4,34 @@ import Vendor from "../models/vendorModel.js";
 
 //add vendor
 export const addVendor = async (req, res) => {
-  const { vendorName, contact, address } = req.body;
-  console.log(req.body);
+  const { vendorName, contact, address, city } = req.body;
 
   if (!vendorName) {
-    return errorHandler(res, 500, "Missing Fields!");
+    return errorHandler(res, 400, "Missing vendor name");
   }
 
-  const existingVendor = await Vendor.findOne({ vendorName });
+  const name = vendorName.trim().toLowerCase()
+
+  const existingVendor = await Vendor.findOne({ vendorName : name });
   if (existingVendor) {
-    return errorHandler(res, 500, "Vendor already Exist!!");
+    return errorHandler(res, 409, "Vendor already Exist!!");
   }
 
   try {
     const newVendor = new Vendor({
-      vendorName,
+      vendorName : name,
       contact,
       address,
+      city,
       vendorBills: [],
     });
-
-    console.log("New Vendor", newVendor);
 
     const vendor = await newVendor.save();
 
     return successHandler(res, 200, "New Vendor Added", vendor);
   } catch (error) {
     console.log("error in addVendorController");
-    return errorHandler(res, 500, error);
+    return errorHandler(res, 500, error?.message);
   }
 };
 

@@ -11,10 +11,6 @@ const productModel = new mongoose.Schema({
     type : mongoose.Schema.Types.ObjectId,
     ref : "Company",
   },
-  vendorName : {
-    type : mongoose.Schema.Types.ObjectId,
-    ref : "Vendors"
-  },
   modelName : {
     type : String
   },
@@ -24,10 +20,12 @@ const productModel = new mongoose.Schema({
   },
   purchasePrice : {
     type : Number,
-    required : true
+    required : true,
+    min : [0, "Purchase price cannot be less than 0"]
   },
   sellPrice : {
-    type : Number
+    type : Number,
+    min : [0, "Sell price cannot be less than 0"]
   },
   quantity : {
     type : Number,
@@ -35,6 +33,7 @@ const productModel = new mongoose.Schema({
     min : [0, "Quantity cannot be less than 0"]
   }
 })
+
 
 productModel.pre("save", async function (next){
   try {

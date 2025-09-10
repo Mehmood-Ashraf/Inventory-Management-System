@@ -2,7 +2,8 @@ import mongoose from "mongoose";
 
 const vendorBillModel = new mongoose.Schema({
   vendorName: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref : "Vendors",
     required : true,
   },
   billNumber : {
@@ -11,10 +12,10 @@ const vendorBillModel = new mongoose.Schema({
   },
   items: [
     {
-      productName: String,
-      quantity: Number,
-      price: Number,
-      total : Number
+      productName : {type : String, required : true},
+      quantity : {type : Number, required : true, min : [0, "Quantity cannot be negative"]},
+      price : {type : Number, required : true, min : [0, "Price cannot be negative"]},
+      total : {type : Number}
     },
   ],
   totalAmount: {
@@ -23,8 +24,25 @@ const vendorBillModel = new mongoose.Schema({
   },
   date: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
   },
 });
 
 export default mongoose.model("VendorBills", vendorBillModel);
+
+// Pre-save hook
+vendorBillModel.pre("save", function (next) {
+  // per item total calculate karo agar missing ho
+  this.items.forEach(item => {
+    if (!item.total || item.total === 0) {
+      item.total = item.quantity * item.price;
+    }
+  });
+
+  // overall total calculate karo agar user ne na diya ho
+  if (!this.totalAmount || this.totalAmount === 0) {
+    this.totalAmount = this.items.reduce((sum, item) => sum + item.total, 0);
+  }
+
+  next();
+});

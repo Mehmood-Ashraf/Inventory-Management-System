@@ -20,7 +20,11 @@ const vendorModel = new mongoose.Schema({
       ref: "VendorBills"
     },
   ],
-  balance : {
+  previousBalance : {
+    type : Number,
+    default : 0
+  },
+  currentBalance : {
     type : Number,
     default : 0
   },
@@ -32,13 +36,16 @@ const vendorModel = new mongoose.Schema({
     type : Number,
     default : 0
   },
-  payments : [
+  payments: [
     {
-      amount : {type : Number},
-      data : {type : Date, default : Date.now()},
-      method : {type : String, enum : ["cash", "bank", "online"], default : "cash"}
-    }
-  ]
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "VendorPayments",
+    },
+  ],
+  isDeleted : {
+    type : Boolean,
+    default : false
+  }
 }, {timestamps : true});
 
 export default mongoose.model("Vendors", vendorModel)
