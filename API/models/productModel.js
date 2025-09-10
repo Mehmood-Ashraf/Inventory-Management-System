@@ -5,7 +5,10 @@ import Category from './categoryModel.js'
 const productModel = new mongoose.Schema({
   productName : {
     type : String,
-    required : true
+    required : true,
+    unique : true,
+    lowercase : true,
+    trim : true
   },
   companyName : {
     type : mongoose.Schema.Types.ObjectId,

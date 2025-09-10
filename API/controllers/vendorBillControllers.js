@@ -2,6 +2,7 @@ import { errorHandler, successHandler } from "../utils/responseHandler.js";
 import VendorBill from "../models/vendorBillModel.js";
 import Vendor from "../models/vendorModel.js";
 import Products from "../models/productModel.js";
+import mongoose from "mongoose";
 
 export const addVendorBill = async (req, res) => {
   try {
@@ -10,8 +11,18 @@ export const addVendorBill = async (req, res) => {
     //total amount destructure kia
     let { totalAmount } = req.body;
     //aagar vendorname aur items nahi hai to return error
-    if (!vendorName || !items || !billNumber) {
+    if (!vendorName || !items) {
       return errorHandler(res, 400, "Missing Fields");
+    }
+
+    let vendor = await Vendor.findOne({
+      vendorName: vendorName.trim().toLowerCase(),
+    });
+
+    if (!vendor || vendor.isDeleted) {
+      vendor = await Vendor.create({
+        vendorName: vendorName.trim().toLowerCase(),
+      });
     }
 
     // billITems ka empty array create kia
@@ -25,11 +36,12 @@ export const addVendorBill = async (req, res) => {
         product = await Products.create({
           productName: item.productName,
           purchasePrice: item.price,
-          stockInHand: item.quantity
+          quantity: item.quantity,
           // salePrice: item.salePrice,
         });
       } else {
-        product.stockInHand += item.quantity;
+        product.quantity += item.quantity;
+        product.purchasePrice = item.price;
         await product.save();
       }
       //bill Items k array me
@@ -38,7 +50,7 @@ export const addVendorBill = async (req, res) => {
         productName: item.productName,
         quantity: item.quantity,
         price: item.price,
-        total : item.total || item.quantity * item.price
+        total: item.total || item.quantity * item.price,
       });
     }
 
@@ -50,50 +62,64 @@ export const addVendorBill = async (req, res) => {
     }
 
     //vendor ko find karenge agar vendor already exist karta hai to vendors k data me existing vendor ka bill data update hoga otherwise new vendor create hoga...
-    let vendor = await Vendor.findOne({ vendorName });
+    // let vendor = await Vendor.findOne({ vendorName });
 
-    if (!vendor) {
-      vendor = new Vendor({ vendorName });
-      await vendor.save();
-    }
+    // if (!vendor) {
+    //   vendor = new Vendor({ vendorName });
+    //   await vendor.save();
+    // }
 
     const bill = new VendorBill({
-      vendorName,
+      vendorName: vendor._id,
       items: billItems,
       totalAmount,
-      billNumber
+      billNumber,
     });
 
     const newBill = await bill.save();
 
     vendor.vendorBills.push(newBill._id);
-    vendor.balance += totalAmount;
+    vendor.currentBalance += totalAmount;
     vendor.totalTurnover += totalAmount;
     await vendor.save();
 
     return successHandler(res, 200, "Vendor Bill added Successfully", newBill);
   } catch (error) {
-    return errorHandler(res, 400, "Error in Add Vendor Bill");
+    return errorHandler(res, 400, error?.message);
   }
 };
 
-
 export const getAllVendorBills = async (req, res) => {
   try {
-
     const { billNumber, vendorName, date } = req.query;
+
+    // const vendor = await Vendor.findOne({ vendorName: new RegExp(vendorName, "i") });
+
     let filters = {};
-    if(billNumber){
-      filters.billNumber = billNumber
+    // if(vendor){
+    //   filters.vendorName = vendor._id
+    // }
+
+    if (billNumber) {
+      filters.billNumber = billNumber;
     }
     if (vendorName) {
-      filters.vendorName = { $regex: vendorName, $options: "i" };
-    }
-    if(date){
-      filters.date = new Date(date)
+      const vendors = await Vendor.find({
+        vendorName: { $regex: vendorName, $options: "i" },
+      }).select("_id");
+
+      const vendorIds = vendors.map((v) => v._id);
+      filters.vendorName = { $in: vendorIds };
     }
 
-    const vendorBills = await VendorBill.find(filters);
+    if (date) {
+      filters.date = new Date(date);
+    }
+
+    const vendorBills = await VendorBill.find(filters).populate(
+      "vendorName",
+      "vendorName"
+    );
 
     if (!vendorBills || vendorBills.length === 0) {
       return errorHandler(res, 400, "No data in Vendor Bills");
@@ -114,18 +140,25 @@ export const getAllVendorBills = async (req, res) => {
   }
 };
 
-
+// get single vendor bill by id
 export const getSingleVendorBill = async (req, res) => {
   try {
     const { id } = req.params;
 
     if (!id) {
-      return errorHandler(res, 400, "vendor ID not available!");
+      return errorHandler(res, 400, "vendor bill not available!");
     }
 
-    const vendorBill = await VendorBill.findById(id);
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return errorHandler(res, 400, "Invalid Vendor Bill ID");
+    }
 
-    if (!vendorBill || vendorBill.length === 0) {
+    const vendorBill = await VendorBill.findById(id).populate(
+      "vendorName",
+      "vendorName"
+    );
+
+    if (!vendorBill) {
       return errorHandler(res, 404, "No bills found for this vendor");
     }
 
@@ -136,26 +169,137 @@ export const getSingleVendorBill = async (req, res) => {
       vendorBill
     );
   } catch (error) {
-    return errorHandler(res, 400, "Something went wrong while fetching")
+    return errorHandler(res, 500, error?.message);
+  }
+};
+
+//delete vendor bill by id
+export const deleteVendorBill = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return errorHandler(res, 400, "Invalid Vendor Bill ID");
+    }
+
+    
+    const deletedVendorBill = await VendorBill.findByIdAndDelete(id);
+    if (!deletedVendorBill) {
+      return errorHandler(res, 404, "Vendor bill not found");
+    }
+
+    for(let item of deletedVendorBill.items){
+      let product = await Products.findById(item.product)
+      if(product){
+        product.quantity -= item.quantity
+        await product.save()
+      }
+    }
+
+    let vendor = await Vendor.findById(deletedVendorBill.vendorName);
+    if(vendor){
+      vendor.vendorBills = vendor.vendorBills.filter(b => !b.equals(deletedVendorBill._id))
+      vendor.currentBalance -= deletedVendorBill.totalAmount;
+      vendor.totalTurnover -= deletedVendorBill.totalAmount;
+      await vendor.save()
+    }
+
+    return successHandler(
+      res,
+      200,
+      "Vendor bill Deleted successfully",
+      deletedVendorBill
+    );
+  } catch (error) {
+    return errorHandler(res, 500, "Something went wrong");
   }
 };
 
 
-
-export const deleteVendorBill = async (req, res) => {
+//update vendor bill
+export const updateVendorBill = async (req, res) => {
   try {
-          const { id } = req.params
-  
-          const deletedVendorBill = await Vendor.findByIdAndDelete(id)
-          if(!deletedVendorBill) {
-              return errorHandler(res, 404, "Vendor bill not found")
-          }
-  
-          return successHandler(res, 200, "Vendor bill Deleted successfully", deletedVendorBill)
-      } catch (error) {
-          return errorHandler(res, 500, "Something went wrong")
-      }
+    const { id } = req.params;
+
+   if (!mongoose.Types.ObjectId.isValid(id)) {
+      return errorHandler(res, 400, "Invalid Vendor Bill ID");
+    }
+
+
+    const vendorBill = await VendorBill.findById(id);
+    if(!vendorBill){
+      return errorHandler(res, 404, "Bill Not Found")
+    }
+
+    const updatedBillData = req.body;
+
+
+    const updatedBill = await VendorBill.findByIdAndUpdate(id, updatedBillData, { new : true, runValidators : true})
+
+    if(!updatedBill) {
+      return errorHandler(res, 404, "Bill Not updated")
+    }
+
+    return successHandler(res, 200, "Vendor bill updated successfully", updatedBill)
+
+  } catch (error) {
+    return errorHandler(res, 400, error?.message)
+  }
 };
 
 
-export const updateVendorBill = async (req, res) => {};
+// export const updateVendorBill = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+
+//     if (!mongoose.Types.ObjectId.isValid(id)) {
+//       return errorHandler(res, 400, "Invalid Vendor Bill ID");
+//     }
+
+//     const vendorBill = await VendorBill.findById(id);
+//     if (!vendorBill) {
+//       return errorHandler(res, 404, "Bill Not Found");
+//     }
+
+//     const updatedBillData = req.body;
+
+//     // 1️⃣ Adjust product stock (reduce old items)
+//     for (let item of vendorBill.items) {
+//       let product = await Products.findById(item.product);
+//       if (product) {
+//         product.stockInHand -= item.quantity;
+//         if (product.stockInHand < 0) product.stockInHand = 0;
+//         await product.save();
+//       }
+//     }
+
+//     // 2️⃣ Update the bill
+//     const updatedBill = await VendorBill.findByIdAndUpdate(id, updatedBillData, { 
+//       new: true, 
+//       runValidators: true 
+//     });
+
+//     // 3️⃣ Adjust product stock (add new items)
+//     for (let item of updatedBill.items) {
+//       let product = await Products.findById(item.product);
+//       if (product) {
+//         product.stockInHand += item.quantity;
+//         await product.save();
+//       }
+//     }
+
+//     // 4️⃣ Update vendor balances
+//     let vendor = await Vendor.findById(updatedBill.vendorName);
+//     if (vendor) {
+//       // remove old total, add new total
+//       vendor.currentBalance = vendor.currentBalance - vendorBill.totalAmount + updatedBill.totalAmount;
+//       vendor.totalTurnover = vendor.totalTurnover - vendorBill.totalAmount + updatedBill.totalAmount;
+//       await vendor.save();
+//     }
+
+//     return successHandler(res, 200, "Vendor bill updated successfully", updatedBill);
+
+//   } catch (error) {
+//     return errorHandler(res, 400, error?.message);
+//   }
+// };
