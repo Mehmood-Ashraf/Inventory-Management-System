@@ -47,11 +47,10 @@ vendorBillModel.pre("save", async function (next) {
         .findOne()
         .sort({ billNumber: -1 });
 
-        let newBillNumber = 1;
+      let newBillNumber = 1;
       if (lastBill && lastBill.billNumber) {
         newBillNumber = parseInt(lastBill.billNumber) + 1;
       }
-
 
       this.billNumber = String(newBillNumber).padStart(3, "0");
     }
@@ -71,6 +70,28 @@ vendorBillModel.pre("save", async function (next) {
     next();
   } catch (error) {
     next(error?.message);
+  }
+});
+
+vendorBillModel.pre("findOneAndUpdate", function (next) {
+  try {
+    let update = this.getUpdate();
+
+    if(update.items && update.items.length > 0){
+      let newTotal = 0;
+      update.items.forEach((item) => {
+        if (!item.total || item.total === 0) {
+          item.total = item.quantity * item.price;
+        }
+        newTotal += item.total;
+      })
+      update.totalAmount = newTotal
+    };
+
+    this.setUpdate(update)
+    next()
+  } catch (error) {
+    next(error?.message)
   }
 });
 

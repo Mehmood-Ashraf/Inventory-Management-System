@@ -182,26 +182,27 @@ export const deleteVendorBill = async (req, res) => {
       return errorHandler(res, 400, "Invalid Vendor Bill ID");
     }
 
-    
     const deletedVendorBill = await VendorBill.findByIdAndDelete(id);
     if (!deletedVendorBill) {
       return errorHandler(res, 404, "Vendor bill not found");
     }
 
-    for(let item of deletedVendorBill.items){
-      let product = await Products.findById(item.product)
-      if(product){
-        product.quantity -= item.quantity
-        await product.save()
+    for (let item of deletedVendorBill.items) {
+      let product = await Products.findById(item.product);
+      if (product) {
+        product.quantity -= item.quantity;
+        await product.save();
       }
     }
 
     let vendor = await Vendor.findById(deletedVendorBill.vendorName);
-    if(vendor){
-      vendor.vendorBills = vendor.vendorBills.filter(b => !b.equals(deletedVendorBill._id))
+    if (vendor) {
+      vendor.vendorBills = vendor.vendorBills.filter(
+        (b) => !b.equals(deletedVendorBill._id)
+      );
       vendor.currentBalance -= deletedVendorBill.totalAmount;
       vendor.totalTurnover -= deletedVendorBill.totalAmount;
-      await vendor.save()
+      await vendor.save();
     }
 
     return successHandler(
@@ -215,91 +216,72 @@ export const deleteVendorBill = async (req, res) => {
   }
 };
 
-
 //update vendor bill
 export const updateVendorBill = async (req, res) => {
   try {
     const { id } = req.params;
 
-   if (!mongoose.Types.ObjectId.isValid(id)) {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       return errorHandler(res, 400, "Invalid Vendor Bill ID");
     }
 
-
     const vendorBill = await VendorBill.findById(id);
-    if(!vendorBill){
-      return errorHandler(res, 404, "Bill Not Found")
+    if (!vendorBill) {
+      return errorHandler(res, 404, "Bill Not Found");
     }
+
+    console.log(vendorBill, "Vendor bill")
 
     const updatedBillData = req.body;
+    console.log(updatedBillData, "updatedBill Data")
 
-
-    const updatedBill = await VendorBill.findByIdAndUpdate(id, updatedBillData, { new : true, runValidators : true})
-
-    if(!updatedBill) {
-      return errorHandler(res, 404, "Bill Not updated")
+    for (let item of vendorBill.items) {
+      const product = await Products.findById(item.product);
+      if (product) {
+        product.quantity -= item.quantity;
+        if (product.quantity < 0) product.quantity = 0;
+        await product.save();
+      }
     }
 
-    return successHandler(res, 200, "Vendor bill updated successfully", updatedBill)
+    const updatedBill = await VendorBill.findByIdAndUpdate(
+      id,
+      updatedBillData,
+      { new: true, runValidators: true }
+    );
 
+    console.log(updatedBill, "Updated Bill")
+
+    if (!updatedBill) {
+      return errorHandler(res, 404, "Bill Not updated");
+    };
+
+    for (let item of updatedBill.items) {
+      let product = await Products.findById(item.product);
+      if (product) {
+        product.quantity += item.quantity;
+        await product.save();
+      }
+    };
+    
+    // Update vendor balance
+    let vendor = await Vendor.findById(updatedBill.vendorName);
+    console.log(vendor, "Vendor")
+    if (vendor) {
+      console.log(vendor.currentBalance, "Vendor current Balance")
+      // remove old total, add new total
+      vendor.currentBalance = vendor.currentBalance - vendorBill.totalAmount + updatedBill.totalAmount;
+      vendor.totalTurnover = vendor.totalTurnover - vendorBill.totalAmount + updatedBill.totalAmount;
+      await vendor.save();
+    }
+
+    return successHandler(
+      res,
+      200,
+      "Vendor bill updated successfully",
+      updatedBill
+    );
   } catch (error) {
-    return errorHandler(res, 400, error?.message)
+    return errorHandler(res, 400, error?.message);
   }
 };
-
-
-// export const updateVendorBill = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-
-//     if (!mongoose.Types.ObjectId.isValid(id)) {
-//       return errorHandler(res, 400, "Invalid Vendor Bill ID");
-//     }
-
-//     const vendorBill = await VendorBill.findById(id);
-//     if (!vendorBill) {
-//       return errorHandler(res, 404, "Bill Not Found");
-//     }
-
-//     const updatedBillData = req.body;
-
-//     // 1️⃣ Adjust product stock (reduce old items)
-//     for (let item of vendorBill.items) {
-//       let product = await Products.findById(item.product);
-//       if (product) {
-//         product.stockInHand -= item.quantity;
-//         if (product.stockInHand < 0) product.stockInHand = 0;
-//         await product.save();
-//       }
-//     }
-
-//     // 2️⃣ Update the bill
-//     const updatedBill = await VendorBill.findByIdAndUpdate(id, updatedBillData, { 
-//       new: true, 
-//       runValidators: true 
-//     });
-
-//     // 3️⃣ Adjust product stock (add new items)
-//     for (let item of updatedBill.items) {
-//       let product = await Products.findById(item.product);
-//       if (product) {
-//         product.stockInHand += item.quantity;
-//         await product.save();
-//       }
-//     }
-
-//     // 4️⃣ Update vendor balances
-//     let vendor = await Vendor.findById(updatedBill.vendorName);
-//     if (vendor) {
-//       // remove old total, add new total
-//       vendor.currentBalance = vendor.currentBalance - vendorBill.totalAmount + updatedBill.totalAmount;
-//       vendor.totalTurnover = vendor.totalTurnover - vendorBill.totalAmount + updatedBill.totalAmount;
-//       await vendor.save();
-//     }
-
-//     return successHandler(res, 200, "Vendor bill updated successfully", updatedBill);
-
-//   } catch (error) {
-//     return errorHandler(res, 400, error?.message);
-//   }
-// };

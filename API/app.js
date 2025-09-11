@@ -7,6 +7,7 @@ import customerRoutes from './routes/customerRoutes.js'
 // import customerBillRoutes from './routes/customerBillRoutes.js'
 import customerBillRoutes from './routes/customerBillRoutes.js'
 import vendorBillRoutes from './routes/vendorBillRoutes.js'
+import vendorPaymentRoutes from './routes/vendorPaymentRoutes.js'
 import productRoutes from './routes/productRoutes.js'
 import { connectDB } from './utils/connectDB.js'
 
@@ -27,6 +28,7 @@ app.use('/api/vendor', vendorRoutes);
 app.use('/api/customer', customerRoutes);
 app.use('/api/customer-bill', customerBillRoutes)
 app.use('/api/vendor-bill', vendorBillRoutes);
+app.use('/api/vendor-payments', vendorPaymentRoutes)
 app.use('/api/product', productRoutes);
 
 if (process.env.MODE === "development") {
