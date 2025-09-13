@@ -13,6 +13,7 @@ import { customerBillsInputs } from "../formSource";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { clearSingleCustomer } from "../redux/slice/customersSlice";
+import { fetchLowStockProducts } from "../redux/slice/productSlice";
 
 const Dashboard = () => {
   const [hovered, setHovered] = useState(null);
@@ -21,6 +22,16 @@ const Dashboard = () => {
 
   useEffect(() => {
     dispatch(clearSingleCustomer())
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchLowStockProducts())
+
+    const interval = setInterval(() => {
+      dispatch(fetchLowStockProducts())
+    }, 3600000) //1 hour
+
+    return clearInterval(interval)
   }, [dispatch])
 
   return (
@@ -79,7 +90,7 @@ const Dashboard = () => {
       </div>
 
       <div>
-        <Table title={"Recent Transactions"} subTitle={"Record of your recent transactions"}/>
+        <Table title={"Recent Transactions"} subTitle={"Record of your recent transactions"} type={"bill"}/>
       </div>
 
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SearchInput from "../components/SearchInput";
 import Button from "../components/Button";
-import { Plus } from "lucide-react";
+import { FileText, Plus } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllProducts } from "../redux/slice/productSlice";
 import Table from "../components/Table";
@@ -42,7 +42,7 @@ const AllProducts = () => {
     { key: "modelName", label: "Model" },
     { key: "quantity", label: "Qauntity" },
     { key: "sellPrice", label: "Sell Price" },
-    { key: companyName, label: "Company Name" },
+    // { key: "companyName", label: "Company Name" },
   ];
 
   return (
@@ -68,6 +68,7 @@ const AllProducts = () => {
             data={allProducts}
             showActions={true}
             headers={productListHeaders}
+            Icon={FileText}
           />
         )}
       </div>

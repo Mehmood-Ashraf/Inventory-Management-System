@@ -73,7 +73,7 @@ function Table({
   return (
     <div className="px-4 py-3 rounded-xl border border-[#cedbe8] bg-slate-50">
       <div className="flex items-center mb-4">
-        <Icon className="h-10 w-10" />
+        {Icon && <Icon className="h-10 w-10" />}
         <div>
           <h2 className="text-[#0d141c] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-2">
             {title}
