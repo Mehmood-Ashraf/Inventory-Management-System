@@ -23,7 +23,7 @@ const customerBillModel = new mongoose.Schema({
     unique : true,
   },
   totalAmount: Number,
-  date: { type: Date, default: Date.now }
+  date: { type: String, default: () => new Date().toISOString().split("T")[0] }
 }, { timestamps : true });
 
 

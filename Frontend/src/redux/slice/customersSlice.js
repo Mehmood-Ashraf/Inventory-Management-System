@@ -87,10 +87,18 @@ export const updateCustomer = createAsyncThunk(
   }
 );
 
+
+
+
 const customerSlice = createSlice({
   name: "customer",
   initialState,
-  reducers: {},
+  reducers: {
+    clearSingleCustomer : (state) => {
+      console.log("clear single Customer triggered")
+      state.singleCustomer = null;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllCustomers.pending, (state) => {
@@ -132,4 +140,5 @@ const customerSlice = createSlice({
   },
 });
 
+export const {clearSingleCustomer} = customerSlice.actions
 export default customerSlice.reducer;

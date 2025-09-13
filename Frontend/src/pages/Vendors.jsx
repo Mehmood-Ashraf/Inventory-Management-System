@@ -58,7 +58,6 @@ const Vendors = () => {
     } else {
       dispatch(fetchAllVendors(searchInput));
     }
-    console.log(vendors);
 
     const savedID = localStorage.getItem("VendorID");
     if (savedID) {
@@ -76,7 +75,7 @@ const Vendors = () => {
   const vendorsListHeaders = [
     { key: "vendorName", label: "Vendor Name" },
     { key: "contact", label: "Contact" },
-    { key: "balance", label: "Balance" },
+    { key: "currentBalance", label: "Balance" },
   ];
   return (
     <div className="space-y-6">

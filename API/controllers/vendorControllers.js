@@ -12,10 +12,10 @@ export const addVendor = async (req, res) => {
     return errorHandler(res, 400, "Missing vendor name");
   }
 
-  const name = vendorName.trim().toLowerCase();
-  const cityName = city.trim().toLowerCase();
+  const name = vendorName?.trim().toLowerCase();
+  const cityName = city?.trim().toLowerCase();
 
-  const existingVendor = await Vendor.findOne({ vendorName: name });
+  const existingVendor = await Vendor.findOne({ vendorName: vendorName });
   if (existingVendor) {
     return errorHandler(res, 409, "Vendor already Exist!!");
   }

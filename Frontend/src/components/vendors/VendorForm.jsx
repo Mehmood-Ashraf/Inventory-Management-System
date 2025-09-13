@@ -24,21 +24,7 @@ const VendorForm = ({ formData, setFormData, editingVendor, handleSubmit, handle
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email
-              </label>
-              <input
-                type="email"
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Phone
+                Contact
               </label>
               <input
                 type="tel"
@@ -68,17 +54,14 @@ const VendorForm = ({ formData, setFormData, editingVendor, handleSubmit, handle
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Total Turnover
-              </label>
-              <input  
-                type="number"
-                step="0.01"
-                value={formData.totalTurnover}
+                City
+              </label>  
+              <input
+                type="text"
+                required
+                value={formData.city}
                 onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    totalTurnover: parseFloat(e.target.value),
-                  })
+                  setFormData({ ...formData, city: e.target.value })
                 }
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />

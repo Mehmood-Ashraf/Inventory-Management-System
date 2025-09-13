@@ -8,8 +8,8 @@ import { useDispatch } from "react-redux";
 
 const VendorDetailsModal = ({ selectedVendor, handleEditVendor, setShowDetailModal }) => {
   // const { handleEditVendor, setShowDetailModal } = useVendors();
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   return (
     <div>
       <div className="space-y-6">
@@ -19,8 +19,8 @@ const VendorDetailsModal = ({ selectedVendor, handleEditVendor, setShowDetailMod
             <Truck className="h-16 w-16 text-gray-400 bg-gray-100 rounded-full p-4" />
           </div>
           <div>
-            <h3 className="text-xl font-semibold text-gray-900">
-              {selectedVendor?.customerName}
+            <h3 className="text-xl font-semibold text-gray-900 capitalize">
+              {selectedVendor?.vendorName}
             </h3>
             <p className="text-lg text-blue-600 font-medium mt-1">
               Total Turnover: PKR {selectedVendor?.totalTurnover}
@@ -101,7 +101,7 @@ const VendorDetailsModal = ({ selectedVendor, handleEditVendor, setShowDetailMod
             <div>
               <p className="text-sm font-medium text-gray-500">Balance</p>
               <p className="text-sm text-red-600 font-medium">
-                PKR {selectedVendor?.balance}
+                PKR {selectedVendor?.currentBalance}
               </p>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../components/Dashboard/Card";
 import { formattedCardData } from "../mockData/cardData";
 import Button from "../components/Button";
@@ -6,9 +6,23 @@ import Table from "../components/Table";
 import Card1 from "../components/Card";
 import { Zap } from "lucide-react";
 import LowStockAlert from "../components/Dashboard/LowStockAlert";
+import { useCustomersBills } from "../hooks/useCustomersBills";
+import Modal from "../components/Modal";
+import BillForm from "../components/BillForm";
+import { customerBillsInputs } from "../formSource";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { clearSingleCustomer } from "../redux/slice/customersSlice";
 
 const Dashboard = () => {
   const [hovered, setHovered] = useState(null);
+  const navigate = useNavigate()
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(clearSingleCustomer())
+  }, [dispatch])
+
   return (
     <div className="space-y-10">
       <div className="heading text-4xl font-semibold">Inventory Management</div>
@@ -32,6 +46,7 @@ const Dashboard = () => {
         >
           <div className="flex flex-col gap-3">
             <Button
+              onClick={() => navigate("/add_customer_bill")}
               variant={hovered ? "secondary" : "primary"}
               // onMouseEnter={() => setHovered("create")}
               // onMouseLeave={() => setHovered(null)}
@@ -66,6 +81,24 @@ const Dashboard = () => {
       <div>
         <Table title={"Recent Transactions"} subTitle={"Record of your recent transactions"}/>
       </div>
+
+
+      {/* {
+        addCustomerBillModal && 
+        <Modal
+        title={"Create Bill"}
+        onClose={() => setAddCustomerBillModal(false)}
+        >
+          <BillForm
+          inputsData={customerBillsInputs}
+          formData={formData}
+          setFormData={setFormData}
+          submitLabel={"Seve Bill"}
+          handleClose={handleCloseModal}
+          />
+
+        </Modal>
+      } */}
     </div>
   );
 };

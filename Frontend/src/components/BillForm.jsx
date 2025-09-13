@@ -25,7 +25,12 @@ const BillForm = ({
 
     updatedItems[index] = {
       ...updatedItems[index],
-      [name]: type === "number" ? parseFloat(value) || 0 : value,
+      [name]:
+        type === "number"
+          ? value === ""
+            ? ""
+            : parseFloat(value) || 0
+          : value,
     };
 
     updatedItems[index].total =
@@ -69,225 +74,164 @@ const BillForm = ({
   };
 
   return (
-    // <form onSubmit={onSubmit} className="space-y-4">
-    //   {inputsData.map((input) =>
-    //     input.type === "array" ? (
-    //       <div key={input.id}>
-    //         <label className="block font-medium mb-1">{input.label}</label>
-    //         {(formData.items || []).map((item, index) => (
-    //           <div key={index} className="grid grid-cols-4 gap-2 mb-2">
-    //             {input.fields.map((field) => (
-    //               <input
-    //                 key={field.id}
-    //                 type={field.type}
-    //                 name={field.id}
-    //                 placeholder={field.label}
-    //                 value={item[field.id] || ""}
-    //                 onChange={(e) => handleItemChange(index, e)}
-    //                 readOnly={field.readOnly}
-    //                 className="border px-2 py-1 rounded-lg"
-    //               />
-    //             ))}
-    //             <button
-    //               type="button"
-    //               onClick={() => removeItem(index)}
-    //               className="text-red-500"
-    //             >
-    //               X
-    //             </button>
-    //           </div>
-    //         ))}
-    //         <Button
-    //           type="button"
-    //           onClick={addItem}
-    //           className="mt-2 bg-green-500 text-white px-3 py-1 rounded-lg"
-    //         >
-    //           + Add Item
-    //         </Button>
-    //       </div>
-    //     ) : input.type === "select" ? (
-    //       <div key={input.id}>
-    //         <label className="block mb-1">{input.label}</label>
-    //         <select
-    //           id={input.id}
-    //           name={input.id}
-    //           required={input.required}
-    //           value={formData?.[input.id] || ""}
-    //           onChange={handleChange}
-    //           className="w-full border px-3 py-2 rounded-lg"
-    //         >
-    //           <option value="">Select</option>
-    //           {input.options.map((opt) => (
-    //             <option key={opt} value={opt}>
-    //               {opt}
-    //             </option>
-    //           ))}
-    //         </select>
-    //       </div>
-    //     ) : (
-    //       <div key={input.id}>
-    //         <label className="block mb-1">{input.label}</label>
-    //         <input
-    //           type={input.type}
-    //           id={input.id}
-    //           name={input.id}
-    //           placeholder={input.placeholder}
-    //           value={formData?.[input.id] || ""}
-    //           onChange={handleChange}
-    //           required={input.required}
-    //           className="w-full border px-3 py-2 rounded-lg"
-    //         />
-    //       </div>
-    //     )
-    //   )}
-
-    //   {/* Total */}
-    //   <div className="font-bold text-lg">Total Amount: {formData.totalAmount || 0}</div>
-
-    //   <div className="flex space-x-3 pt-4">
-    //     <Button type="submit" className="flex-1">
-    //       {submitLabel}
-    //     </Button>
-    //     <Button
-    //       type="button"
-    //       variant="secondary"
-    //       onClick={handleClose}
-    //       className="flex-1"
-    //     >
-    //       Cancel
-    //     </Button>
-    //   </div>
-    // </form>
-
     <>
-      <form className="space-y-6 bg-white rounded-xl shadow-lg">
-        <div className="space-y-4 border rounded-xl p-5">
-          <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">
-            Customer Information
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {inputsData
-              .filter((input) => input.type !== "array")
-              .map((input) =>
-                input.type === "select" ? (
-                  <div key={input.id} className="">
-                    <label className="block mb-1 text-sm font-medium text-gray-600">
-                      {input.label}
-                    </label>
-                    <select
-                      id={input.id}
-                      name={input.id}
-                      required={input.required}
-                      value={formData?.[input.id] || ""}
-                      onChange={handleChange}
-                      className="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="">Select</option>
-                      {input.options.map((opt) => (
-                        <option key={opt} value={opt}>
-                          {opt}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                ) : (
-                  <div key={input.id} className="">
-                    <label className="block mb-1 text-sm font-medium text-gray-600">
-                      {input.label}
-                    </label>
-                    <input
-                      type={input.type}
-                      id={input.id}
-                      name={input.id}
-                      placeholder={input.placeholder}
-                      value={formData?.[input.id] || ""}
-                      onChange={handleChange}
-                      required={input.required}
-                      className="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                )
-              )}
-          </div>
-        </div>
-        //Items Section
-        <div className="p-5 border rounded-xl space-y-4">
-          <div className="flex justify-between items-center border-b pb-2">
-            <h3 className="text-lg font-semibold text-gray-800">Items</h3>
-            <Button
-              type="button"
-              onClick={addItem}
-              className="flex items-center gap-2 bg-green-600 text-white hover:bg-green-700 px-3 py-1 rounded-lg"
-            >
-              <Plus className="w-4 h-4" /> Add Item
-            </Button>
-          </div>
+      <div className="max-w-6xl mx-auto px-6 py-10">
+        {/* Page Title */}
+        <h2 className="text-3xl font-bold text-gray-900 mb-10">Add Bill</h2>
 
-          {(formData.items || []).map((item, index) => (
-            <div
-              key={index}
-              className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center p-2 bg-gray-200 rounded-2xl"
-            >
-              <input
-                type="text"
-                name="product"
-                placeholder="Product"
-                value={item.product}
-                onChange={(e) => handleItemChange(e, index)}
-                className="border px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500"
-              />
-              <input
-                type="number"
-                name="quantity"
-                placeholder="Qty"
-                value={item.quantity}
-                onChange={(e) => handleItemChange(e, index)}
-                className="border px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500"
-              />
-              <input
-                type="number"
-                name="price"
-                placeholder="Price"
-                value={item.price}
-                onChange={(e) => handleItemChange(e, index)}
-                className="border px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500"
-              />
-              <div className="flex justify-between items-center">
-                <span className="font-semibold text-gray-700">
-                  {item.total || 0}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => removeItem(index)}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  <Trash2 className="w-5 h-5" />
-                </button>
+        <form
+          className="space-y-10"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit(formData);
+          }}
+        >
+          {/* Customer Information */}
+          <div className="bg-white shadow-md rounded-2xl p-8 space-y-6">
+            <h3 className="text-xl font-semibold text-gray-800">
+              Customer Information
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {inputsData
+                .filter((input) => input.type !== "array")
+                .map((input) =>
+                  input.type === "select" ? (
+                    <div key={input.id}>
+                      <label className="block mb-2 text-sm font-medium text-gray-700">
+                        {input.label}
+                      </label>
+                      <select
+                        id={input.id}
+                        name={input.id}
+                        required={input.required}
+                        value={formData?.[input.id] || ""}
+                        onChange={handleChange}
+                        className="w-full border border-gray-300 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                      >
+                        <option value="">Select</option>
+                        {input.options.map((opt) => (
+                          <option key={opt} value={opt}>
+                            {opt}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  ) : (
+                    <div key={input.id}>
+                      <label className="block mb-2 text-sm font-medium text-gray-700">
+                        {input.label}
+                      </label>
+                      <input
+                        type={input.type}
+                        id={input.id}
+                        name={input.id}
+                        placeholder={input.placeholder}
+                        value={formData?.[input.id] || ""}
+                        onChange={handleChange}
+                        required={input.required}
+                        className="w-full border border-gray-300 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                      />
+                    </div>
+                  )
+                )}
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  Bill Date
+                </label>
+                <input
+                  type="date"
+                  name="date"
+                  value={formData?.date || ""}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                />
               </div>
             </div>
-          ))}
-        </div>
-        <div className="flex justify-between items-center pt-4 border-t">
-          <div className="text-lg font-bold text-gray-800">
-            Total Amount: Rs {formData.totalAmount || 0}
           </div>
-          <div className="flex gap-4">
-            <Button
-              type="button"
-              onClick={handleClose}
-              className="bg-gray-200 text-gray-700 hover:bg-gray-300 rounded-xl px-4 py-2"
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              className="bg-blue-600 text-white hover:bg-blue-700 rounded-xl px-6 py-2"
-            >
-              {submitLabel}
-            </Button>
+
+          {/* Items Section */}
+          <div className="bg-white shadow-md rounded-2xl p-8 space-y-6">
+            <div className="flex justify-between items-center">
+              <h3 className="text-xl font-semibold text-gray-800">Items</h3>
+              <Button
+                type="button"
+                onClick={addItem}
+                className="flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-xl"
+              >
+                <Plus className="w-4 h-4" /> Add Item
+              </Button>
+            </div>
+
+            <div className="space-y-4">
+              {(formData.items || []).map((item, index) => (
+                <div
+                  key={index}
+                  className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center bg-gray-50 p-4 rounded-xl"
+                >
+                  <input
+                    type="text"
+                    name="product"
+                    placeholder="Product"
+                    value={item.product}
+                    onChange={(e) => handleItemChange(e, index)}
+                    className="border border-gray-300 px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  />
+                  <input
+                    type="number"
+                    name="quantity"
+                    placeholder="Qty"
+                    value={item?.quantity ?? ""}
+                    onChange={(e) => handleItemChange(e, index)}
+                    className="border border-gray-300 px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  />
+                  <input
+                    type="number"
+                    name="price"
+                    placeholder="Price"
+                    value={item?.price ?? ""}
+                    onChange={(e) => handleItemChange(e, index)}
+                    className="border border-gray-300 px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  />
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold text-gray-800">
+                      Rs {item.total || 0}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeItem(index)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <Trash2 className="w-5 h-5 cursor-pointer" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </form>
+
+          {/* Footer */}
+          <div className="flex justify-between items-center bg-white shadow-md rounded-2xl p-6">
+            <div className="text-xl font-bold text-gray-900">
+              Total Amount: Rs {formData.totalAmount || 0}
+            </div>
+            <div className="flex gap-4">
+              <Button
+                type="button"
+                onClick={handleClose}
+                className="bg-red-600 text-gray-700 hover:bg-red-700 rounded-xl px-6 py-2"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                className="bg-blue-600 text-white hover:bg-blue-700 rounded-xl px-6 py-2"
+              >
+                {submitLabel}
+              </Button>
+            </div>
+          </div>
+        </form>
+      </div>
     </>
   );
 };

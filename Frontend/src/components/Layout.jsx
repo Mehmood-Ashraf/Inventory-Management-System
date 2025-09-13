@@ -8,6 +8,7 @@ import {
   TrendingUp,
   Menu,
   X,
+  Zap,
 } from "lucide-react";
 import { Outlet, NavLink, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -27,7 +28,8 @@ const Layout = () => {
     { path: "all_vendor_bills", icon: FileText, label: "Vendor Bills" },
     { path: "vendors", icon: Truck, label: "Vendors" },
     { path: "reports", icon: TrendingUp, label: "Reports" },
-    { path : "all_customer_bills", icon : FileText, label : "Customer Bills"}
+    { path : "all_customer_bills", icon : FileText, label : "Customer Bills"},
+    { path : "add_customer_bill", icon : Zap ,label : "Create New Bill"}
   ];
 
   const currentPath = location.pathname.replace("/", "");

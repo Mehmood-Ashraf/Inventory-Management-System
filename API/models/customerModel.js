@@ -24,7 +24,11 @@ const customerModel = new mongoose.Schema({
         type : mongoose.Schema.Types.ObjectId,
         ref : "CustomerBills"
     }],
-    balance : {
+    currentBalance : {
+        type : Number,
+        default : 0
+    },
+    previousBalance : {
         type : Number,
         default : 0
     },

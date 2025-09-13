@@ -18,10 +18,9 @@ const useVendors = () => {
   const [addVendorBillModalOpen, setAddVendorBillModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     vendorName: "",
-    email: "",
     contact: "",
     address: "",
-    totalTurnover: "",
+    city : "",
   }); 
 
   const saveVendorBill = async (billData) => {
@@ -37,10 +36,9 @@ const useVendors = () => {
   const resetForm = () => {
     setFormData({
       vendorName: "",
-      email: "",
       contact: "",
       address: "",
-      totalTurnover: "",
+      city : ""
     });
 
     setEditingVendor(null);
@@ -79,10 +77,9 @@ const useVendors = () => {
     setEditingVendor(vendor);
     setFormData({
       vendorName: vendor.vendorName,
-      email: vendor.email,
       contact: vendor.contact,
       address: vendor.address,
-      totalTurnover: vendor.totalTurnover,
+      city : vendor.city
     });
     setShowAddModal(true);
     setShowDetailModal(false)

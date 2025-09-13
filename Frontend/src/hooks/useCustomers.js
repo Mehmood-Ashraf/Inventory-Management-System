@@ -28,13 +28,12 @@ const useCustomers = () => {
   const dispatch = useDispatch();
 
   const handleCustomerClick = (customerID) => {
-    dispatch(fetchSingleCustomer(customerID));
-    setShowDetailModal(true);
-    localStorage.setItem("customerID", customerID);
+    navigate(`/details/customer/${customerID}`)
+    // localStorage.setItem("customerID", customerID);
   };
 
   const viewBillsHandler = () => {
-    localStorage.removeItem("customerID")
+    // localStorage.removeItem("customerID")
     setShowDetailModal(false);
     setTimeout(() => {
       navigate("/all_customer_bills", {

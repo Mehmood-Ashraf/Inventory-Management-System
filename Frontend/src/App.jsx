@@ -15,6 +15,8 @@ import Customers from "./pages/Customers";
 import AllVendorBills from "./pages/AllVendorBills";
 import AllProducts from "./pages/AllProducts";
 import AllCustomerBills from "./pages/AllCustomerBills";
+import AddCutomerBill from "./pages/AddCutomerBill";
+import DetailsPage from "./pages/DetailsPage";
 
 function App() {
   return (
@@ -34,6 +36,8 @@ function App() {
             <Route path="/all_vendor_bills" element={<AllVendorBills />} />
             <Route path="/inventory" element={<AllProducts />} />
             <Route path="/all_customer_bills" element={<AllCustomerBills />} />
+            <Route path="/add_customer_bill" element={<AddCutomerBill />}/>
+            <Route path="/details/:type/:id" element={<DetailsPage />}/>
           </Route>
         </Route>
       </Routes>

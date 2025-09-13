@@ -115,7 +115,7 @@ const DetailModal = ({ type, data, handleEdit, setShowDetailModal, onDelete, vie
               <div>
                 <p className="text-sm font-medium text-gray-500">Balance</p>
                 <p className="text-sm text-red-600 font-medium">
-                  PKR {data?.balance}
+                  PKR {data?.currentBalance}
                 </p>
               </div>
             </>
@@ -124,7 +124,7 @@ const DetailModal = ({ type, data, handleEdit, setShowDetailModal, onDelete, vie
               <div>
                 <p className="text-sm font-medium text-gray-500">Balance</p>
                 <p className="text-sm text-red-600 font-medium">
-                  PKR {data?.balance}
+                  PKR {data?.currentBalance}
                 </p>
               </div>
             </>

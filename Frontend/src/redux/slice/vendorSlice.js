@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk, autoBatchEnhancer } from "@reduxjs/toolkit";
-import axios from "axios";
 import { Satellite } from "lucide-react";
 import api from "../../utils/api";
 
 
 const initialState = {
   vendors: [],
+  deletedVendors : [],
   singleVendor : null,
   loading: false,
   error: null,
@@ -15,10 +15,10 @@ const initialState = {
 // getAllVendors API
 export const fetchAllVendors = createAsyncThunk(
   "vendor/fetchVendors",
-  async (searchInput, billNumber, thunkAPI) => {
+  async (searchInput, thunkAPI) => {
     try {
       const res = await api.get(
-        `/vendor/all?vendorName=${searchInput}&billNumber=${billNumber}`
+        `/vendor/all?vendorName=${searchInput}`
       );
       return res.data.data;
     } catch (error) {

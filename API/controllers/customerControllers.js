@@ -1,18 +1,18 @@
 import { errorHandler, successHandler } from "../utils/responseHandler.js";
-import Customer from "../models/customerModel.js";
-
+import CustomerBills from "../models/customerBillModel.js";
+import Customer from "../models/customerModel.js"
 
 export const addCustomer = async (req, res) => {
-  console.log(req.body, "=========> Add Customer")
+  console.log(req.body, "=========> Add Customer");
   const { customerName, customerType, contact, address, city } = req.body;
 
   if (!customerName || !customerType) {
-    console.log(customerName, customerType)
+    console.log(customerName, customerType);
     return errorHandler(res, 404, "Missing Fields!");
   }
 
   try {
-    const isExist = await Customer.findOne({ customerName }); 
+    const isExist = await Customer.findOne({ customerName });
     if (isExist) {
       return errorHandler(res, 400, "Customer already exist");
     }
@@ -32,17 +32,15 @@ export const addCustomer = async (req, res) => {
   }
 };
 
-
-
 export const getSingleCustomer = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const customer = await Customer.findByIdAndUpdate(id);
+    const customer = await Customer.findByIdAndUpdate(id).populate("bills");
     if (!customer) {
       return errorHandler(res, 400, "Customer not found by given id");
     }
-    
+
     return successHandler(res, 200, "Customer Fetched successfully", customer);
   } catch (error) {
     return errorHandler(
@@ -52,8 +50,6 @@ export const getSingleCustomer = async (req, res) => {
     );
   }
 };
-
-
 
 export const getAllCustomers = async (req, res) => {
   try {
@@ -85,10 +81,9 @@ export const getAllCustomers = async (req, res) => {
       customers
     );
   } catch (error) {
-    return errorHandler(res, 400, error);
+    return errorHandler(res, 400, error?.message);
   }
 };
-
 
 export const deleteCustomer = async (req, res) => {
   try {
@@ -98,6 +93,8 @@ export const deleteCustomer = async (req, res) => {
     if (!deletedCustomer) {
       return errorHandler(res, 400, "Customer not found by given id");
     }
+
+    await CustomerBills.deleteMany({ customerId: id });
 
     return successHandler(
       res,
@@ -114,15 +111,13 @@ export const deleteCustomer = async (req, res) => {
   }
 };
 
-
-
 export const updateCustomer = async (req, res) => {
   try {
     const { id } = req.params;
 
     const updatedCustomerData = req.body;
-    if(!id){
-      return errorHandler(res, 400, "Id not available")
+    if (!id) {
+      return errorHandler(res, 400, "Id not available");
     }
 
     const updatedCustomer = await Customer.findByIdAndUpdate(
@@ -141,6 +136,6 @@ export const updateCustomer = async (req, res) => {
       updatedCustomer
     );
   } catch (error) {
-    return errorHandler(res, 400, error?.message)
+    return errorHandler(res, 400, error?.message);
   }
 };

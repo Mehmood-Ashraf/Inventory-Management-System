@@ -41,57 +41,10 @@ function Table({
   onDelete,
   onView,
   loading,
-  Icon
+  Icon,
+  type
 }) {
   console.log(data);
-  // const title1 = "Recent Transictions";
-  // const listHeaders = [
-  //   { key : "type", label : "Type"},
-  //   { key : "date", label : "Date"},
-  //   { key : "detail", label : "Detail"},
-  //   { key : "amount", label : "Amount"}
-  // ];
-  // const dummyData = [
-  //   {
-  //     type: " New Order Received",
-  //     date: "2023-08-15",
-  //     detail: "Order #12345 from Emily Carter",
-  //     amount: 5000,
-  //   },
-  //   {
-  //     type: " Product Added",
-  //     date: "2023-08-14",
-  //     detail: "Added Product X to inventory",
-  //     amount: 6000,
-  //   },
-
-  //   {
-  //     type: "Customer Registered",
-  //     date: "2023-08-12",
-  //     detail: "New customer, Ethan Chen, registered",
-  //     amount: 1000,
-  //   },
-
-  //   {
-  //     type: " New Order Received",
-  //     date: "2023-08-15",
-  //     detail: "Order #12345 from Emily Carter",
-  //     amount: 2500,
-  //   },
-  //   {
-  //     type: " Product Added",
-  //     date: "2023-08-14",
-  //     detail: "Added Product X to inventory",
-  //     amount: 1500,
-  //   },
-
-  //   {
-  //     type: "Customer Registered",
-  //     date: "2023-08-12",
-  //     detail: "New customer, Ethan Chen, registered",
-  //     amount: 200,
-  //   },
-  // ];
 
   if (loading) {
     return <Loader />;
@@ -99,18 +52,28 @@ function Table({
 
   if (!data || data.length === 0) {
     return (
-      <div className="border rounded-lg p-4">
-        <h2 className="text-lg font-semibold">{title}</h2>
-        <p className="text-sm text-gray-500">{subTitle}</p>
-        <p className="mt-4">No data found</p>
+      // <div className="border border-[#cedbe8] bg-slate-50 rounded-lg p-4">
+      //   <h2 className="text-lg font-semibold">{title}</h2>
+      //   <p className="text-sm text-gray-500">{subTitle}</p>
+      //   <p className="mt-4">No data found</p>
+      // </div>
+      <div className="text-center py-12 border border-[#cedbe8] bg-slate-50 rounded-lg">
+        <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+        <h3 className="text-lg font-medium text-gray-900 mb-2">
+          No {type === "bill" ? "bills" : "payments"} found
+        </h3>
+        <p className="text-gray-500">
+          Get started by creating your first{" "}
+          {type === "bill" ? "bill" : "payment"}
+        </p>
       </div>
     );
   }
 
   return (
-    <>
-      <div className="flex items-center px-4">
-        <Icon className="h-10 w-10"/>
+    <div className="px-4 py-3 rounded-xl border border-[#cedbe8] bg-slate-50">
+      <div className="flex items-center mb-4">
+        <Icon className="h-10 w-10" />
         <div>
           <h2 className="text-[#0d141c] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-2">
             {title}
@@ -140,11 +103,11 @@ function Table({
             </thead>
             <tbody>
               {data?.map((i, index) => (
-                <tr key={index} className="border-t border-t-[#cedbe8]">
+                <tr key={index} className="border-t border-t-[#cedbe8] hover:bg-gray-200 ">
                   {headers.map((header) => (
                     <td
                       key={header?.key}
-                      className="h-[72px] px-4 py-2 w-[400px] text-[#49719c]  text-sm font-normal leading-normal"
+                      className="h-[72px] px-4 py-2 w-[400px] text-[#49719c]  text-sm font-normal leading-normal capitalize"
                     >
                       {i[header?.key]}
                     </td>
@@ -177,7 +140,7 @@ function Table({
           </table>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

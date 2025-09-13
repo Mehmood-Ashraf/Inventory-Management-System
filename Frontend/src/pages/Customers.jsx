@@ -19,6 +19,7 @@ import useCustomers from "../hooks/useCustomers.js";
 import Form from "../components/Form.jsx";
 import { addCustomerInputs } from "../formSource.js";
 import DetailModal from "../components/DetailModal.jsx";
+import { useCustomersBills } from "../hooks/useCustomersBills.js";
 
 const Customers = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -26,6 +27,7 @@ const Customers = () => {
   const { allCustomers, loading, singleCustomer } = useSelector(
     (state) => state.customer
   );
+
 
   console.log(useSelector((state) => state.customer));
 
@@ -67,7 +69,7 @@ const Customers = () => {
   const customersListHeaders = [
     { key: "customerName", label: "Customer Name" },
     { key: "contact", label: "Contact" },
-    { key: "balance", label: "Balance" },
+    { key: "currentBalance", label: "Balance" },
   ];
   return (
     <div className="space-y-6">

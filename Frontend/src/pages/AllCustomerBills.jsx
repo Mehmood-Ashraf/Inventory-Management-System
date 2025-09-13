@@ -13,16 +13,17 @@ import Card from "../components/Dashboard/Card";
 import { customerBillsCardData } from "../mockData/cardData";
 import { toast } from "react-toastify";
 import BillDetailsModal from "../components/BillDetailsModal";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const AllCustomerBills = () => {
   const [searchInput, setSearchInput] = useState("");
   const dispatch = useDispatch();
-  const { allCustomerBills, singleBill, loading, error } = useSelector(
+  const { allCustomerBills, singleBill, singleCustomerBills, loading, error } = useSelector(
     (state) => state.customerBills
   );
   const location = useLocation();
   const customerId = location.state?.customerId;
+  const navigate = useNavigate()
   console.log(customerId)
   const {
     addCustomerBillModal,
@@ -34,7 +35,8 @@ const AllCustomerBills = () => {
     showBillDetailsModal,
     setShowBillDetailsModal,
     billDetailsHandler,
-    handleCloseDetailModal
+    handleCloseBillDetailModal,
+    addCustomerBill
   } = useCustomersBills();
 
   const customerBillsListHeaders = [
@@ -44,6 +46,8 @@ const AllCustomerBills = () => {
     { key: "totalAmount", label: "Amount" },
   ];
 
+  const billsToShow = singleCustomerBills?.length > 0 ? singleCustomerBills : allCustomerBills
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-GB");
@@ -51,11 +55,11 @@ const AllCustomerBills = () => {
 
   const filteredBills =
     searchInput.trim === ""
-      ? allCustomerBills
-      : allCustomerBills.filter((bill) => {
+      ? billsToShow
+      : billsToShow.filter((bill) => {
           const search = searchInput.toLowerCase();
           return (
-            bill.customerName.toLowerCase().includes(search) ||
+            bill.customerName?.toLowerCase().includes(search) ||
             bill.billNumber?.toString().includes(search)
           );
         });
@@ -102,7 +106,7 @@ const AllCustomerBills = () => {
           onChange={setSearchInput}
         />
 
-        <Button onClick={() => setAddCustomerBillModal(true)}>
+        <Button onClick={() =>navigate('/add_customer_bill')}>
           <Plus className="h-4 w-4 mr-2" />
           Add Bill
         </Button>
@@ -149,10 +153,11 @@ const AllCustomerBills = () => {
         </Modal>
       )}
 
+
       {showBillDetailsModal && (
         <Modal
         title={"Customer Bill Details"}
-        onClose={handleCloseDetailModal}
+        onClose={handleCloseBillDetailModal}
         >
           <BillDetailsModal
           type={"customer"}
