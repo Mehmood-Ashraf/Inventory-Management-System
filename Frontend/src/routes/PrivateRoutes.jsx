@@ -6,8 +6,8 @@ import Login from "../pages/Login"
 const PrivateRoutes = () => {
 
     const token = useSelector((state) => state.auth.token)
-
-    return token ? <Outlet /> : <Navigate to="/login"/>
+    const sessionToken = typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
+    return token || sessionToken ? <Outlet /> : <Navigate to="/login"/>
 }
 
 export default PrivateRoutes
