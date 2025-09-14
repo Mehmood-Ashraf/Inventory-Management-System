@@ -19,9 +19,24 @@ app.use(express.json())
 
 const port = process.env.PORT
 
-app.use(cors(
-    "http://localhost:5173"
-))
+
+const allowedOrigins = ["http://localhost:5173", process.env.VITE_API_URL];
+// app.use(cors(
+//     ["http://localhost:5173", process.env.VITE_API_URL]
+// ))
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 
 app.use('/api/auth', adminRoutes);
 app.use('/api/vendor', vendorRoutes);
