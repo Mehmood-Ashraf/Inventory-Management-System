@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addProduct, deleteProduct } from "../redux/slice/productSlice";
+import { addProduct, deleteProduct, fetchSingleProduct } from "../redux/slice/productSlice";
 import { toast } from "react-toastify";
 
 const useProducts = () => {
   const [showProductForm, setShowProductForm] = useState(false);
+  const [showProductDetails, setShowProductDetails] = useState(false)
   const [formData, setFormData] = useState({
     productName: "",
     companyName: "",
@@ -18,6 +19,7 @@ const useProducts = () => {
 
   const handleCloseProductForm = () => {
     setShowProductForm(false);
+    resetForm();
   };
 
   const productDetailsHandler = (productId) => {
@@ -37,6 +39,21 @@ const useProducts = () => {
     });
   };
 
+
+  const productDetailHandler = async (productId) => {
+    try {
+        const product = await dispatch(fetchSingleProduct(productId)).unwrap()
+        if(product){
+            setShowProductDetails(true)
+            toast.success("Single Product Fetch successfully")
+        }else{
+            toast.error("Product not found")
+        }
+    } catch (error) {
+        toast.error(error?.message || error?.payload || "Something went wrong")
+    }
+  }
+
   const handleSubmit = async (productData) => {
     try {
       const payload = { ...productData };
@@ -47,7 +64,7 @@ const useProducts = () => {
       resetForm();
       setShowProductForm(false)
     } catch (error) {
-      toast.error(error?.message);
+      toast.error(error?.message || error?.payload);
     }
   };
 
@@ -56,7 +73,7 @@ const useProducts = () => {
         await dispatch(deleteProduct(id)).unwrap()
         toast.success("Product deleted successfully")
     } catch (error) {
-        toast.error(error?.message)
+        toast.error(error?.message || error?.payload)
     }
   }
 
@@ -68,7 +85,10 @@ const useProducts = () => {
     handleSubmit,
     formData,
     setFormData,
-    handleDeleteProduct
+    handleDeleteProduct,
+    productDetailHandler,
+    showProductDetails,
+    setShowProductDetails
   };
 };
 

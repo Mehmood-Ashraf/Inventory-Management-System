@@ -8,13 +8,14 @@ import Table from "../components/Table";
 import useProducts from "../hooks/useProducts";
 import Modal from "../components/Modal";
 import ProductForm from "../components/ProductForm";
+import ProductDetails from "../components/ProductDetails";
 
 const AllProducts = () => {
   const [searchInput, setSearchInput] = useState("");
   const { allProducts, loading, error } = useSelector((state) => state.product);
   const dispatch = useDispatch();
 
-  const { formData, setFormData, handleSubmit, showProductForm, setShowProductForm, handleCloseProductForm, handleDeleteProduct } = useProducts();
+  const { formData, setFormData, handleSubmit, showProductForm, setShowProductForm, handleCloseProductForm, handleDeleteProduct, productDetailHandler, setShowProductDetails, showProductDetails } = useProducts();
   useEffect(() => {
     // const fetchData = async () => {
     //   try {
@@ -73,8 +74,10 @@ const AllProducts = () => {
             headers={productListHeaders}
             Icon={FileText}
             onDelete={handleDeleteProduct}
+            onView={productDetailHandler}
           />
         )}
+
       </div>
 
       {showProductForm && (
@@ -86,9 +89,16 @@ const AllProducts = () => {
           formData={formData}
           setFormData={setFormData}
           handleSubmit={handleSubmit}
+          handleClose={handleCloseProductForm}
           />
         </Modal>
       )}
+
+      {
+        showProductDetails && (
+          <ProductDetails />
+        )
+      }
     </div>
   );
 };

@@ -3,6 +3,7 @@ import Product from "../models/productModel.js";
 import Vendors from "../models/vendorModel.js";
 import Company from "../models/companyModel.js";
 import Category from "../models/categoryModel.js";
+import mongoose from "mongoose";
 
 export const addProduct = async (req, res) => {
   try {
@@ -54,7 +55,7 @@ export const addProduct = async (req, res) => {
     });
 
     if (existingProduct) {
-      existingProduct.quantity += quantity;
+      existingProduct.quantity += Number(quantity);
       await existingProduct.save();
 
       return successHandler(
@@ -141,7 +142,9 @@ export const getSingleProduct = async (req, res) => {
       return errorHandler(res, 400, "Invalid Product ID");
     }
 
-    const singleProduct = await Product.findById(id);
+    const singleProduct = await Product.findById(id)
+      .populate("companyName")
+      .populate("category");
     if (!singleProduct) {
       return errorHandler(res, 404, "Product not found by given ID");
     }
@@ -167,8 +170,8 @@ export const deleteProduct = async (req, res) => {
       return errorHandler(res, 404, "Product not found by given ID");
     }
 
-    await Product.findByIdAndDelete(id)  
-    return successHandler(res, 200, "Product deleted Successfully", product)
+    await Product.findByIdAndDelete(id);
+    return successHandler(res, 200, "Product deleted Successfully", product);
   } catch (error) {
     return errorHandler(res, 400, error?.message);
   }

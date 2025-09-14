@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const ProductForm = ({formData, setFormData, handleSubmit}) => {
+const ProductForm = ({formData, setFormData, handleSubmit, handleClose}) => {
   //   const [formData, setFormData] = useState({
   //     productName: "",
   //     companyName: "",
@@ -132,6 +132,7 @@ const ProductForm = ({formData, setFormData, handleSubmit}) => {
           <button
             type="submit"
             className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
+            onClick={handleClose}
           >
             Save Product
           </button>
