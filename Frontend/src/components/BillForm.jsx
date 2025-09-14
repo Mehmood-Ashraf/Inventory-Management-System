@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "./Button";
 import { Plus, Trash2 } from "lucide-react";
+import ProductInput from "./ProductInput";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllProducts } from "../redux/slice/productSlice";
 
 const BillForm = ({
   formData,
@@ -10,6 +13,14 @@ const BillForm = ({
   inputsData,
   submitLabel,
 }) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchAllProducts("")).unwrap();
+  }, []);
+
+  const { allProducts } = useSelector((state) => state.product);
+
   const handleChange = (e) => {
     const { name, value, type } = e.target;
     setFormData((prev) => ({
@@ -19,19 +30,25 @@ const BillForm = ({
   };
 
   const handleItemChange = (e, index) => {
-    if (!e?.target) return;
-    const { name, value, type } = e.target;
     const updatedItems = [...(formData.items || [])];
-
-    updatedItems[index] = {
-      ...updatedItems[index],
-      [name]:
-        type === "number"
-          ? value === ""
-            ? ""
-            : parseFloat(value) || 0
-          : value,
-    };
+    if (e?.target) {
+      const { name, value, type } = e.target;
+      updatedItems[index] = {
+        ...updatedItems[index],
+        [name]:
+          type === "number"
+            ? value === ""
+              ? ""
+              : parseFloat(value) || 0
+            : value,
+      };
+    } else if (e.productName && e.sellPrice !== undefined) {
+      updatedItems[index] = {
+        ...updatedItems[index],
+        product: e.productName,
+        price: e.sellPrice,
+      };
+    }
 
     updatedItems[index].total =
       (updatedItems[index].quantity || 0) * (updatedItems[index].price || 0);
@@ -168,13 +185,19 @@ const BillForm = ({
                   key={index}
                   className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center bg-gray-50 p-4 rounded-xl"
                 >
-                  <input
+                  {/* <input
                     type="text"
                     name="product"
                     placeholder="Product"
                     value={item.product}
                     onChange={(e) => handleItemChange(e, index)}
                     className="border border-gray-300 px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  /> */}
+                  <ProductInput
+                    value={item.product || ""}
+                    onChange={(e) => handleItemChange(e, index)}
+                    onSelect={(product) => handleItemChange(product, index)}
+                    allProducts={allProducts}
                   />
                   <input
                     type="number"

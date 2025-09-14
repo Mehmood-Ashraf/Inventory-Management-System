@@ -31,7 +31,7 @@ export const addCustomerBill = async (req, res) => {
     // har item ke liye loop chalaya
     for (let i of items) {
       // product ko database se find kar rahe hain id ke basis par
-      const product = await Product.findOne({ productName: i.product });
+      const product = await Product.findOne({ productName:  i.product.toLowerCase().replace(/\s+/g, '') });
       if (!product) {
         // agar product na mile to error return
         return errorHandler(res, 400, "Product not found");

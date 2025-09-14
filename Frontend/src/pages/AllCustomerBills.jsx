@@ -132,6 +132,7 @@ const AllCustomerBills = () => {
             loading={loading}
             onDelete={deleteCustomerBillHander}
             onView={billDetailsHandler}
+            type={"Bill"}
           />
         )}
       </div>

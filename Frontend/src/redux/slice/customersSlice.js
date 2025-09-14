@@ -46,7 +46,7 @@ export const deleteCustomer = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const res = await api.delete(`/customer/${id}`);
-      return res?.data
+      return res?.data;
     } catch (error) {
       return (
         thunkAPI,
@@ -87,17 +87,14 @@ export const updateCustomer = createAsyncThunk(
   }
 );
 
-
-
-
 const customerSlice = createSlice({
   name: "customer",
   initialState,
   reducers: {
-    clearSingleCustomer : (state) => {
-      console.log("clear single Customer triggered")
+    clearSingleCustomer: (state) => {
+      console.log("clear single Customer triggered");
       state.singleCustomer = null;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -134,11 +131,25 @@ const customerSlice = createSlice({
       })
       .addCase(deleteCustomer.fulfilled, (state) => {
         (state.loading = false),
-        (state.singleCustomer = null),
-        (state.error = null);
+          (state.singleCustomer = null),
+          (state.error = null);
+      })
+      .addCase(addCustomer.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addCustomer.fulfilled, (state, action) => {
+        state.loading = false;
+        // naya customer store me push kar do
+        state.allCustomers.push(action.payload);
+        state.error = null;
+      })
+      .addCase(addCustomer.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export const {clearSingleCustomer} = customerSlice.actions
+export const { clearSingleCustomer } = customerSlice.actions;
 export default customerSlice.reducer;

@@ -33,7 +33,7 @@ export const useCustomersBills = () => {
   const deleteCustomerBillHander = async (billId) => {
     try {
       await dispatch(deleteCustomerBill(billId)).unwrap();
-      toast.success("Customer bill delted Successfully");
+      toast.success("Customer bill deleted Successfully");
       await dispatch(fetchAllCustomerBills()).unwrap();
     } catch (error) {
       toast.error("Error in delete Customer Bill", error?.message);
