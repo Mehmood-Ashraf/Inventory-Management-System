@@ -2,6 +2,7 @@ import { errorHandler, successHandler } from "../utils/responseHandler.js";
 import Product from "../models/productModel.js";
 import CustomerBill from "../models/customerBillModel.js";
 import Customer from "../models/customerModel.js";
+import mongoose from "mongoose";
 
 export const addCustomerBill = async (req, res) => {
   try {

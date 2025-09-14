@@ -99,6 +99,7 @@ const Customers = () => {
             onView={handleCustomerClick}
             onDelete={deleteCustomerHandler}
             Icon={Users}
+            type={"Customer"}
           />
         )}
       </div>

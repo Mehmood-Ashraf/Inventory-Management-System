@@ -105,6 +105,7 @@ const Vendors = () => {
             onView={handleVendorClick}
             onDelete={deleteVendorHandler}
             Icon={Truck}
+            type={"Vendor"}
           />
         )}
       </div>

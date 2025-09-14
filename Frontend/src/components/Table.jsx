@@ -60,11 +60,11 @@ function Table({
       <div className="text-center py-12 border border-[#cedbe8] bg-slate-50 rounded-lg">
         <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
         <h3 className="text-lg font-medium text-gray-900 mb-2">
-          No {type === "bill" ? "bills" : "payments"} found
+          No {type && type} found
         </h3>
         <p className="text-gray-500">
           Get started by creating your first{" "}
-          {type === "bill" ? "bill" : "payment"}
+          {type && type}
         </p>
       </div>
     );

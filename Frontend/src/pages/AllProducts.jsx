@@ -12,7 +12,7 @@ import ProductDetails from "../components/ProductDetails";
 
 const AllProducts = () => {
   const [searchInput, setSearchInput] = useState("");
-  const { allProducts, loading, error } = useSelector((state) => state.product);
+  const { allProducts, loading, error, singleProduct } = useSelector((state) => state.product);
   const dispatch = useDispatch();
 
   const { formData, setFormData, handleSubmit, showProductForm, setShowProductForm, handleCloseProductForm, handleDeleteProduct, productDetailHandler, setShowProductDetails, showProductDetails } = useProducts();
@@ -75,6 +75,7 @@ const AllProducts = () => {
             Icon={FileText}
             onDelete={handleDeleteProduct}
             onView={productDetailHandler}
+            type={"Product"}
           />
         )}
 
@@ -96,7 +97,15 @@ const AllProducts = () => {
 
       {
         showProductDetails && (
-          <ProductDetails />
+          <Modal
+          // title={"Product Details"}
+          onClose={() => setShowProductDetails(false)}
+          >
+
+            <ProductDetails 
+            product={singleProduct}
+            />
+          </Modal>
         )
       }
     </div>
