@@ -6,7 +6,6 @@ const productModel = new mongoose.Schema({
   productName : {
     type : String,
     required : true,
-    unique : true,
     lowercase : true,
     trim : true
   },
