@@ -117,8 +117,15 @@ const customerBillsSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteCustomerBill.fulfilled, (state, payload) => {
+      .addCase(deleteCustomerBill.fulfilled, (state, action) => {
         state.loading = false;
+        state.allCustomerBills = state.allCustomerBills.filter(
+        (bill) => bill._id !== action.payload._id
+      );
+      })
+      .addCase(deleteCustomerBill.rejected, (state, action) => {
+        state.loading  = false;
+        state.error = action.payload
       })
       .addCase(fetchSingleBill.pending, (state) => {
         state.loading = true;
