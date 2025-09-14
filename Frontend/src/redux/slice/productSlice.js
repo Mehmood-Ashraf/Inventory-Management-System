@@ -68,6 +68,20 @@ export const addProduct = createAsyncThunk(
   }
 );
 
+export const deleteProduct = createAsyncThunk(
+  "product/deleteProduct",
+  async (id, thunkAPI) => {
+    try {
+      const res = await api.delete(`/product/${id}`);
+      return res?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error?.response?.data?.message || "Error deleting Product"
+      );
+    }
+  }
+);
+
 const productSlice = createSlice({
   name: "Product",
   initialState,
@@ -124,6 +138,21 @@ const productSlice = createSlice({
       .addCase(addProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(deleteProduct.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        // deleted product ka _id aa raha hoga action.payload._id me
+        state.allProducts = state.allProducts.filter(
+          (p) => p._id !== action.payload._id
+        );
+      })
+      .addCase(deleteProduct.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Error deleting product";
       });
   },
 });

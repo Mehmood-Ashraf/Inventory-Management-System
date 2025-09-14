@@ -14,7 +14,7 @@ const AllProducts = () => {
   const { allProducts, loading, error } = useSelector((state) => state.product);
   const dispatch = useDispatch();
 
-  const { formData, setFormData, handleSubmit, showProductForm, setShowProductForm, handleCloseProductForm } = useProducts();
+  const { formData, setFormData, handleSubmit, showProductForm, setShowProductForm, handleCloseProductForm, handleDeleteProduct } = useProducts();
   useEffect(() => {
     // const fetchData = async () => {
     //   try {
@@ -72,6 +72,7 @@ const AllProducts = () => {
             showActions={true}
             headers={productListHeaders}
             Icon={FileText}
+            onDelete={handleDeleteProduct}
           />
         )}
       </div>

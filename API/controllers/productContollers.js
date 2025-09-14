@@ -157,3 +157,19 @@ export const getSingleProduct = async (req, res) => {
   }
 };
 
+export const deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return errorHandler(res, 404, "Product not found by given ID");
+    }
+
+    await Product.findByIdAndDelete(id)  
+    return successHandler(res, 200, "Product deleted Successfully", product)
+  } catch (error) {
+    return errorHandler(res, 400, error?.message);
+  }
+};

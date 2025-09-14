@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addProduct } from "../redux/slice/productSlice";
+import { addProduct, deleteProduct } from "../redux/slice/productSlice";
 import { toast } from "react-toastify";
 
 const useProducts = () => {
@@ -39,13 +39,26 @@ const useProducts = () => {
 
   const handleSubmit = async (productData) => {
     try {
-      await dispatch(addProduct(productData)).unwrap();
+      const payload = { ...productData };
+      if (!payload.companyName) delete payload.companyName;
+      if (!payload.category) delete payload.category;
+      await dispatch(addProduct(payload)).unwrap();
       toast.success("Product added successfully");
       resetForm();
+      setShowProductForm(false)
     } catch (error) {
       toast.error(error?.message);
     }
   };
+
+  const handleDeleteProduct = async (id) => {
+    try {
+        await dispatch(deleteProduct(id)).unwrap()
+        toast.success("Product deleted successfully")
+    } catch (error) {
+        toast.error(error?.message)
+    }
+  }
 
   return {
     productDetailsHandler,
@@ -54,7 +67,8 @@ const useProducts = () => {
     handleCloseProductForm,
     handleSubmit,
     formData,
-    setFormData
+    setFormData,
+    handleDeleteProduct
   };
 };
 
