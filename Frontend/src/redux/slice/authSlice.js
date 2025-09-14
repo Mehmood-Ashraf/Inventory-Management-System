@@ -20,8 +20,8 @@ export const loginAdmin = createAsyncThunk(
 const authSlice = createSlice({
     name : "auth",
     initialState : {
-        adminName : sessionStorage.getItem("adminName") || "",
-        token : sessionStorage.getItem("token") || null,
+        adminName : typeof window !== "undefined" ? sessionStorage.getItem("adminName") : "",
+        token : typeof window !== "undefined" ? sessionStorage.getItem("token") : null,
         loading : false,
         error : null
     },
