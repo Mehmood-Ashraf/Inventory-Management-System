@@ -20,7 +20,7 @@ app.use(express.json())
 const port = process.env.PORT
 
 
-const allowedOrigins = ["http://localhost:5173", process.env.VITE_API_URL];
+const allowedOrigins = ["http://localhost:5173", process.env.FRONTEND_URL];
 // app.use(cors(
 //     ["http://localhost:5173", process.env.VITE_API_URL]
 // ))
