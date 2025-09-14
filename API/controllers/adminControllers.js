@@ -74,6 +74,7 @@ export const login = async (req, res) => {
     return successHandler(res, 200, "User Logged in successfully", {adminDetails, token})
   } catch (error) {
     console.log(error)
-    return errorHandler(res, 500, "User not logged in");
+    return errorHandler(res, 500, error?.message);
+    
   }
 };

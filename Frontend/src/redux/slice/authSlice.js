@@ -12,7 +12,7 @@ export const loginAdmin = createAsyncThunk(
             const adminName = res.data.data.adminDetails.adminName
             return {token, adminName}
         } catch (error) {
-            return thunkAPI.rejectWithValue(error.message)
+            return thunkAPI.rejectWithValue(error?.message)
         }
     }
 )
