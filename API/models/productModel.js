@@ -19,7 +19,9 @@ const productModel = new mongoose.Schema({
   },
   category : {
     type : mongoose.Schema.Types.ObjectId,
-    ref : "Category"
+    ref : "Category",
+    required : false,
+    default : null
   },
   purchasePrice : {
     type : Number,
@@ -52,7 +54,7 @@ productModel.pre("save", async function (next){
         this.companyName = genericCompany._id
     }
 
-    if(!this.category || this.category === ""){
+    if(!this.category){
       let defaultCatogory = await Category.findOne({ categoryName : "Uncategorized"})
 
       if(!defaultCatogory){
