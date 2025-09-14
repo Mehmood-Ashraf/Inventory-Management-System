@@ -75,9 +75,9 @@ const BillForm = ({
 
   return (
     <>
-      <div className="max-w-6xl mx-auto px-6 py-10">
+      <div className="max-w-6xl mx-auto px-6 py-6">
         {/* Page Title */}
-        <h2 className="text-3xl font-bold text-gray-900 mb-10">Add Bill</h2>
+        <h2 className="text-3xl font-bold text-gray-900 mb-5">Add Bill</h2>
 
         <form
           className="space-y-10"
