@@ -156,3 +156,4 @@ export const getSingleProduct = async (req, res) => {
     return errorHandler(res, 500, error?.message);
   }
 };
+

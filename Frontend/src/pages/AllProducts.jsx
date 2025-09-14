@@ -5,12 +5,16 @@ import { FileText, Plus } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllProducts } from "../redux/slice/productSlice";
 import Table from "../components/Table";
+import useProducts from "../hooks/useProducts";
+import Modal from "../components/Modal";
+import ProductForm from "../components/ProductForm";
 
 const AllProducts = () => {
   const [searchInput, setSearchInput] = useState("");
   const { allProducts, loading, error } = useSelector((state) => state.product);
   const dispatch = useDispatch();
 
+  const { formData, setFormData, handleSubmit, showProductForm, setShowProductForm, handleCloseProductForm } = useProducts();
   useEffect(() => {
     // const fetchData = async () => {
     //   try {
@@ -21,7 +25,6 @@ const AllProducts = () => {
     //   }
     // };
     // fetchData()
-
     if (searchInput) {
       const handler = setTimeout(() => {
         dispatch(fetchAllProducts(searchInput));
@@ -35,7 +38,7 @@ const AllProducts = () => {
     }
   }, [searchInput]);
 
-  const companyName = allProducts?.companyName?.companyName
+  const companyName = allProducts?.companyName?.companyName;
 
   const productListHeaders = [
     { key: "productName", label: "Product Name" },
@@ -54,7 +57,7 @@ const AllProducts = () => {
           placeholder={"Search Products....."}
         />
 
-        <Button>
+        <Button onClick={() => setShowProductForm(true)}>
           <Plus className="h-4 w-4 mr-2" />
           Add Product
         </Button>
@@ -72,6 +75,19 @@ const AllProducts = () => {
           />
         )}
       </div>
+
+      {showProductForm && (
+        <Modal
+        title={"Add Product"}
+        onClose={handleCloseProductForm}
+        >
+          <ProductForm 
+          formData={formData}
+          setFormData={setFormData}
+          handleSubmit={handleSubmit}
+          />
+        </Modal>
+      )}
     </div>
   );
 };

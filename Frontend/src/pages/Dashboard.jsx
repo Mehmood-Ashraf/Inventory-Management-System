@@ -83,6 +83,13 @@ const Dashboard = () => {
               onMouseEnter={() => setHovered("btn4")}
               onMouseLeave={() => setHovered(null)}
             >
+              Add Product
+            </Button>
+            <Button
+              variant={hovered === "btn5" ? "primary" : "secondary"}
+              onMouseEnter={() => setHovered("btn5")}
+              onMouseLeave={() => setHovered(null)}
+            >
               Show Order List
             </Button>
           </div>

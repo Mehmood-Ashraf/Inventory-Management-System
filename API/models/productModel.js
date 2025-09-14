@@ -52,7 +52,7 @@ productModel.pre("save", async function (next){
         this.companyName = genericCompany._id
     }
 
-    if(!this.category){
+    if(!this.category || this.category === ""){
       let defaultCatogory = await Category.findOne({ categoryName : "Uncategorized"})
 
       if(!defaultCatogory){
