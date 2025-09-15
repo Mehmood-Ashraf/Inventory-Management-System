@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addProduct, deleteProduct, fetchSingleProduct } from "../redux/slice/productSlice";
+import { addProduct, deleteProduct, fetchSingleProduct, updateProduct } from "../redux/slice/productSlice";
 import { toast } from "react-toastify";
 
 const useProducts = () => {
   const [showProductForm, setShowProductForm] = useState(false);
-  const [showProductDetails, setShowProductDetails] = useState(false)
+  const [showProductDetails, setShowProductDetails] = useState(false);
+  const [editProduct, setEditProduct] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null)
   const [formData, setFormData] = useState({
     productName: "",
     companyName: "",
@@ -68,6 +70,19 @@ const useProducts = () => {
     }
   };
 
+  const handleUpdate = async () => {
+    dispatch(updateProduct({
+      id : selectedProduct._id,
+      productData : selectedProduct
+    }))
+    setEditProduct(false)
+  };
+
+  const handleEditProduct = (product) => {
+    setEditProduct(true);
+    setSelectedProduct(product);
+  }
+
   const handleDeleteProduct = async (id) => {
     try {
         await dispatch(deleteProduct(id)).unwrap()
@@ -88,7 +103,8 @@ const useProducts = () => {
     handleDeleteProduct,
     productDetailHandler,
     showProductDetails,
-    setShowProductDetails
+    setShowProductDetails,
+    editProduct, setEditProduct, handleEditProduct, selectedProduct, setSelectedProduct, handleUpdate
   };
 };
 

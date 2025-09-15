@@ -15,7 +15,8 @@ const AllProducts = () => {
   const { allProducts, loading, error, singleProduct } = useSelector((state) => state.product);
   const dispatch = useDispatch();
 
-  const { formData, setFormData, handleSubmit, showProductForm, setShowProductForm, handleCloseProductForm, handleDeleteProduct, productDetailHandler, setShowProductDetails, showProductDetails } = useProducts();
+  const { formData, setFormData, handleSubmit, showProductForm, setShowProductForm, handleCloseProductForm, handleDeleteProduct, productDetailHandler, setShowProductDetails, showProductDetails, editProduct, setEditProduct, handleEditProduct, selectedProduct, setSelectedProduct, handleUpdate } = useProducts();
+
   useEffect(() => {
     // const fetchData = async () => {
     //   try {
@@ -75,6 +76,7 @@ const AllProducts = () => {
             Icon={FileText}
             onDelete={handleDeleteProduct}
             onView={productDetailHandler}
+            onEdit={handleEditProduct}
             type={"Product"}
           />
         )}
@@ -94,6 +96,24 @@ const AllProducts = () => {
           />
         </Modal>
       )}
+
+      {
+        editProduct && selectedProduct && (
+          <Modal
+          title={"Edit Product"}
+          onClose={() => setEditProduct(false)}
+          >
+            <ProductForm 
+            formData={formData}
+            setFormData={setFormData}
+            handleClose={() => setEditProduct(false)}
+            handleSubmit={handleUpdate}
+            selectedProduct={selectedProduct}
+            />
+          </Modal>
+        )
+      }
+
 
       {
         showProductDetails && (

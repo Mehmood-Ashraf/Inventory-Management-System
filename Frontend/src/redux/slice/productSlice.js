@@ -82,6 +82,18 @@ export const deleteProduct = createAsyncThunk(
   }
 );
 
+export const updateProduct = createAsyncThunk(
+  'product/updateProduct',
+  async({id, productData}, thunkAPI) => {
+    try {
+      const res = await api.put(`/product/${id}`, productData);
+      return res?.data?.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error?.response?.data?.message || "Product not updated")
+    }
+  }
+)
+
 const productSlice = createSlice({
   name: "Product",
   initialState,
@@ -153,7 +165,25 @@ const productSlice = createSlice({
       .addCase(deleteProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Error deleting product";
-      });
+      })
+      .addCase(updateProduct.pending, (state) => {
+        state.loading = true;
+        state.error = null
+      })
+      .addCase(updateProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        const updatedProduct = action.payload;
+        state.allProducts = state.allProducts.map((p) => p._id === updatedProduct._id ? updatedProduct : p)
+        
+        if(state.singleProduct && state.singleProduct._id === updateProduct._id){
+          state.singleProduct = updatedProduct
+        }
+      })
+      .addCase(updateProduct.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload
+      })
+
   },
 });
 

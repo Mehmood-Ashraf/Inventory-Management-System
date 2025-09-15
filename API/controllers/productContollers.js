@@ -176,3 +176,62 @@ export const deleteProduct = async (req, res) => {
     return errorHandler(res, 400, error?.message);
   }
 };
+
+
+export const updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return errorHandler(res, 400, "Invalid Product ID");
+    }
+
+    let {
+      productName,
+      companyName,
+      modelName,
+      category,
+      purchasePrice,
+      sellPrice,
+      quantity,
+    } = req.body;
+
+    const product = await Product.findById(id);
+    if(!product){
+      return errorHandler(res, 404, "Product not found")
+    };
+
+    // convert companyName to ObjectId
+    if (companyName && typeof companyName === "string") {
+      let company = await Company.findOne({ companyName });
+      if (!company) {
+        company = await Company.create({ companyName });
+      }
+      companyName = company._id;
+    }
+
+    // convert category to ObjectId
+    if (category && typeof category === "string") {
+      let cat = await Category.findOne({ categoryName: category });
+      if (!cat) {
+        cat = await Category.create({ categoryName: category });
+      }
+      category = cat._id;
+    }
+
+    product.productName = productName || product.productName;
+    product.companyName = companyName || product.companyName;
+    product.vendorName = vendorName || product.vendorName;
+    product.modelName = modelName || product.modelName;
+    product.category = category || product.category;
+    product.purchasePrice = purchasePrice || product.purchasePrice;
+    product.sellPrice = sellPrice || product.sellPrice;
+    product.quantity = quantity ?? product.quantity; // agar 0 bheja to bhi update ho
+
+    await product.save();
+
+    return successHandler(res, 200, "Product updated successfully", product)
+  } catch (error) {
+    return errorHandler(res, 500, error?.message)
+  }
+}
