@@ -20,7 +20,7 @@ export const useCustomersBills = () => {
     billNumber: "",
     contact: "",
     city: "",
-    date : "",
+    date: "",
     items: [{ product: "", quantity: "", price: "", total: "" }],
   });
 
@@ -65,16 +65,18 @@ export const useCustomersBills = () => {
       contact: "",
       city: "",
       contact: "",
-      date : "",
+      date: "",
       items: [{ product: "", quantity: "", price: "", total: "" }],
     });
   };
 
-  const handleAddCustomerBill = (billDetails) => {
+  const handleAddCustomerBill = async (billDetails) => {
     try {
-      console.log(billDetails)
-      dispatch(addCustomerBill(billDetails));
-      toast.success("Bill Added Successfully");
+      console.log(billDetails);
+      const newBill = await dispatch(addCustomerBill(billDetails)).unwrap();
+      if (newBill) {
+        toast.success("Bill Added Successfully");
+      }
       resetBillForm();
       setTimeout(() => {
         navigate("/all_customer_bills");

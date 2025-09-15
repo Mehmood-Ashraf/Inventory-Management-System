@@ -31,7 +31,9 @@ export const addCustomerBill = async (req, res) => {
     // har item ke liye loop chalaya
     for (let i of items) {
       // product ko database se find kar rahe hain id ke basis par
-      const product = await Product.findOne({ productName:  i.product.toLowerCase().replace(/\s+/g, '') });
+      const product = await Product.findOne({
+        productName: { $regex: new RegExp(`^${i.product}$`, "i") },
+      });
       if (!product) {
         // agar product na mile to error return
         return errorHandler(res, 400, "Product not found");
@@ -206,22 +208,23 @@ export const deleteCustomerBill = async (req, res) => {
       return errorHandler(res, 400, "Bill not found!");
     }
 
-    for(let item of deletedBill.items){
-      let product = await Product.findById(item.product)
-      if(product){
-        product.quantity += item.quantity
-        await product.save()
+    for (let item of deletedBill.items) {
+      let product = await Product.findById(item.product);
+      if (product) {
+        product.quantity += item.quantity;
+        await product.save();
       }
     }
 
-    let customer = await Customer.findById(deletedBill.customerId)
-    if(customer){
-      customer.customerBills = customer.customerBills.filter((bill) => !bill.equals(deletedBill._id))
+    let customer = await Customer.findById(deletedBill.customerId);
+    if (customer) {
+      customer.customerBills = customer.customerBills.filter(
+        (bill) => !bill.equals(deletedBill._id)
+      );
       customer.currentBalance -= deletedBill.totalAmount;
-      customer.totalTurnover -= deletedBill.totalAmount
-      await customer.save()
+      customer.totalTurnover -= deletedBill.totalAmount;
+      await customer.save();
     }
-
 
     return successHandler(res, 200, "BIll Deleted Successfully", deletedBill);
   } catch (error) {
