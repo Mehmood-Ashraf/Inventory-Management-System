@@ -196,11 +196,14 @@ export const updateProduct = async (req, res) => {
       quantity,
     } = req.body;
 
+    // console.log(productName, companyName, quantity, sellPrice, purchasePrice, category, modelName)
+
     const product = await Product.findById(id);
     if(!product){
       return errorHandler(res, 404, "Product not found")
     };
 
+    // console.log(product, "=====> Product")
     // convert companyName to ObjectId
     if (companyName && typeof companyName === "string") {
       let company = await Company.findOne({ companyName });
@@ -228,6 +231,8 @@ export const updateProduct = async (req, res) => {
     product.quantity = quantity ?? product.quantity; // agar 0 bheja to bhi update ho
 
     await product.save();
+
+    // console.log("Product after update", product)
 
     return successHandler(res, 200, "Product updated successfully", product)
   } catch (error) {

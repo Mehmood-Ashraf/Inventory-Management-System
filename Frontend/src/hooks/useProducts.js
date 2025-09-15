@@ -1,13 +1,18 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addProduct, deleteProduct, fetchSingleProduct, updateProduct } from "../redux/slice/productSlice";
+import {
+  addProduct,
+  deleteProduct,
+  fetchSingleProduct,
+  updateProduct,
+} from "../redux/slice/productSlice";
 import { toast } from "react-toastify";
 
 const useProducts = () => {
   const [showProductForm, setShowProductForm] = useState(false);
   const [showProductDetails, setShowProductDetails] = useState(false);
   const [editProduct, setEditProduct] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [formData, setFormData] = useState({
     productName: "",
     companyName: "",
@@ -41,20 +46,19 @@ const useProducts = () => {
     });
   };
 
-
   const productDetailHandler = async (productId) => {
     try {
-        const product = await dispatch(fetchSingleProduct(productId)).unwrap()
-        if(product){
-            setShowProductDetails(true)
-            toast.success("Single Product Fetch successfully")
-        }else{
-            toast.error("Product not found")
-        }
+      const product = await dispatch(fetchSingleProduct(productId)).unwrap();
+      if (product) {
+        setShowProductDetails(true);
+        toast.success("Single Product Fetch successfully");
+      } else {
+        toast.error("Product not found");
+      }
     } catch (error) {
-        toast.error(error?.message || error?.payload || "Something went wrong")
+      toast.error(error?.message || error?.payload || "Something went wrong");
     }
-  }
+  };
 
   const handleSubmit = async (productData) => {
     try {
@@ -64,33 +68,53 @@ const useProducts = () => {
       await dispatch(addProduct(payload)).unwrap();
       toast.success("Product added successfully");
       resetForm();
-      setShowProductForm(false)
+      setShowProductForm(false);
     } catch (error) {
       toast.error(error?.message || error?.payload);
     }
   };
 
   const handleUpdate = async () => {
-    dispatch(updateProduct({
-      id : selectedProduct._id,
-      productData : selectedProduct
-    }))
-    setEditProduct(false)
+    try {
+      const payload = { ...formData };
+
+      if (!payload.companyName) delete payload.companyName;
+      if (!payload.category) delete payload.category;
+
+      const updated = await dispatch(
+        updateProduct({
+          id: selectedProduct._id,
+          productData: payload,
+        })
+      ).unwrap();
+
+      setSelectedProduct(updated)
+
+      toast.success("Product updated successfully")
+      setEditProduct(false);
+      // setShowProductDetails(true)
+
+    } catch (error) {}
+      toast.error(error?.message || error?.payload || "Update failed")
   };
 
   const handleEditProduct = (product) => {
     setEditProduct(true);
     setSelectedProduct(product);
-  }
+  };
 
   const handleDeleteProduct = async (id) => {
     try {
-        await dispatch(deleteProduct(id)).unwrap()
-        toast.success("Product deleted successfully")
+      await dispatch(deleteProduct(id)).unwrap();
+      toast.success("Product deleted successfully");
+      setSelectedProduct(null);
+      resetForm();
+      setEditProduct(false)
+      setShowProductDetails(false)
     } catch (error) {
-        toast.error(error?.message || error?.payload)
+      toast.error(error?.message || error?.payload);
     }
-  }
+  };
 
   return {
     productDetailsHandler,
@@ -104,7 +128,12 @@ const useProducts = () => {
     productDetailHandler,
     showProductDetails,
     setShowProductDetails,
-    editProduct, setEditProduct, handleEditProduct, selectedProduct, setSelectedProduct, handleUpdate
+    editProduct,
+    setEditProduct,
+    handleEditProduct,
+    selectedProduct,
+    setSelectedProduct,
+    handleUpdate,
   };
 };
 

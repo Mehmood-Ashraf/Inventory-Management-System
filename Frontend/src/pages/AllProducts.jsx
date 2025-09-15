@@ -12,10 +12,29 @@ import ProductDetails from "../components/ProductDetails";
 
 const AllProducts = () => {
   const [searchInput, setSearchInput] = useState("");
-  const { allProducts, loading, error, singleProduct } = useSelector((state) => state.product);
+  const { allProducts, loading, error, singleProduct } = useSelector(
+    (state) => state.product
+  );
   const dispatch = useDispatch();
 
-  const { formData, setFormData, handleSubmit, showProductForm, setShowProductForm, handleCloseProductForm, handleDeleteProduct, productDetailHandler, setShowProductDetails, showProductDetails, editProduct, setEditProduct, handleEditProduct, selectedProduct, setSelectedProduct, handleUpdate } = useProducts();
+  const {
+    formData,
+    setFormData,
+    handleSubmit,
+    showProductForm,
+    setShowProductForm,
+    handleCloseProductForm,
+    handleDeleteProduct,
+    productDetailHandler,
+    setShowProductDetails,
+    showProductDetails,
+    editProduct,
+    setEditProduct,
+    handleEditProduct,
+    selectedProduct,
+    setSelectedProduct,
+    handleUpdate,
+  } = useProducts();
 
   useEffect(() => {
     // const fetchData = async () => {
@@ -80,54 +99,39 @@ const AllProducts = () => {
             type={"Product"}
           />
         )}
-
       </div>
 
       {showProductForm && (
-        <Modal
-        title={"Add Product"}
-        onClose={handleCloseProductForm}
-        >
-          <ProductForm 
-          formData={formData}
-          setFormData={setFormData}
-          handleSubmit={handleSubmit}
-          handleClose={handleCloseProductForm}
+        <Modal title={"Add Product"} onClose={handleCloseProductForm}>
+          <ProductForm
+            formData={formData}
+            setFormData={setFormData}
+            handleSubmit={handleSubmit}
+            handleClose={handleCloseProductForm}
           />
         </Modal>
       )}
 
-      {
-        editProduct && selectedProduct && (
-          <Modal
-          title={"Edit Product"}
-          onClose={() => setEditProduct(false)}
-          >
-            <ProductForm 
+      {editProduct && selectedProduct && (
+        <Modal title={"Edit Product"} onClose={() => setEditProduct(false)}>
+          <ProductForm
             formData={formData}
             setFormData={setFormData}
             handleClose={() => setEditProduct(false)}
             handleSubmit={handleUpdate}
             selectedProduct={selectedProduct}
-            />
-          </Modal>
-        )
-      }
+          />
+        </Modal>
+      )}
 
-
-      {
-        showProductDetails && (
-          <Modal
+      {showProductDetails && (
+        <Modal
           // title={"Product Details"}
           onClose={() => setShowProductDetails(false)}
-          >
-
-            <ProductDetails 
-            product={singleProduct}
-            />
-          </Modal>
-        )
-      }
+        >
+          <ProductDetails product={singleProduct} />
+        </Modal>
+      )}
     </div>
   );
 };
