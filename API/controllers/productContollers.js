@@ -221,7 +221,6 @@ export const updateProduct = async (req, res) => {
 
     product.productName = productName || product.productName;
     product.companyName = companyName || product.companyName;
-    product.vendorName = vendorName || product.vendorName;
     product.modelName = modelName || product.modelName;
     product.category = category || product.category;
     product.purchasePrice = purchasePrice || product.purchasePrice;
