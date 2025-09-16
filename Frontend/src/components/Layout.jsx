@@ -54,7 +54,8 @@ const Layout = () => {
       `}
       >
         <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
-          <h1 className="text-xl font-bold text-gray-900">InventoryPro</h1>
+        <img src="/logo4.png" alt="IMS Logo" className="w-16 h-16 rounded-full object-cover" />
+          <h1 className="text-xl font-bold text-gray-900">IMS Pro</h1>
           <button
             onClick={() => setSidebarOpen(false)}
             className="lg:hidden cursor-pointer hover:bg-blue-50"
@@ -106,12 +107,14 @@ const Layout = () => {
             >
               <Menu className="h-6 w-6" />
             </button>
-
+          <div className="flex items-center gap-2">
+        <img src="/logo4.png" alt="IMS Logo" className="w-16 h-16 rounded-full object-cover" />
             <h2 className="text-lg font-semibold text-gray-900 capitalize">
               {currentPage ? currentPage.label : "Dashboard"}
             </h2>
+          </div>
 
-            <div className="flex items-center space-x-4">
+            <div className="md:flex items-center space-x-4 hidden">
               <div className="relative">
                 <button
                   className="text-sm text-gray-500 cursor-pointer"

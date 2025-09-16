@@ -7,10 +7,10 @@ import mongoose from "mongoose";
 export const addCustomerBill = async (req, res) => {
   try {
     // request body se customerType, customerName aur items ko destructure kar rahe hain
-    const { customerType, customerName, items, date } = req.body;
+    const { customerType, customerName, items, date, paymentType } = req.body;
 
     // agar ye tino fields body me na milein to error return kar do
-    if (!customerType || !customerName || !items) {
+    if (!customerType || !customerName || !items || !paymentType) {
       return errorHandler(res, 400, "Missing Fields");
     }
 
@@ -96,6 +96,12 @@ export const addCustomerBill = async (req, res) => {
       }
     }
 
+    let finalPaymentType = paymentType;
+
+    if(customerType === "walkin"){
+      finalPaymentType = "cash";
+    }
+
     // naya bill object banaya CustomerBill model ke through
     const newBill = new CustomerBill({
       customerType,
@@ -105,6 +111,7 @@ export const addCustomerBill = async (req, res) => {
       billNumber: newBillNumber,
       totalAmount,
       date: finalDate,
+      paymentType : finalPaymentType
     });
 
     // bill ko database me save kia
@@ -231,3 +238,21 @@ export const deleteCustomerBill = async (req, res) => {
     return errorHandler(res, 400, error?.message);
   }
 };
+
+
+export const getTodaysSale = async (req, res) => {
+  try {
+    const today = new Date().toISOString().split("T")[0];
+
+    const todaysBills = await CustomerBill.find({
+      paymentType : "cash",
+      date : today
+    })
+
+    const todaysSale = todaysBills.reduce((acc, bill) => acc + bill.totalAmount, 0)
+
+    return successHandler(res, 200, "Todays Sale fetched Successfully", todaysSale)
+  } catch (error) {
+    return errorHandler(res, 500, error?.message)
+  }
+}

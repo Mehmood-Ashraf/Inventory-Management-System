@@ -23,6 +23,7 @@ const customerBillModel = new mongoose.Schema({
     unique : true,
   },
   totalAmount: Number,
+  paymentType : { type : String, enum : ["credit", "cash"], required : true},
   date: { type: String, default: () => new Date().toISOString().split("T")[0] }
 }, { timestamps : true });
 

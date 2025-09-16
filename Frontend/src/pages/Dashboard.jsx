@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Card from "../components/Dashboard/Card";
-import { formattedCardData } from "../mockData/cardData";
+import { dashboardCardData, formattedCardData } from "../mockData/cardData";
 import Button from "../components/Button";
 import Table from "../components/Table";
 import Card1 from "../components/Card";
@@ -11,48 +11,68 @@ import Modal from "../components/Modal";
 import BillForm from "../components/BillForm";
 import { customerBillsInputs } from "../formSource";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { clearSingleCustomer } from "../redux/slice/customersSlice";
 import { fetchLowStockProducts } from "../redux/slice/productSlice";
+import { fetchTodaySale } from "../redux/slice/salesSlice";
+import useProducts from "../hooks/useProducts";
+import ProductForm from "../components/ProductForm";
 
 const Dashboard = () => {
   const [hovered, setHovered] = useState(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const { todaySale, loading, error} = useSelector((state) => state.sales);
+  const {showProductForm, setShowProductForm, formData, setFormData, handleCloseProductForm, handleSubmit} = useProducts()
+
+  const cardsWithFetch = dashboardCardData.map((card) => {
+    if (card.title === "Todays's Sale") {
+      return {
+        ...card,
+        onFetch: async () => {
+          const res = await dispatch(fetchTodaySale()).unwrap();
+          return `PKR ${res.toLocaleString("en-US")}`;
+        },
+      };
+    }
+    return card;
+  });
+
   useEffect(() => {
-    dispatch(clearSingleCustomer())
+    dispatch(clearSingleCustomer());
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(fetchLowStockProducts())
+    dispatch(fetchLowStockProducts());
 
     const interval = setInterval(() => {
-      dispatch(fetchLowStockProducts())
-    }, 3600000) //1 hour
+      dispatch(fetchLowStockProducts());
+    }, 3600000); //1 hour
 
-    return clearInterval(interval)
-  }, [dispatch])
+    return clearInterval(interval);
+  }, [dispatch]);
 
   return (
     <div className="space-y-10">
-      <div className="heading text-4xl font-semibold">Inventory Management</div>
+      <div className="flex items-center space-x-3">
+        <div className=" text-2xl sm:text-4xl text-center font-semibold">
+          Inventory Management System
+        </div>
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 items-center">
-        {formattedCardData.map((card, index) => (
-          <Card key={index} title={card.title} value={card.formattedValue} />
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-8 items-center">
+        {cardsWithFetch.map((card, index) => (
+          <Card key={index} title={card.title} onFetch={card.onFetch} />
         ))}
       </div>
 
-      <div className="flex gap-8 w-full flex-col lg:flex-row justify-between">
-        <div className="w-3/4">
-          <LowStockAlert />
-        </div>
+      <div className="flex md:flex-row flex-col gap-8 w-full justify-between">
 
         <Card1
           title={"Quick Actions"}
           subtitle={"Common tasks and shortcuts"}
-          className="lg:w-1/3"
+          className="md:w-1/3"
           icon={Zap}
         >
           <div className="flex flex-col gap-3">
@@ -82,6 +102,7 @@ const Dashboard = () => {
               variant={hovered === "btn4" ? "primary" : "secondary"}
               onMouseEnter={() => setHovered("btn4")}
               onMouseLeave={() => setHovered(null)}
+              onClick={() => setShowProductForm(true)}
             >
               Add Product
             </Button>
@@ -94,12 +115,21 @@ const Dashboard = () => {
             </Button>
           </div>
         </Card1>
+
+
+        <div className="md:w-3/4 w-full">
+          <LowStockAlert />
+        </div>
+
       </div>
 
       <div>
-        <Table title={"Recent Transactions"} subTitle={"Record of your recent transactions"} type={"bill"}/>
+        <Table
+          title={"Recent Transactions"}
+          subTitle={"Record of your recent transactions"}
+          type={"bill"}
+        />
       </div>
-
 
       {/* {
         addCustomerBillModal && 
@@ -117,6 +147,17 @@ const Dashboard = () => {
 
         </Modal>
       } */}
+
+      {showProductForm && (
+        <Modal title={"Add Product"} onClose={handleCloseProductForm}>
+          <ProductForm
+            formData={formData}
+            setFormData={setFormData}
+            handleSubmit={handleSubmit}
+            handleClose={handleCloseProductForm}
+          />
+        </Modal>
+      )}
     </div>
   );
 };

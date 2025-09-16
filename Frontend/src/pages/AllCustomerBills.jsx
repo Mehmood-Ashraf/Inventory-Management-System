@@ -3,7 +3,10 @@ import SearchInput from "../components/SearchInput";
 import { FileText, Plus } from "lucide-react";
 import Button from "../components/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllCustomerBills, fetchSingleCustomerBills } from "../redux/slice/customerBillSlice";
+import {
+  fetchAllCustomerBills,
+  fetchSingleCustomerBills,
+} from "../redux/slice/customerBillSlice";
 import Table from "../components/Table";
 import { useCustomersBills } from "../hooks/useCustomersBills";
 import Modal from "../components/Modal";
@@ -18,13 +21,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 const AllCustomerBills = () => {
   const [searchInput, setSearchInput] = useState("");
   const dispatch = useDispatch();
-  const { allCustomerBills, singleBill, singleCustomerBills, loading, error } = useSelector(
-    (state) => state.customerBills
-  );
+  const { allCustomerBills, singleBill, singleCustomerBills, loading, error } =
+    useSelector((state) => state.customerBills);
   const location = useLocation();
   const customerId = location.state?.customerId;
-  const navigate = useNavigate()
-  console.log(customerId)
+  const navigate = useNavigate();
+  console.log(customerId);
   const {
     addCustomerBillModal,
     setAddCustomerBillModal,
@@ -36,7 +38,7 @@ const AllCustomerBills = () => {
     setShowBillDetailsModal,
     billDetailsHandler,
     handleCloseBillDetailModal,
-    addCustomerBill
+    addCustomerBill,
   } = useCustomersBills();
 
   const customerBillsListHeaders = [
@@ -46,7 +48,8 @@ const AllCustomerBills = () => {
     { key: "totalAmount", label: "Amount" },
   ];
 
-  const billsToShow = singleCustomerBills?.length > 0 ? singleCustomerBills : allCustomerBills
+  const billsToShow =
+    singleCustomerBills?.length > 0 ? singleCustomerBills : allCustomerBills;
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -83,9 +86,9 @@ const AllCustomerBills = () => {
   // }, [searchInput, dispatch]);
 
   useEffect(() => {
-    if(customerId){
-      dispatch(fetchSingleCustomerBills(customerId))
-    }else{
+    if (customerId) {
+      dispatch(fetchSingleCustomerBills(customerId));
+    } else {
       dispatch(fetchAllCustomerBills());
     }
   }, [customerId, dispatch]);
@@ -95,7 +98,7 @@ const AllCustomerBills = () => {
     date: formatDate(bill.date),
   }));
 
-  const billsCardsData = customerBillsCardData(allCustomerBills);
+  const billsCardsData = customerBillsCardData(billsToShow);
 
   return (
     <div className="space-y-6">
@@ -106,7 +109,7 @@ const AllCustomerBills = () => {
           onChange={setSearchInput}
         />
 
-        <Button onClick={() =>navigate('/add_customer_bill')}>
+        <Button onClick={() => navigate("/add_customer_bill")}>
           <Plus className="h-4 w-4 mr-2" />
           Add Bill
         </Button>
@@ -114,7 +117,16 @@ const AllCustomerBills = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 items-center">
         {billsCardsData?.map((item, index) => (
-          <Card key={index} title={item.title} value={item.value} />
+          // <Card key={index} title={item.title} value={item.value} />
+          <div
+            key={index}
+            className="border-1 border-black bg-white shadow-md rounded-2xl p-4"
+          >
+            <h1 className="text-lg font-semibold text-gray-900">
+              {item.title}
+            </h1>
+            <p className="text-2xl font-bold text-gray-700">{item.value}</p>
+          </div>
         ))}
       </div>
 
@@ -154,16 +166,12 @@ const AllCustomerBills = () => {
         </Modal>
       )}
 
-
       {showBillDetailsModal && (
         <Modal
-        title={"Customer Bill Details"}
-        onClose={handleCloseBillDetailModal}
+          title={"Customer Bill Details"}
+          onClose={handleCloseBillDetailModal}
         >
-          <BillDetailsModal
-          type={"customer"}
-          selectedBill={singleBill}
-          />
+          <BillDetailsModal type={"customer"} selectedBill={singleBill} />
         </Modal>
       )}
     </div>

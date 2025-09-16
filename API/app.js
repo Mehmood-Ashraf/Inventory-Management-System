@@ -28,7 +28,6 @@ const allowedOrigins = ["http://localhost:5173", process.env.FRONTEND_URL];
 app.use(
   cors({
     origin: (origin, callback) => {
-        console.log("Incoming origin", origin);
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {

@@ -34,6 +34,13 @@ export const customerBillsInputs = [
     required: true,
   },
   {
+    id: "paymentType",
+    label: "Payment Type",
+    type: "select",
+    options: ["cash", "credit"],
+    required: true,
+  },
+  {
     id: "billNumber",
     label: "Bill Number",
     type: "text",
