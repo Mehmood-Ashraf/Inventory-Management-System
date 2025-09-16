@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addCustomerBill, deleteCustomerBill, getAllCustomerBills, getSingleCustomerBill, getSingleCustomerBills } from "../controllers/customerBillControllers.js";
+import { addCustomerBill, deleteCustomerBill, getAllCustomerBills, getSingleCustomerBill, getSingleCustomerBills, getTodaysSale } from "../controllers/customerBillControllers.js";
 
 const router = Router()
 
