@@ -17,6 +17,8 @@ import { fetchLowStockProducts } from "../redux/slice/productSlice";
 import { fetchTodaySale } from "../redux/slice/salesSlice";
 import useProducts from "../hooks/useProducts";
 import ProductForm from "../components/ProductForm";
+import usePayment from "../hooks/usePayment";
+import AddPaymentModal from "../components/payments/AddPaymentModal";
 
 const Dashboard = () => {
   const [hovered, setHovered] = useState(null);
@@ -25,6 +27,7 @@ const Dashboard = () => {
 
   const { todaySale, loading, error} = useSelector((state) => state.sales);
   const {showProductForm, setShowProductForm, formData, setFormData, handleCloseProductForm, handleSubmit} = useProducts()
+  const {showAddPaymentModal, setShowAddPaymentModal, paymentFormData, setPaymentFormData, handleClose, handleFormSubmit} = usePayment();
 
   const cardsWithFetch = dashboardCardData.map((card) => {
     if (card.title === "Todays's Sale") {
@@ -32,7 +35,7 @@ const Dashboard = () => {
         ...card,
         onFetch: async () => {
           const res = await dispatch(fetchTodaySale()).unwrap();
-          return `PKR ${res.toLocaleString("en-US")}`;
+          return `PKR ${res?.data?.todaysSale.toLocaleString("en-US")}`;
         },
       };
     }
@@ -95,8 +98,9 @@ const Dashboard = () => {
               variant={hovered === "btn3" ? "primary" : "secondary"}
               onMouseEnter={() => setHovered("btn3")}
               onMouseLeave={() => setHovered(null)}
+              onClick={() => setShowAddPaymentModal(true)}
             >
-              Add Today's Expenses
+              Add Payment
             </Button>
             <Button
               variant={hovered === "btn4" ? "primary" : "secondary"}
@@ -157,6 +161,16 @@ const Dashboard = () => {
             handleClose={handleCloseProductForm}
           />
         </Modal>
+      )}
+
+      {showAddPaymentModal && (
+        <AddPaymentModal
+        setShowAddPaymentModal={setShowAddPaymentModal}
+        paymentData={paymentFormData}
+        setPaymentData={setPaymentFormData}
+        handleClose={handleClose}
+        handleSubmit={handleFormSubmit}
+        />
       )}
     </div>
   );

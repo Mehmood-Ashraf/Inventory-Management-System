@@ -1,6 +1,7 @@
 import { errorHandler, successHandler } from "../utils/responseHandler.js";
 import CustomerBills from "../models/customerBillModel.js";
 import Customer from "../models/customerModel.js"
+import CustomerPayments from '../models/customerPaymentModel.js'
 
 export const addCustomer = async (req, res) => {
   console.log(req.body, "=========> Add Customer");
@@ -36,7 +37,10 @@ export const getSingleCustomer = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const customer = await Customer.findByIdAndUpdate(id).populate("bills");
+    const customer = await Customer.findById(id).populate({
+       path : "payments",
+      options : { sort : {date : -1} }
+    }).populate({path : "bills", options : {sort : {date : -1}}});
     if (!customer) {
       return errorHandler(res, 400, "Customer not found by given id");
     }
@@ -95,6 +99,8 @@ export const deleteCustomer = async (req, res) => {
     }
 
     await CustomerBills.deleteMany({ customerId: id });
+
+    await CustomerPayments.deleteMany({customerId : id});
 
     return successHandler(
       res,

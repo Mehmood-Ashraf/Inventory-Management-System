@@ -64,7 +64,7 @@ productModel.pre("save", async function (next){
 
     next()
   } catch (error) {
-    next(error)
+    next(error) 
   }
 })
 

@@ -8,8 +8,10 @@ import customerRoutes from './routes/customerRoutes.js'
 import customerBillRoutes from './routes/customerBillRoutes.js'
 import vendorBillRoutes from './routes/vendorBillRoutes.js'
 import vendorPaymentRoutes from './routes/vendorPaymentRoutes.js'
+import customerPaymentRoutes from "./routes/customerPaymentRoutes.js"
 import productRoutes from './routes/productRoutes.js'
 import { connectDB } from './utils/connectDB.js'
+import allPaymentRoute from './routes/allPaymentRoute.js'
 
 dotenv.config()
 const app = express()
@@ -45,7 +47,9 @@ app.use('/api/customer', customerRoutes);
 app.use('/api/customer-bill', customerBillRoutes)
 app.use('/api/vendor-bill', vendorBillRoutes);
 app.use('/api/vendor-payments', vendorPaymentRoutes)
+app.use('/api/customer-payment', customerPaymentRoutes)
 app.use('/api/product', productRoutes);
+app.use("/api/payments", allPaymentRoute);
 
 if (process.env.MODE === "development") {
     

@@ -28,7 +28,7 @@ const useCustomers = () => {
   const dispatch = useDispatch();
 
   const handleCustomerClick = (customerID) => {
-    navigate(`/details/customer/${customerID}`)
+    navigate(`/details/customer/${customerID}`);
     // localStorage.setItem("customerID", customerID);
   };
 
@@ -47,11 +47,15 @@ const useCustomers = () => {
       await dispatch(deleteCustomer(customerID)).unwrap();
       toast.success("customer deleted Successfully!");
       setShowDetailModal(false);
-      await dispatch(fetchAllCustomers()).unwrap();
     } catch (error) {
       toast.error(
         error?.message || " Vendor not deleted Something went wrong!"
       );
+    }
+    try {
+      await dispatch(fetchAllCustomers()).unwrap();
+    } catch (error) {
+      console.error("Error fetching customers:", error?.message);
     }
   };
 
@@ -101,7 +105,6 @@ const useCustomers = () => {
 
   const handleSubmit = async (e, onClose) => {
     e.preventDefault();
-    console.log(formData);
     try {
       if (!formData.customerType) {
         alert("Select");

@@ -12,7 +12,7 @@ export const fetchTodaySale = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const res = await api.get(`/customer-bill/today-sale`);
-      return res?.data?.data;
+      return res?.data;
     } catch (error) {
         return thunkAPI.rejectWithValue(error?.response?.data?.message || "Error fetching today sale")
     }

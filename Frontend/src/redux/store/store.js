@@ -5,7 +5,7 @@ import customerReducer from '../slice/customersSlice'
 import productReducer from '../slice/productSlice'
 import customerBillsReducer from '../slice/customerBillSlice'
 import salesReducer from '../slice/salesSlice'
-
+import paymentReducer from '../slice/paymentSlice'
 
 export const store = configureStore({
     reducer : {
@@ -14,7 +14,8 @@ export const store = configureStore({
         customer : customerReducer,
         product : productReducer,
         customerBills : customerBillsReducer,
-        sales : salesReducer
+        sales : salesReducer,
+        payment : paymentReducer
         // vendorBills : 
     }
 })

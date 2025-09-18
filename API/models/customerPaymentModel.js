@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 
-const vendorPaymentModel = new mongoose.Schema({
-    vendorId : {
+const customerPaymentModel = new mongoose.Schema({
+    customerId : {
         type : mongoose.Schema.Types.ObjectId,
-        ref : "Vendors",
+        ref : "Customer",
         required : true
     },
     amount : {
@@ -17,11 +17,11 @@ const vendorPaymentModel = new mongoose.Schema({
     method : {
         type : String,
         enum : ["cash", "bank", "online"],
-        default : "Cash"
+        default : "cash"
     },
     note : {
         type : String
     }
 }, { timestamps : true })
 
-export default mongoose.model("VendorPayments", vendorPaymentModel)
+export default mongoose.model("CustomerPayments", customerPaymentModel)

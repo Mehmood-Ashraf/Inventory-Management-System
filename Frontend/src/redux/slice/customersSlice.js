@@ -63,8 +63,7 @@ export const addCustomer = createAsyncThunk(
   async (customerData, thunkAPI) => {
     try {
       const res = await api.post(`/customer/add`, customerData);
-      console.log(res?.data);
-      return res.data.data;
+      return res?.data?.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || "Error adding vendor"
@@ -92,7 +91,6 @@ const customerSlice = createSlice({
   initialState,
   reducers: {
     clearSingleCustomer: (state) => {
-      console.log("clear single Customer triggered");
       state.singleCustomer = null;
     },
   },

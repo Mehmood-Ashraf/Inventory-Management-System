@@ -9,6 +9,7 @@ import {
   Menu,
   X,
   Zap,
+  Wallet,
 } from "lucide-react";
 import { Outlet, NavLink, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -29,7 +30,8 @@ const Layout = () => {
     { path: "vendors", icon: Truck, label: "Vendors" },
     { path: "reports", icon: TrendingUp, label: "Reports" },
     { path : "all_customer_bills", icon : FileText, label : "Customer Bills"},
-    { path : "add_customer_bill", icon : Zap ,label : "Create New Bill"}
+    { path : "add_customer_bill", icon : Zap ,label : "Create New Bill"},
+    { path : "payments", icon : Wallet ,label : "All Payments"}
   ];
 
   const currentPath = location.pathname.replace("/", "");

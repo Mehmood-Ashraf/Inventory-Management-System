@@ -30,3 +30,13 @@ export const customerBillsCardData = (allCustomerBills) => {
     { title : "Total Amount", value : `PKR ${totalAmount.toLocaleString()}`}
   ]
 };
+
+export const paymentsCardsData = (allCustomerPayments = [], allVendorPayments = []) => {
+  const totalRecieved = allCustomerPayments?.reduce((acc, payment) => acc + (payment.amount || 0), 0)
+  const totalPaid = allVendorPayments?.reduce((acc, payment) => acc + (payment.amount || 0), 0)
+
+  return [
+    {title : "Total Paid", value : `PKR ${totalPaid.toLocaleString()}`},
+    {title : "Total Recieved", value : `PKR ${totalRecieved.toLocaleString()}`}
+  ]
+}

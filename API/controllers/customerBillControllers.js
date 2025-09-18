@@ -2,6 +2,7 @@ import { errorHandler, successHandler } from "../utils/responseHandler.js";
 import Product from "../models/productModel.js";
 import CustomerBill from "../models/customerBillModel.js";
 import Customer from "../models/customerModel.js";
+import CustomerPayments from "../models/customerPaymentModel.js"
 import mongoose from "mongoose";
 
 export const addCustomerBill = async (req, res) => {
@@ -125,6 +126,7 @@ export const addCustomerBill = async (req, res) => {
         // uske bills array me savedBill ka id push karna
         customer.bills.push(savedBill._id);
         customer.currentBalance += totalAmount;
+        customer.totalTurnover += totalAmount
         await customer.save();
       }
     }
@@ -150,7 +152,7 @@ export const getAllCustomerBills = async (req, res) => {
     if (date) {
       filters.date = new Date(date);
     }
-    const customerBills = await CustomerBill.find(filters);
+    const customerBills = await CustomerBill.find(filters).sort({createdAt : -1});
 
     if (!customerBills || customerBills.length === 0) {
       return errorHandler(res, 400, "No data in customer Bills");
@@ -249,10 +251,28 @@ export const getTodaysSale = async (req, res) => {
       date : today
     })
 
-    const todaysSale = todaysBills.reduce((acc, bill) => acc + bill.totalAmount, 0)
+    const todayBillsSale = todaysBills.reduce((acc, bill) => acc + bill.totalAmount, 0)
 
-    return successHandler(res, 200, "Todays Sale fetched Successfully", todaysSale)
+    const todaysPayments = await CustomerPayments.find({ date : {
+      $gte : new Date(today),
+      $lte : new Date(new Date(today).setDate(new Date(today).getDate() + 1))
+    }});
+
+    const todaysReceivedPayments = todaysPayments.reduce(
+      (acc, payment) => acc + payment.amount,
+      0
+    );
+
+    const todaysSale = todayBillsSale + todaysReceivedPayments
+
+
+    return successHandler(res, 200, "Todays Sale fetched Successfully", {
+      todaysSale : todaysSale,
+      billsTotal : todayBillsSale
+      ,
+      paymentsTotal : todaysReceivedPayments 
+    })
   } catch (error) {
     return errorHandler(res, 500, error?.message)
   }
-}
+};
