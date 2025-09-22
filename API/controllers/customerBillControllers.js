@@ -152,7 +152,7 @@ export const getAllCustomerBills = async (req, res) => {
     if (date) {
       filters.date = new Date(date);
     }
-    const customerBills = await CustomerBill.find(filters).sort({createdAt : -1});
+    const customerBills = await CustomerBill.find(filters).sort({date : -1});
 
     if (!customerBills || customerBills.length === 0) {
       return errorHandler(res, 400, "No data in customer Bills");

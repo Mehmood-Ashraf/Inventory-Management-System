@@ -28,7 +28,7 @@ export const getAllPayments = async (req, res) => {
       const allPayments = [
         ...customerPayments.map((p) => ({ ...p, type: "customer", name: p.customerId ? p.customerId.customerName : "Unknown Customer" })),
         ...vendorPayments.map((p) => ({ ...p, type: "vendor", name: p.vendorId ? p.vendorId.vendorName : "Unknown Vendor" })),
-      ].sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))
+      ].sort((a,b) => new Date(b.date) - new Date(a.date))
 
       return successHandler(res, 200, "Fetched all payments successfully", allPayments)
   } catch (error) {
