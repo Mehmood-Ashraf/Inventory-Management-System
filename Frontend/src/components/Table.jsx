@@ -109,7 +109,7 @@ function Table({
                       key={header?.key}
                       className="h-[72px] px-4 py-2 w-[400px] text-[#49719c]  text-sm font-normal leading-normal capitalize"
                     >
-                      {i[header?.key]}
+                      {header.render ? header.render(i) : i[header.key]}
                     </td>
                   ))}
                   {showActions && (

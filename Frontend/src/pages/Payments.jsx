@@ -58,7 +58,7 @@ const Payments = () => {
     if (activeTab === "All Payments") {
       return [
         { key: "date", label: "Date", render: (row) => formatDate(row.date) },
-        { key: "name", label: "Name" }, // aap mapping me condition laga sakte ho
+        { key: "name", label: "Name" },
         { key: "method", label: "Method" },
         { key: "amount", label: "Amount" },
       ];
