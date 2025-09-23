@@ -31,7 +31,7 @@ const formatDate = (dateString) => {
 
 
 const customerBillsListHeaders = [
-  { key: "date", label: "Date" },
+  { key: "date", label: "Date", render: (row) => formatDate(row.date) },
   // { key: "customerName", label: "Customer Name" },
   { key: "billNumber", label: "Bill No" },
   { key: "totalAmount", label: "Amount" },

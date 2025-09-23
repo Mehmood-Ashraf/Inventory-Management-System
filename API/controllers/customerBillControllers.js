@@ -126,7 +126,7 @@ export const addCustomerBill = async (req, res) => {
         // uske bills array me savedBill ka id push karna
         customer.bills.push(savedBill._id);
         customer.currentBalance += totalAmount;
-        customer.totalTurnover += totalAmount
+        customer.totalTurnover = (customer.totalTurnover || 0) + totalAmount
         await customer.save();
       }
     }
