@@ -24,6 +24,12 @@ import { useCustomersBills } from "../hooks/useCustomersBills";
 import Modal from "../components/Modal";
 import BillDetailsModal from "../components/BillDetailsModal";
 
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-GB");
+};
+
+
 const customerBillsListHeaders = [
   { key: "date", label: "Date" },
   // { key: "customerName", label: "Customer Name" },
@@ -32,7 +38,7 @@ const customerBillsListHeaders = [
 ];
 
 const customerPaymentsListHeaders = [
-  { key: "date", label: "Date" },
+  { key: "date", label: "Date", render: (row) => formatDate(row.date) },
   { key: "method", label: "Method" },
   { key: "amount", label: "Amount" },
 ];

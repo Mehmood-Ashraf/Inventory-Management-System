@@ -3,10 +3,10 @@ import CustomerPayments from "../models/customerPaymentModel.js";
 import { errorHandler, successHandler } from "../utils/responseHandler.js";
 
 export const addCustomerPayment = async (req, res) => {
-  const { customerName, amount, method, note, date } = req.body;
+  let { customerName, amount, method, note, date } = req.body;
 
   if (!amount || !method) {
-    return errorHandler(res, 404, "Amount or method missing");
+    return errorHandler(res, 400, "Amount or method missing");
   }
 
   try {
@@ -14,10 +14,13 @@ export const addCustomerPayment = async (req, res) => {
       customerName: { $regex: `^${customerName}$`, $options: "i" },
     });
     if (!customer) {
-      return errorHandler(res, 404, "Customer not found by given ID");
+      return errorHandler(res, 404, "Customer not found by given name");
     }
 
     amount = Number(amount);
+    if(isNaN(amount) || amount <= 0){
+      return errorHandler(res, 400, "Invalid amount")
+    }
 
     const newPayment = new CustomerPayments({
       customerId: customer._id,

@@ -15,14 +15,14 @@ export const addCustomerBill = async (req, res) => {
       return errorHandler(res, 400, "Missing Fields");
     }
 
-    let finalDate;
-    if (date) {
-      // frontend se string aayi hai to wahi store karo
-      finalDate = date;
-    } else {
-      // agar nahi aayi to backend khud string banaye
-      finalDate = new Date().toISOString().split("T")[0];
-    }
+    // let finalDate;
+    // if (date) {
+    //   // frontend se string aayi hai to wahi store karo
+    //   finalDate = date;
+    // } else {
+    //   // agar nahi aayi to backend khud string banaye
+    //   finalDate = new Date().toISOString().split("T")[0];
+    // }
 
     // updated items ki array banayi jisme final processed items push karenge
     let updatedItems = [];
@@ -111,7 +111,7 @@ export const addCustomerBill = async (req, res) => {
       items: updatedItems,
       billNumber: newBillNumber,
       totalAmount,
-      date: finalDate,
+      date: date || undefined,
       paymentType : finalPaymentType
     });
 
@@ -227,7 +227,7 @@ export const deleteCustomerBill = async (req, res) => {
 
     let customer = await Customer.findById(deletedBill.customerId);
     if (customer) {
-      customer.customerBills = customer.customerBills.filter(
+      customer?.bills = customer?.bills?.filter(
         (bill) => !bill.equals(deletedBill._id)
       );
       customer.currentBalance -= deletedBill.totalAmount;
@@ -244,18 +244,23 @@ export const deleteCustomerBill = async (req, res) => {
 
 export const getTodaysSale = async (req, res) => {
   try {
-    const today = new Date().toISOString().split("T")[0];
+    const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Karachi" });
+    const startOfDay = new Date(today + "T00:00:00+05:00");
+    const endOfDay = new Date(today + "T23:59:59+05:00");
 
     const todaysBills = await CustomerBill.find({
       paymentType : "cash",
-      date : today
+      date : {
+        $gte : startOfDay,
+        $lte : endOfDay
+      }
     })
 
     const todayBillsSale = todaysBills.reduce((acc, bill) => acc + bill.totalAmount, 0)
 
     const todaysPayments = await CustomerPayments.find({ date : {
-      $gte : new Date(today),
-      $lte : new Date(new Date(today).setDate(new Date(today).getDate() + 1))
+      $gte : startOfDay,
+      $lte : endOfDay
     }});
 
     const todaysReceivedPayments = todaysPayments.reduce(

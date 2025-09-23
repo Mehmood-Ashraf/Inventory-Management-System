@@ -26,7 +26,7 @@ const customerBillModel = new mongoose.Schema(
     totalAmount: Number,
     paymentType: { type: String, enum: ["credit", "cash"], required: true },
     date: {
-      type: String,
+      type: Date,
       default: () => {
         const now = new Date();
         // Pakistan timezone offset +5 hours
