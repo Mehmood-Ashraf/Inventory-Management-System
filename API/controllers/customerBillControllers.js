@@ -227,7 +227,7 @@ export const deleteCustomerBill = async (req, res) => {
 
     let customer = await Customer.findById(deletedBill.customerId);
     if (customer) {
-      customer?.bills = customer?.bills?.filter(
+      customer.bills = customer?.bills?.filter(
         (bill) => !bill.equals(deletedBill._id)
       );
       customer.currentBalance -= deletedBill.totalAmount;
