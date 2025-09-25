@@ -14,6 +14,7 @@ export const useCustomersBills = () => {
   const [addCustomerBillModal, setAddCustomerBillModal] = useState(false);
   const [showBillDetailsModal, setShowBillDetailsModal] = useState(false);
   const dispatch = useDispatch();
+  const {page, limit, total, allCustomerBills} = useSelector((state) => state.customerBills)
   const [formData, setFormData] = useState({
     customerType: "",
     customerName: "",
@@ -88,6 +89,19 @@ export const useCustomersBills = () => {
     }
   };
 
+  const handleLoadMore = async () => {
+    const hasMore = allCustomerBills.length < total;
+    if(!hasMore){
+      toast.info("No more bills to load")
+      return
+    }
+    try {
+      await dispatch(fetchAllCustomerBills({ page : page + 1, limit})).unwrap();
+    } catch (error) {
+      toast.error("Failed to laod more bills")
+    }
+  };
+
   return {
     addCustomerBillModal,
     setAddCustomerBillModal,
@@ -100,5 +114,6 @@ export const useCustomersBills = () => {
     setShowBillDetailsModal,
     handleCloseBillDetailModal,
     handleAddCustomerBill,
+    handleLoadMore
   };
 };

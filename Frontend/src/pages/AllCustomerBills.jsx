@@ -39,6 +39,7 @@ const AllCustomerBills = () => {
     billDetailsHandler,
     handleCloseBillDetailModal,
     addCustomerBill,
+    handleLoadMore
   } = useCustomersBills();
 
   const customerBillsListHeaders = [
@@ -66,24 +67,6 @@ const AllCustomerBills = () => {
             bill.billNumber?.toString().includes(search)
           );
         });
-  console.log(filteredBills);
-
-  // useEffect(() => {
-  //   const loadCustomerBills = () => {
-  //     try {
-  //       if(searchInput){
-  //         dispatch(fetchAllCustomerBills({ customerName: searchInput }));
-  //       }else{
-  //         dispatch(fetchAllCustomerBills())
-  //         toast.success("Fetched All Customers Bills successfully!")
-  //       }
-  //     } catch (error) {
-  //       toast.error(error?.message)
-  //     }
-
-  //   };
-  //   loadCustomerBills();
-  // }, [searchInput, dispatch]);
 
   useEffect(() => {
     if (customerId) {
@@ -145,6 +128,7 @@ const AllCustomerBills = () => {
             onDelete={deleteCustomerBillHander}
             onView={billDetailsHandler}
             type={"Bill"}
+            loadMore={handleLoadMore}
           />
         )}
       </div>

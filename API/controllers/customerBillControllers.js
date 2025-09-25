@@ -2,7 +2,7 @@ import { errorHandler, successHandler } from "../utils/responseHandler.js";
 import Product from "../models/productModel.js";
 import CustomerBill from "../models/customerBillModel.js";
 import Customer from "../models/customerModel.js";
-import CustomerPayments from "../models/customerPaymentModel.js"
+import CustomerPayments from "../models/customerPaymentModel.js";
 import mongoose from "mongoose";
 
 export const addCustomerBill = async (req, res) => {
@@ -99,7 +99,7 @@ export const addCustomerBill = async (req, res) => {
 
     let finalPaymentType = paymentType;
 
-    if(customerType === "walkin"){
+    if (customerType === "walkin") {
       finalPaymentType = "cash";
     }
 
@@ -112,7 +112,7 @@ export const addCustomerBill = async (req, res) => {
       billNumber: newBillNumber,
       totalAmount,
       date: date || undefined,
-      paymentType : finalPaymentType
+      paymentType: finalPaymentType,
     });
 
     // bill ko database me save kia
@@ -126,7 +126,7 @@ export const addCustomerBill = async (req, res) => {
         // uske bills array me savedBill ka id push karna
         customer.bills.push(savedBill._id);
         customer.currentBalance += totalAmount;
-        customer.totalTurnover = (customer.totalTurnover || 0) + totalAmount
+        customer.totalTurnover = (customer.totalTurnover || 0) + totalAmount;
         await customer.save();
       }
     }
@@ -140,7 +140,7 @@ export const addCustomerBill = async (req, res) => {
 // get all customers bills
 export const getAllCustomerBills = async (req, res) => {
   try {
-    const { customerName, billNumber, date } = req.query;
+    const { customerName, billNumber, date, limit = 10, page = 1 } = req.query;
     let filters = {};
 
     if (billNumber) {
@@ -152,18 +152,24 @@ export const getAllCustomerBills = async (req, res) => {
     if (date) {
       filters.date = new Date(date);
     }
-    const customerBills = await CustomerBill.find(filters).sort({date : -1});
+
+    const total = await CustomerBill.countDocuments(filters);
+
+    const customerBills = await CustomerBill.find(filters)
+      .sort({ date: -1 })
+      .skip((page - 1) * limit)
+      .limit(parseInt(limit));
 
     if (!customerBills || customerBills.length === 0) {
       return errorHandler(res, 400, "No data in customer Bills");
     }
 
-    return successHandler(
-      res,
-      200,
-      "Customer bills fetched successfully",
-      customerBills
-    );
+    return successHandler(res, 200, "Customer bills fetched successfully", {
+      bills: customerBills,
+      page: Number(page),
+      limit: Number(limit),
+      total
+    });
   } catch (error) {
     return errorHandler(res, 400, error?.message);
   }
@@ -241,43 +247,47 @@ export const deleteCustomerBill = async (req, res) => {
   }
 };
 
-
 export const getTodaysSale = async (req, res) => {
   try {
-    const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Karachi" });
+    const today = new Date().toLocaleDateString("en-CA", {
+      timeZone: "Asia/Karachi",
+    });
     const startOfDay = new Date(today + "T00:00:00+05:00");
     const endOfDay = new Date(today + "T23:59:59+05:00");
 
     const todaysBills = await CustomerBill.find({
-      paymentType : "cash",
-      date : {
-        $gte : startOfDay,
-        $lte : endOfDay
-      }
-    })
+      paymentType: "cash",
+      date: {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      },
+    });
 
-    const todayBillsSale = todaysBills.reduce((acc, bill) => acc + bill.totalAmount, 0)
+    const todayBillsSale = todaysBills.reduce(
+      (acc, bill) => acc + bill.totalAmount,
+      0
+    );
 
-    const todaysPayments = await CustomerPayments.find({ date : {
-      $gte : startOfDay,
-      $lte : endOfDay
-    }});
+    const todaysPayments = await CustomerPayments.find({
+      date: {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      },
+    });
 
     const todaysReceivedPayments = todaysPayments.reduce(
       (acc, payment) => acc + payment.amount,
       0
     );
 
-    const todaysSale = todayBillsSale + todaysReceivedPayments
-
+    const todaysSale = todayBillsSale + todaysReceivedPayments;
 
     return successHandler(res, 200, "Todays Sale fetched Successfully", {
-      todaysSale : todaysSale,
-      billsTotal : todayBillsSale
-      ,
-      paymentsTotal : todaysReceivedPayments 
-    })
+      todaysSale: todaysSale,
+      billsTotal: todayBillsSale,
+      paymentsTotal: todaysReceivedPayments,
+    });
   } catch (error) {
-    return errorHandler(res, 500, error?.message)
+    return errorHandler(res, 500, error?.message);
   }
 };

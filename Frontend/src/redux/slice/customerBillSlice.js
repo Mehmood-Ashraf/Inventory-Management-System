@@ -6,6 +6,9 @@ const initialState = {
   singleCustomerBills: [],
   singleBill: null,
   addSingleBill: null,
+  total : 0,
+  page : 1,
+  limit : 10,
   loading: false,
   error: null,
 };
@@ -93,7 +96,15 @@ const customerBillsSlice = createSlice({
       })
       .addCase(fetchAllCustomerBills.fulfilled, (state, action) => {
         state.loading = false;
-        state.allCustomerBills = action.payload;
+        const {bills, total, page} = action.payload;
+
+        if(page === 1){
+          state.allCustomerBills = bills;
+        }else{
+          state.allCustomerBills = [...state.allCustomerBills, ...bills]
+        }
+        state.total = total;
+        state.page = page;
       })
       .addCase(fetchAllCustomerBills.rejected, (state, action) => {
         state.loading = false;

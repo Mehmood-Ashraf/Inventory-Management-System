@@ -1,35 +1,7 @@
-// import React from 'react'
-
-// const Table = () => {
-// return (
-//     <div>
-//         <table className='table-auto border-collapse border border-gray-400 w-full'>
-//             <thead>
-//                 <tr>
-//                     <th className='border border-gray-400 px-4 py-2'>Date</th>
-//                     <th className='border border-gray-400 px-4 py-2'>Name</th>
-//                     <th className='border border-gray-400 px-4 py-2'>Type</th>
-//                     <th className='border border-gray-400 px-4 py-2'>Amount</th>
-//                 </tr>
-//             </thead>
-//             <tbody>
-//                 <tr>
-//                     <td className='border border-gray-400 px-4 py-2'>22/8/24</td>
-//                     <td>Mehmood</td>
-//                     <td>Sale</td>
-//                     <td>9000</td>
-//                 </tr>
-//             </tbody>
-//         </table>
-//     </div>
-// )
-// }
-
-// export default Table
-
 import { Edit, Eye, FileText, Trash2 } from "lucide-react";
 import React from "react";
 import { Loader } from "../components/Loader";
+import Button from "../components/Button"
 
 function Table({
   title,
@@ -42,7 +14,8 @@ function Table({
   onView,
   loading,
   Icon,
-  type
+  type,
+  loadMore
 }) {
   console.log(data);
 
@@ -52,11 +25,6 @@ function Table({
 
   if (!data || data.length === 0) {
     return (
-      // <div className="border border-[#cedbe8] bg-slate-50 rounded-lg p-4">
-      //   <h2 className="text-lg font-semibold">{title}</h2>
-      //   <p className="text-sm text-gray-500">{subTitle}</p>
-      //   <p className="mt-4">No data found</p>
-      // </div>
       <div className="text-center py-12 border border-[#cedbe8] bg-slate-50 rounded-lg">
         <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
         <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -138,6 +106,17 @@ function Table({
               ))}
             </tbody>
           </table>
+        </div>
+
+        <div className="flex justify-center mt-4">
+          <Button
+          variant="secondary"
+          size="sm"
+          className="!py-1"
+          onClick={loadMore}
+          >
+            Load More
+          </Button>
         </div>
       </div>
     </div>
