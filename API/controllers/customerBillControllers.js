@@ -77,7 +77,7 @@ export const addCustomerBill = async (req, res) => {
 
       // total bill amount me is item ka total add karna
       totalAmount += itemTotal;
-    }
+    };
 
     //last bill number check karna
     const lastBill = await CustomerBill.findOne().sort({ createdAt: -1 });
@@ -87,7 +87,7 @@ export const addCustomerBill = async (req, res) => {
       const lastNumber = parseInt(lastBill.billNumber, 10);
       const nextNumber = (lastNumber + 1).toString().padStart(3, "0");
       newBillNumber = `${nextNumber}`;
-    }
+    };
 
     let customerId = null;
     if (customerType === "regular") {
@@ -95,13 +95,13 @@ export const addCustomerBill = async (req, res) => {
       if (customer) {
         customerId = customer._id;
       }
-    }
+    };
 
     let finalPaymentType = paymentType;
 
     if (customerType === "walkin") {
       finalPaymentType = "cash";
-    }
+    };
 
     // naya bill object banaya CustomerBill model ke through
     const newBill = new CustomerBill({
