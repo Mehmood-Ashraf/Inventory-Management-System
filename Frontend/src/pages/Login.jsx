@@ -5,6 +5,8 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "../components/Loader";
 import { Lock, Mail } from "lucide-react";
+import Button from "../components/Button"
+
 
 export default function Login() {
   const [email, setEmail] = useState("");
