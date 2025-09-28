@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { loginAdmin } from "../redux/slice/authSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "../components/Loader";
+import { Lock, Mail } from "lucide-react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
