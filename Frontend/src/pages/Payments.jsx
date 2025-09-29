@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import SearchInput from "../components/SearchInput";
 import Button from "../components/Button";
-import { Plus } from "lucide-react";
+import { Plus, Wallet } from "lucide-react";
 import { useSelector } from "react-redux";
 import { paymentsCardsData } from "../mockData/cardData";
 import Tabs from "../components/Tabs";
@@ -22,7 +22,10 @@ const Payments = () => {
     handleFormSubmit,
     fetchCustomerPayments,
     getAllPayments,
+    handleLoadMore,
+    deletePaymentHandler
   } = usePayment();
+
   const {
     allPayments,
     customerPayments,
@@ -58,7 +61,7 @@ const Payments = () => {
     if (activeTab === "All Payments") {
       return [
         { key: "date", label: "Date", render: (row) => formatDate(row.date) },
-        { key: "name", label: "Name" },
+        { key: "name", label: "Name" }, // aap mapping me condition laga sakte ho
         { key: "method", label: "Method" },
         { key: "amount", label: "Amount" },
       ];
@@ -77,18 +80,19 @@ const Payments = () => {
     let data = [];
 
     if (activeTab === "All Payments") {
-      data = allPayments;
+      data = allPayments || [];
     } else if (activeTab === "Customer Payments") {
-      data = customerPayments;
+      data = customerPayments || [];
     } else if (activeTab === "Vendor Payments") {
-      data = vendorPayments;
+      data = vendorPayments || [];
     }
 
     if (searchInput.trim()) {
       data = data?.filter(
         (p) =>
           p.customerName?.toLowerCase().includes(searchInput.toLowerCase()) ||
-          p.vendorName?.toLowerCase().includes(searchInput?.toLocaleLowerCase())
+          p.vendorName?.toLowerCase().includes(searchInput?.toLocaleLowerCase()) ||
+          p.name?.toLowerCase().includes(searchInput.toLowerCase())
       );
     }
 
@@ -103,6 +107,7 @@ const Payments = () => {
     } else if (activeTab === "All Payments") {
       getAllPayments(searchInput);
     }
+    console.log(activeTab)
   }, [searchInput, activeTab]);
 
   return (
@@ -147,10 +152,17 @@ const Payments = () => {
 
       <div>
         <Table
+          title={"Payments"}
+          subTitle={
+            "Easily track vendor & customer payments with complete details."
+          }
+          Icon={Wallet}
           type={"Payment"}
           headers={paymentListHeaders}
           data={filteredPayments}
           showActions={true}
+          loadMore={handleLoadMore}
+          onDelete={deletePaymentHandler}
         />
       </div>
 
@@ -168,5 +180,3 @@ const Payments = () => {
 };
 
 export default Payments;
-
-// user jab first time page per ae to all payments show karni hain agar search bar me customer ka name type kare to us i payments agar vendor ka name type kare to us ki payments agar kisi payment per click kare to us ki details show karni hain agar

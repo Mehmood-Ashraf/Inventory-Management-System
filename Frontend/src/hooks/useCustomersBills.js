@@ -22,7 +22,7 @@ export const useCustomersBills = () => {
     paymentType : "",
     contact: "",
     city: "",
-    date: "",
+    date: new Date().toISOString().split("T")[0],
     items: [{ product: "", quantity: "", price: "", total: "" }],
   });
 
@@ -30,6 +30,11 @@ export const useCustomersBills = () => {
 
   const handleCloseModal = () => {
     setAddCustomerBillModal(false);
+  };
+
+  const handleCloseAddBill = () => {
+    navigate('/dashboard');
+    resetBillForm();
   };
 
   const deleteCustomerBillHander = async (billId) => {
@@ -75,7 +80,6 @@ export const useCustomersBills = () => {
 
   const handleAddCustomerBill = async (billDetails) => {
     try {
-      console.log(billDetails);
       const newBill = await dispatch(addCustomerBill(billDetails)).unwrap();
       if (newBill) {
         toast.success("Bill Added Successfully");
@@ -85,7 +89,7 @@ export const useCustomersBills = () => {
         navigate("/all_customer_bills");
       }, 2000);
     } catch (error) {
-      toast.error(error?.message, "Error while adding bill");
+      toast.error(error?.message || "Error while adding bill");
     }
   };
 
@@ -114,6 +118,7 @@ export const useCustomersBills = () => {
     setShowBillDetailsModal,
     handleCloseBillDetailModal,
     handleAddCustomerBill,
+    handleCloseAddBill,
     handleLoadMore
   };
 };

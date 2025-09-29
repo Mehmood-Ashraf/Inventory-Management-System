@@ -1,7 +1,7 @@
 import { Edit, Eye, FileText, Trash2 } from "lucide-react";
 import React from "react";
 import { Loader } from "../components/Loader";
-import Button from "../components/Button"
+import Button from "./Button";
 
 function Table({
   title,
@@ -15,10 +15,8 @@ function Table({
   loading,
   Icon,
   type,
-  loadMore
+  loadMore,
 }) {
-  console.log(data);
-
   if (loading) {
     return <Loader />;
   }
@@ -31,8 +29,7 @@ function Table({
           No {type && type} found
         </h3>
         <p className="text-gray-500">
-          Get started by creating your first{" "}
-          {type && type}
+          Get started by creating your first {type && type}
         </p>
       </div>
     );
@@ -40,30 +37,35 @@ function Table({
 
   return (
     <div className="px-4 py-3 rounded-xl border border-[#cedbe8] bg-slate-50">
+      {/* Heading */}
       <div className="flex items-center mb-4">
         {Icon && <Icon className="h-10 w-10" />}
         <div>
-          <h2 className="text-[#0d141c] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-2">
+          <h2 className="text-[#0d141c] text-lg sm:text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-2">
             {title}
           </h2>
-          <h2 className="text-sm text-gray-500 px-4 pb-3">{subTitle}</h2>
+          <h2 className="text-xs sm:text-sm text-gray-500 px-4 pb-3">
+            {subTitle}
+          </h2>
         </div>
       </div>
-      <div className="px-4 py-3">
-        <div className="flex overflow-hidden rounded-xl border border-[#cedbe8] bg-slate-50">
-          <table className="flex-1">
+
+      {/* Table for desktop, cards for mobile */}
+      <div className="px-2 sm:px-4 py-3">
+        <div className="hidden sm:block overflow-hidden rounded-xl border border-[#cedbe8] bg-white">
+          <table className="w-full text-left">
             <thead>
-              <tr className="bg-slate-50">
+              <tr className="bg-gray-50">
                 {headers?.map((header) => (
                   <th
                     key={header.key}
-                    className="px-4 py-3 text-left text-[#0d141c] w-[400px] text-sm font-medium leading-normal"
+                    className="px-4 py-3 text-sm font-medium text-[#0d141c]"
                   >
                     {header.label}
                   </th>
                 ))}
                 {showActions && (
-                  <th className="px-4 py-3 text-left text-[#0d141c] w-[400px] text-sm font-medium leading-normal">
+                  <th className="px-4 py-3 text-sm font-medium text-[#0d141c]">
                     Actions
                   </th>
                 )}
@@ -71,35 +73,40 @@ function Table({
             </thead>
             <tbody>
               {data?.map((i, index) => (
-                <tr key={index} className="border-t border-t-[#cedbe8] hover:bg-gray-200 ">
+                <tr
+                  key={index}
+                  className="border-t border-[#cedbe8] hover:bg-gray-100 transition"
+                >
                   {headers.map((header) => (
                     <td
                       key={header?.key}
-                      className="h-[72px] px-4 py-2 w-[400px] text-[#49719c]  text-sm font-normal leading-normal capitalize"
+                      className="px-4 py-3 text-sm text-[#49719c] capitalize"
                     >
                       {header.render ? header.render(i) : i[header.key]}
                     </td>
                   ))}
                   {showActions && (
-                    <td className="h-[72px] px-4 py-2 w-[400px] text-[#49719c] text-sm font-normal leading-normal">
-                      <button
-                        className="text-indigo-600 hover:text-indigo-900 p-1 cursor-pointer"
-                        onClick={() => onView(i._id)}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </button>
-                      <button
-                        className="text-indigo-600 hover:text-indigo-900 p-1 cursor-pointer"
-                        onClick={() => onEdit(i)}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </button>
-                      <button
-                        className="text-red-600 hover:text-red-900 p-1 cursor-pointer"
-                        onClick={() => onDelete(i._id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <button
+                          className="text-indigo-600 hover:text-indigo-900"
+                          onClick={() => onView(i._id)}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </button>
+                        <button
+                          className="text-indigo-600 hover:text-indigo-900"
+                          onClick={() => onEdit(i)}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </button>
+                        <button
+                          className="text-red-600 hover:text-red-900"
+                          onClick={() => onDelete(i._id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
                     </td>
                   )}
                 </tr>
@@ -108,16 +115,62 @@ function Table({
           </table>
         </div>
 
-        <div className="flex justify-center mt-4">
-          <Button
-          variant="secondary"
-          size="sm"
-          className="!py-1"
-          onClick={loadMore}
-          >
-            Load More
-          </Button>
+        {/* Mobile view (cards instead of table) */}
+        <div className="sm:hidden space-y-3">
+          {data?.map((i, index) => (
+            <div
+              key={index}
+              className="border border-[#cedbe8] rounded-lg bg-white p-3 shadow-sm"
+            >
+              {headers.map((header) => (
+                <div key={header?.key} className="flex justify-between py-1">
+                  <span className="text-xs font-medium text-gray-500">
+                    {header.label}
+                  </span>
+                  <span className="text-sm text-[#49719c]">
+                    {header.render ? header.render(i) : i[header.key]}
+                  </span>
+                </div>
+              ))}
+
+              {showActions && (
+                <div className="flex justify-end gap-3 mt-2">
+                  <button
+                    className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                    onClick={() => onView(i._id)}
+                  >
+                    <Eye className="h-4 w-4" />
+                  </button>
+                  <button
+                    className="text-indigo-600 hover:text-indigo-900 cursor-pointer"
+                    onClick={() => onEdit(i)}
+                  >
+                    <Edit className="h-4 w-4 cursor-pointer" />
+                  </button>
+                  <button
+                    className="text-red-600 hover:text-red-900 cursor-pointer"
+                    onClick={() => onDelete(i._id)}
+                  >
+                    <Trash2 className="h-4 w-4 cursor-pointer" />
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
+
+        {loadMore && (
+          <div className="flex justify-center mt-6">
+            <Button
+              variant="secondary"
+              size="sm"
+              className="!py-1 px-4 rounded-lg shadow-sm hover:shadow-md transition"
+              onClick={loadMore}
+            >
+              Load More
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

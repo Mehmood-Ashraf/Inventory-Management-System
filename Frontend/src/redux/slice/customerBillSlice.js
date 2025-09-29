@@ -36,7 +36,7 @@ export const addCustomerBill = createAsyncThunk(
       return res?.data?.data;
     } catch (error) {
       return thunkApi.rejectWithValue(
-        error?.response?.data?.message || "Something went wrong in addBill"
+        {message : error?.response?.data?.message || "Something went wrong in addBill"}
       );
     }
   }

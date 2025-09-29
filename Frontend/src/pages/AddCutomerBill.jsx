@@ -8,7 +8,7 @@ import { clearSingleCustomer, fetchSingleCustomer } from '../redux/slice/custome
 
 const AddCutomerBill = () => {
 
-  const { addCustomerBillModal, setAddCustomerBillModal, formData, setFormData, handleCloseModal, handleAddCustomerBill} = useCustomersBills();
+  const { formData, setFormData, handleAddCustomerBill, handleCloseAddBill} = useCustomersBills();
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -45,6 +45,7 @@ const AddCutomerBill = () => {
         setFormData={setFormData}
         submitLabel={"Save Bill"}
         handleSubmit={handleAddCustomerBill}
+        handleClose={handleCloseAddBill}
         />
     </div>
   )

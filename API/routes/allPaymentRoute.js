@@ -1,8 +1,10 @@
 import { Router } from "express";
-import { getAllPayments } from "../controllers/allPaymentContoller.js";
+import { deletePayment, getAllPayments } from "../controllers/allPaymentContoller.js";
 
 const router = Router();
 
-router.get("/all", getAllPayments)
+router.get("/all", getAllPayments);
+router.delete("/:type/:id", deletePayment);
+
 
 export default router;

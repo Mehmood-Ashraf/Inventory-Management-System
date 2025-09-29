@@ -21,12 +21,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 const AllCustomerBills = () => {
   const [searchInput, setSearchInput] = useState("");
   const dispatch = useDispatch();
-  const { allCustomerBills, singleBill, singleCustomerBills, loading, error } =
+  const { allCustomerBills, singleBill, singleCustomerBills, loading } =
     useSelector((state) => state.customerBills);
   const location = useLocation();
   const customerId = location.state?.customerId;
   const navigate = useNavigate();
-  console.log(customerId);
   const {
     addCustomerBillModal,
     setAddCustomerBillModal,
@@ -39,7 +38,7 @@ const AllCustomerBills = () => {
     billDetailsHandler,
     handleCloseBillDetailModal,
     addCustomerBill,
-    handleLoadMore
+    handleLoadmore
   } = useCustomersBills();
 
   const customerBillsListHeaders = [
@@ -72,7 +71,7 @@ const AllCustomerBills = () => {
     if (customerId) {
       dispatch(fetchSingleCustomerBills(customerId));
     } else {
-      dispatch(fetchAllCustomerBills());
+      dispatch(fetchAllCustomerBills({ page : 1, limit : 10}));
     }
   }, [customerId, dispatch]);
 
@@ -128,28 +127,12 @@ const AllCustomerBills = () => {
             onDelete={deleteCustomerBillHander}
             onView={billDetailsHandler}
             type={"Bill"}
-            loadMore={handleLoadMore}
+            loadMore={handleLoadmore}
           />
         )}
       </div>
 
-      {addCustomerBillModal && (
-        <Modal
-          title={"Create Bill"}
-          onClose={() => {
-            setAddCustomerBillModal(false);
-          }}
-        >
-          <BillForm
-            inputsData={customerBillsInputs}
-            formData={formData}
-            setFormData={setFormData}
-            submitLabel={"Save Bill"}
-            handleClose={handleCloseModal}
-          />
-        </Modal>
-      )}
-
+      
       {showBillDetailsModal && (
         <Modal
           title={"Customer Bill Details"}
