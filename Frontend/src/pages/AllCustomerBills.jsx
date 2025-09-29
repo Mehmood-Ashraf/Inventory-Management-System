@@ -38,7 +38,7 @@ const AllCustomerBills = () => {
     billDetailsHandler,
     handleCloseBillDetailModal,
     addCustomerBill,
-    handleLoadmore
+    handleLoadMore
   } = useCustomersBills();
 
   const customerBillsListHeaders = [
@@ -127,7 +127,7 @@ const AllCustomerBills = () => {
             onDelete={deleteCustomerBillHander}
             onView={billDetailsHandler}
             type={"Bill"}
-            loadMore={handleLoadmore}
+            loadMore={handleLoadMore}
           />
         )}
       </div>
