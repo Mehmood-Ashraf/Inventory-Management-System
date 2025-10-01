@@ -1,9 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Button from "./Button";
 import { Plus, Trash2 } from "lucide-react";
 import ProductInput from "./ProductInput";
 import { useDispatch, useSelector } from "react-redux";
+import { useReactToPrint } from "react-to-print";
 import { fetchAllProducts } from "../redux/slice/productSlice";
+import CustomerSlip from "./CustomerSlip"
 
 const BillForm = ({
   formData,
@@ -14,6 +16,25 @@ const BillForm = ({
   submitLabel,
 }) => {
   const dispatch = useDispatch();
+
+  const slipRef = useRef();
+
+  const handlePrint = useReactToPrint({
+    contentRef: slipRef,
+    documentTitle: "Customer_Bill",
+  });
+
+  const handlePrintAndSave = async () => {
+    try {
+      // 1. Save Bill API call
+      await handleSubmit(formData);
+
+      // 2. Print Bill
+      handlePrint();
+    } catch (error) {
+      console.error("Bill save error:", error);
+    }
+  };
 
   useEffect(() => {
     dispatch(fetchAllProducts("")).unwrap();
@@ -83,11 +104,6 @@ const BillForm = ({
         0
       ),
     }));
-  };
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    handleSubmit(formData, handleClose);
   };
 
   return (
@@ -185,14 +201,6 @@ const BillForm = ({
                   key={index}
                   className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center bg-gray-50 p-4 rounded-xl"
                 >
-                  {/* <input
-                    type="text"
-                    name="product"
-                    placeholder="Product"
-                    value={item.product}
-                    onChange={(e) => handleItemChange(e, index)}
-                    className="border border-gray-300 px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  /> */}
                   <ProductInput
                     value={item.product || ""}
                     onChange={(e) => handleItemChange(e, index)}
@@ -251,10 +259,17 @@ const BillForm = ({
               >
                 {submitLabel}
               </Button>
+              <Button type="button" onClick={handlePrintAndSave}>
+                Print & Save
+              </Button>
             </div>
           </div>
         </form>
       </div>
+
+      <div className="hidden">
+          <CustomerSlip ref={slipRef} formData={formData} />
+        </div>
     </>
   );
 };

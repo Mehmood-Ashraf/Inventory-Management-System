@@ -1,0 +1,17 @@
+
+.w-80mm {
+  width: 80mm;
+}
+
+
+@media print {
+  @page {
+    size: 80mm auto;
+    margin: 0;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+}
