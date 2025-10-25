@@ -14,15 +14,24 @@ export const useCustomersBills = () => {
   const [addCustomerBillModal, setAddCustomerBillModal] = useState(false);
   const [showBillDetailsModal, setShowBillDetailsModal] = useState(false);
   const dispatch = useDispatch();
-  const {page, limit, total, allCustomerBills} = useSelector((state) => state.customerBills)
+  const { page, limit, total, allCustomerBills } = useSelector(
+    (state) => state.customerBills
+  );
+  const now = new Date();
+  const pakistanOffset = 5 * 60 * 60 * 1000; // Pakistan +5 hours
+  const pakistanDate = new Date(now.getTime() + pakistanOffset)
+    .toISOString()
+    .split("T")[0];
+    
   const [formData, setFormData] = useState({
     customerType: "",
     customerName: "",
     billNumber: "",
-    paymentType : "",
+    paymentType: "",
     contact: "",
     city: "",
-    date: new Date().toISOString().split("T")[0],
+    // date: new Date().toISOString().split("T")[0],
+    date: pakistanDate,
     items: [{ product: "", quantity: "", price: "", total: "" }],
   });
 
@@ -33,7 +42,7 @@ export const useCustomersBills = () => {
   };
 
   const handleCloseAddBill = () => {
-    navigate('/dashboard');
+    navigate("/dashboard");
     resetBillForm();
   };
 
@@ -69,7 +78,7 @@ export const useCustomersBills = () => {
       customerType: "",
       customerName: "",
       billNumber: "",
-      paymentType : "",
+      paymentType: "",
       contact: "",
       city: "",
       contact: "",
@@ -95,14 +104,14 @@ export const useCustomersBills = () => {
 
   const handleLoadMore = async () => {
     const hasMore = allCustomerBills.length < total;
-    if(!hasMore){
-      toast.info("No more bills to load")
-      return
+    if (!hasMore) {
+      toast.info("No more bills to load");
+      return;
     }
     try {
-      await dispatch(fetchAllCustomerBills({ page : page + 1, limit})).unwrap();
+      await dispatch(fetchAllCustomerBills({ page: page + 1, limit })).unwrap();
     } catch (error) {
-      toast.error("Failed to laod more bills")
+      toast.error("Failed to laod more bills");
     }
   };
 
@@ -119,6 +128,6 @@ export const useCustomersBills = () => {
     handleCloseBillDetailModal,
     handleAddCustomerBill,
     handleCloseAddBill,
-    handleLoadMore
+    handleLoadMore,
   };
 };

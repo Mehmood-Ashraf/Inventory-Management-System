@@ -25,13 +25,23 @@ const customerBillModel = new mongoose.Schema(
     },
     totalAmount: Number,
     paymentType: { type: String, enum: ["credit", "cash"], required: true },
+    // date: {
+    //   type: Date,
+    //   default: () => {
+    //     const now = new Date();
+    //     // Pakistan timezone offset +5 hours
+    //     const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+    //     return new Date(utc + 5 * 60 * 60000);
+    //   },
+    // },
     date: {
-      type: Date,
+      type: String,
       default: () => {
         const now = new Date();
-        // Pakistan timezone offset +5 hours
-        const utc = now.getTime() + now.getTimezoneOffset() * 60000;
-        return new Date(utc + 5 * 60 * 60000);
+        const pakistanOffset = 5 * 60 * 60 * 1000;
+        return new Date(now.getTime() + pakistanOffset)
+          .toISOString()
+          .split("T")[0];
       },
     },
   },
