@@ -257,7 +257,7 @@ export const getTodaysSale = async (req, res) => {
 
     const todaysBills = await CustomerBill.find({
       paymentType: "cash",
-      date: {
+      createdAt: {
         $gte: startOfDay,
         $lte: endOfDay,
       },
@@ -269,7 +269,7 @@ export const getTodaysSale = async (req, res) => {
     );
 
     const todaysPayments = await CustomerPayments.find({
-      date: {
+      createdAt: {
         $gte: startOfDay,
         $lte: endOfDay,
       },
