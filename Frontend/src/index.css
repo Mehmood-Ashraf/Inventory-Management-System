@@ -1,17 +1,28 @@
 
 .w-80mm {
-  width: 80mm;
+  width: 80mm !important;
+  margin: 0 auto !important;
 }
 
 
 @media print {
   @page {
-    size: 80mm auto;
-    margin: 0;
+    size: 80mm auto !important;
+    margin: 0 !important;
+  }
+
+  .w-80mm {
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   body {
-    margin: 0;
-    padding: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  .print-margin-fix{
+    margin-top: -8mm !important;
   }
 }

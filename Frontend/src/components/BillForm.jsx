@@ -5,7 +5,7 @@ import ProductInput from "./ProductInput";
 import { useDispatch, useSelector } from "react-redux";
 import { useReactToPrint } from "react-to-print";
 import { fetchAllProducts } from "../redux/slice/productSlice";
-import CustomerSlip from "./CustomerSlip"
+import CustomerSlip from "./CustomerSlip";
 
 const BillForm = ({
   formData,
@@ -267,9 +267,9 @@ const BillForm = ({
         </form>
       </div>
 
-      <div className="hidden">
-          <CustomerSlip ref={slipRef} formData={formData} />
-        </div>
+      <div style={{ position: "absolute", top: 0, left: "-9999px" }}>
+        <CustomerSlip ref={slipRef} formData={formData} />
+      </div>
     </>
   );
 };
