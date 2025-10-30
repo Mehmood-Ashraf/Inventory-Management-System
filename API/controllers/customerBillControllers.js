@@ -156,7 +156,7 @@ export const getAllCustomerBills = async (req, res) => {
     const total = await CustomerBill.countDocuments(filters);
 
     const customerBills = await CustomerBill.find(filters)
-      .sort({ date: -1 })
+      .sort({ date: -1, createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(parseInt(limit));
 
