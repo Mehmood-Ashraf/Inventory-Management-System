@@ -291,3 +291,45 @@ export const getTodaysSale = async (req, res) => {
     return errorHandler(res, 500, error?.message);
   }
 };
+
+export const updateAllBillDates = async (req, res) => {
+  try {
+    const result = await CustomerBill.updateMany(
+      {},
+      [
+        {
+          $set: {
+            date: {
+              $cond: {
+                // agar date ka type "date" hai -> string me convert karo
+                if: { $eq: [{ $type: "$date" }, "date"] },
+                then: {
+                  $dateToString: {
+                    format: "%Y-%m-%d",
+                    date: "$date",
+                    timezone: "+05:00"
+                  }
+                },
+                // agar string hai to waise hi rehne do
+                else: "$date"
+              }
+            }
+          }
+        }
+      ]
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "✅ All bill dates converted to YYYY-MM-DD successfully!",
+      modifiedCount: result.modifiedCount,
+    });
+  } catch (error) {
+    console.error("Error updating bill dates:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error updating dates",
+      error: error.message,
+    });
+  }
+};

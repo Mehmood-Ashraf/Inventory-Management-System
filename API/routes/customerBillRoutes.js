@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addCustomerBill, deleteCustomerBill, getAllCustomerBills, getSingleCustomerBill, getSingleCustomerBills, getTodaysSale } from "../controllers/customerBillControllers.js";
+import { addCustomerBill, deleteCustomerBill, getAllCustomerBills, getSingleCustomerBill, getSingleCustomerBills, getTodaysSale, updateAllBillDates } from "../controllers/customerBillControllers.js";
 
 const router = Router()
 
@@ -10,5 +10,6 @@ router.get('/today-sale', getTodaysSale)
 router.get('/:id', getSingleCustomerBill) //get single bill
 // router.put('/update/:id') //update bill
 router.delete('/:id', deleteCustomerBill) //delete bill
+router.put("/update-dates", updateAllBillDates);
 
 export default router
