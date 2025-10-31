@@ -9,6 +9,7 @@ import {
   resetSingleBill,
 } from "../redux/slice/customerBillSlice";
 import { useNavigate } from "react-router-dom";
+import {fetchSingleCustomer} from "../redux/slice/customersSlice"
 
 export const useCustomersBills = () => {
   const [addCustomerBillModal, setAddCustomerBillModal] = useState(false);
@@ -46,11 +47,15 @@ export const useCustomersBills = () => {
     resetBillForm();
   };
 
-  const deleteCustomerBillHander = async (billId) => {
+  const deleteCustomerBillHandler = async (billId, customerId = null) => {
     try {
       await dispatch(deleteCustomerBill(billId)).unwrap();
       toast.success("Customer bill deleted Successfully");
-      await dispatch(fetchAllCustomerBills()).unwrap();
+      if(customerId){
+        await dispatch(fetchSingleCustomer(customerId)).unwrap();
+      }else {
+        await dispatch(fetchAllCustomerBills()).unwrap();
+      }
     } catch (error) {
       toast.error("Error in delete Customer Bill", error?.message);
     }
@@ -121,7 +126,7 @@ export const useCustomersBills = () => {
     formData,
     setFormData,
     handleCloseModal,
-    deleteCustomerBillHander,
+    deleteCustomerBillHandler,
     billDetailsHandler,
     showBillDetailsModal,
     setShowBillDetailsModal,

@@ -29,7 +29,6 @@ const formatDate = (dateString) => {
   return date.toLocaleDateString("en-GB");
 };
 
-
 const customerBillsListHeaders = [
   { key: "date", label: "Date", render: (row) => formatDate(row.date) },
   // { key: "customerName", label: "Customer Name" },
@@ -51,6 +50,7 @@ const DetailsPage = () => {
     billDetailsHandler,
     showBillDetailsModal,
     handleCloseBillDetailModal,
+    deleteCustomerBillHandler
   } = useCustomersBills();
 
   const singleCustomer = useSelector((state) => state.customer.singleCustomer);
@@ -219,6 +219,7 @@ const DetailsPage = () => {
           showActions={true}
           type={"bill"}
           onView={billDetailsHandler}
+          onDelete={(billId) => deleteCustomerBillHandler(billId, singleCustomer._id)}
         />
 
         <Table
