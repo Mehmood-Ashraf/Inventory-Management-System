@@ -32,7 +32,7 @@ const AllCustomerBills = () => {
     formData,
     setFormData,
     handleCloseModal,
-    deleteCustomerBillHander,
+    deleteCustomerBillHandler,
     showBillDetailsModal,
     setShowBillDetailsModal,
     billDetailsHandler,
@@ -124,7 +124,7 @@ const AllCustomerBills = () => {
             headers={customerBillsListHeaders}
             showActions={true}
             loading={loading}
-            onDelete={deleteCustomerBillHander}
+            onDelete={deleteCustomerBillHandler}
             onView={billDetailsHandler}
             type={"Bill"}
             loadMore={handleLoadMore}
