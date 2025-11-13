@@ -38,7 +38,8 @@ const AllCustomerBills = () => {
     billDetailsHandler,
     handleCloseBillDetailModal,
     addCustomerBill,
-    handleLoadMore
+    handleLoadMore,
+    editBillHandler
   } = useCustomersBills();
 
   const customerBillsListHeaders = [
@@ -128,6 +129,7 @@ const AllCustomerBills = () => {
             onView={billDetailsHandler}
             type={"Bill"}
             loadMore={handleLoadMore}
+            onEdit={editBillHandler}
           />
         )}
       </div>

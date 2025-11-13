@@ -14,6 +14,7 @@ const BillForm = ({
   handleSubmit,
   inputsData,
   submitLabel,
+  heading
 }) => {
   const dispatch = useDispatch();
 
@@ -67,6 +68,7 @@ const BillForm = ({
       updatedItems[index] = {
         ...updatedItems[index],
         product: e.productName,
+        productName: e.productName,
         price: e.sellPrice,
       };
     }
@@ -89,7 +91,7 @@ const BillForm = ({
       ...prev,
       items: [
         ...(prev.items || []),
-        { product: "", quantity: 1, price: 0, total: 0 },
+        { productName: "", quantity: 1, price: 0, total: 0 },
       ],
     }));
   };
@@ -110,7 +112,7 @@ const BillForm = ({
     <>
       <div className="max-w-6xl mx-auto px-6 py-6">
         {/* Page Title */}
-        <h2 className="text-3xl font-bold text-gray-900 mb-5">Add Bill</h2>
+        <h2 className="text-3xl font-bold text-gray-900 mb-5">{heading}</h2>
 
         <form
           className="space-y-10"
@@ -202,7 +204,7 @@ const BillForm = ({
                   className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center bg-gray-50 p-4 rounded-xl"
                 >
                   <ProductInput
-                    value={item.product || ""}
+                    value={item.productName || ""}
                     onChange={(e) => handleItemChange(e, index)}
                     onSelect={(product) => handleItemChange(product, index)}
                     allProducts={allProducts}

@@ -33,7 +33,7 @@ export const addCustomerBill = async (req, res) => {
     for (let i of items) {
       // product ko database se find kar rahe hain id ke basis par
       const product = await Product.findOne({
-        productName: { $regex: new RegExp(`^${i.product}$`, "i") },
+        productName: { $regex: new RegExp(`^${i.productName}$`, "i") },
       });
       if (!product) {
         // agar product na mile to error return
@@ -131,7 +131,7 @@ export const addCustomerBill = async (req, res) => {
       }
     }
 
-    return successHandler(res, 200, "Bill added successfully");
+    return successHandler(res, 200, "Bill added successfully", savedBill);
   } catch (error) {
     return errorHandler(res, 400, error?.message);
   }
@@ -289,6 +289,86 @@ export const getTodaysSale = async (req, res) => {
     });
   } catch (error) {
     return errorHandler(res, 500, error?.message);
+  }
+};
+
+//Update customer Bill
+export const updateCustomerBill = async (req, res) => {
+  try {
+    const { billId } = req.params;
+    const { customerType, customerName, items, date, paymentType } = req.body;
+
+    if (!billId) return errorHandler(res, 404, "Bill ID is required");
+
+    const existingBill = await CustomerBill.findById(billId);
+    if (!existingBill) return errorHandler(res, 404, "Bill not found");
+
+    let totalAmount = 0;
+    let updatedItems = [];
+
+    //OldItems ka stock update
+    for (let oldItem of existingBill.items) {
+      const product = await Product.findById(oldItem.product);
+      if (product) {
+        product.quantity += oldItem.quantity;
+        await product.save();
+      }
+    }
+
+    //New Items
+    for (let i of items) {
+      const product = await Product.findOne({
+        productName: { $regex: new RegExp(`^${i.productName}$`, "i") },
+      });
+      if (!product) {
+        return errorHandler(res, 400, `Product not found: ${i.productName}`);
+      }
+
+      if (product.quantity < i.quantity) {
+        return errorHandler(
+          res,
+          400,
+          `Not enough stock for Product: ${product.productName}`
+        );
+      }
+
+      product.quantity -= i.quantity;
+      await product.save();
+
+      const price = i.price || product.sellPrice;
+      const itemTotal = i.total || price * i.quantity;
+      totalAmount += itemTotal;
+
+      updatedItems.push({
+        product: product._id,
+        quantity: i.quantity,
+        price,
+        total: itemTotal,
+      });
+    }
+
+    existingBill.customerType = customerType;
+    existingBill.customerName = customerName;
+    existingBill.items = updatedItems;
+    existingBill.totalAmount = totalAmount;
+    existingBill.paymentType = paymentType;
+    existingBill.date = date || existingBill.date;
+
+    const updatedBill = await existingBill.save();
+
+    const customer = await Customer.findByIdAndUpdate(existingBill.customerId);
+    if(customer){
+      const allBills = await CustomerBill.find({ customerId : customer._id });
+      const turnover = allBills.reduce((sum, bill) => sum + bill.totalAmount, 0);
+      customer.totalTurnover = turnover;
+      customer.currentBalance = turnover - customer.totalRecieved
+
+      await customer.save()
+    }
+
+    return successHandler(res, 200, "Bill Updated Successfully", updatedBill);
+  } catch (error) {
+    return errorHandler(res, 500, error.message);
   }
 };
 

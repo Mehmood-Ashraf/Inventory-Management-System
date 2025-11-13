@@ -6,7 +6,7 @@ const ProductInput = ({ value, onChange, allProducts, onSelect }) => {
 
   const handleChange = (e) => {
     const value = e.target.value;
-    onChange({ target : { name : "product", value }});
+    onChange({ target : { name : "productName", value }});
     if (value.length > 2) {
       const matches = allProducts.filter((product) =>
         product.productName.toLowerCase().includes(value.toLowerCase())
@@ -19,7 +19,7 @@ const ProductInput = ({ value, onChange, allProducts, onSelect }) => {
   };
 
   const handleSelect = (product) => {
-    onSelect({productName : product.productName, sellPrice : product.sellPrice});
+    onSelect({product : product.productName, productName : product.productName, sellPrice : product.sellPrice});
     setShowDropdown(false);
   };
 

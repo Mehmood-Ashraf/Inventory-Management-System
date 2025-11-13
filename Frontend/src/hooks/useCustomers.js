@@ -49,7 +49,7 @@ const useCustomers = () => {
       setShowDetailModal(false);
     } catch (error) {
       toast.error(
-        error?.message || " Vendor not deleted Something went wrong!"
+        error?.message || " Customer not deleted Something went wrong!"
       );
     }
     try {

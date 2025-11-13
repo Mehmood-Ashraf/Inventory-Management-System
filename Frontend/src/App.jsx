@@ -38,7 +38,7 @@ function App() {
             <Route path="/all_vendor_bills" element={<AllVendorBills />} />
             <Route path="/inventory" element={<AllProducts />} />
             <Route path="/all_customer_bills" element={<AllCustomerBills />} />
-            <Route path="/add_customer_bill" element={<AddCutomerBill />}/>
+            <Route path="/add_customer_bill/:billId?" element={<AddCutomerBill />}/>
             <Route path="/details/:type/:id" element={<DetailsPage />}/>
             <Route path="/reports" element={<Reports />}/>
             <Route path="/payments" element={<Payments />} />

@@ -7,6 +7,7 @@ import {
   fetchAllCustomerBills,
   fetchSingleBill,
   resetSingleBill,
+  updateCustomerBill,
 } from "../redux/slice/customerBillSlice";
 import { useNavigate } from "react-router-dom";
 import {fetchSingleCustomer} from "../redux/slice/customersSlice"
@@ -37,10 +38,6 @@ export const useCustomersBills = () => {
   });
 
   const navigate = useNavigate();
-
-  const handleCloseModal = () => {
-    setAddCustomerBillModal(false);
-  };
 
   const handleCloseAddBill = () => {
     navigate("/dashboard");
@@ -107,6 +104,24 @@ export const useCustomersBills = () => {
     }
   };
 
+  const handleUpdateCustomerBill = async (billId, billDetails) => {
+    try {
+      const updatedBill = await dispatch(
+        updateCustomerBill({ billId, billDetails })
+      ).unwrap();
+      if (updatedBill) {
+        toast.success("Bill Updated Successfully");
+      }
+
+      resetBillForm();
+      setTimeout(() => {
+        navigate("/all_customer_bills");
+      }, 2000)
+    } catch (error) {
+      toast.error(error?.message || "Error while updating bill");
+    }
+  };
+
   const handleLoadMore = async () => {
     const hasMore = allCustomerBills.length < total;
     if (!hasMore) {
@@ -116,8 +131,12 @@ export const useCustomersBills = () => {
     try {
       await dispatch(fetchAllCustomerBills({ page: page + 1, limit })).unwrap();
     } catch (error) {
-      toast.error("Failed to laod more bills");
+      toast.error("Failed to load more bills");
     }
+  };
+
+  const editBillHandler = (bill) => {
+    navigate(`/add_customer_bill/${bill._id}`);
   };
 
   return {
@@ -125,7 +144,6 @@ export const useCustomersBills = () => {
     setAddCustomerBillModal,
     formData,
     setFormData,
-    handleCloseModal,
     deleteCustomerBillHandler,
     billDetailsHandler,
     showBillDetailsModal,
@@ -134,5 +152,7 @@ export const useCustomersBills = () => {
     handleAddCustomerBill,
     handleCloseAddBill,
     handleLoadMore,
+    editBillHandler,
+    handleUpdateCustomerBill
   };
 };
