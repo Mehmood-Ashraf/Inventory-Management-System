@@ -5,6 +5,7 @@ import {
   deletePayment,
   fetchAllCustomerPayments,
   fetchAllPayments,
+  updateCustomerPayment,
 } from "../redux/slice/paymentSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +14,7 @@ const usePayment = () => {
   const [showAddPaymentModal, setShowAddPaymentModal] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isEditMode, setIsEditMode] = useState(false);
   const { allPayments, page, total, limit } = useSelector(
     (state) => state.payment
   );
@@ -101,6 +103,40 @@ const usePayment = () => {
     }
   };
 
+  const openEditPaymentHandler = async (payment) => {
+    console.log(payment)
+    setPaymentFormData({
+      type : payment.type || "customer",
+      customerName : payment?.name || "",
+      vendorName : payment?.vendorName || "",
+      amount : payment?.amount || "",
+      method : payment?.method || "",
+      date : payment?.date ? payment?.date.split("T")[0] : new Date().toISOString().split("T")[0],
+      note : payment?.note || "",
+      _id : payment?._id || ""
+    });
+    setIsEditMode(true);
+    setShowAddPaymentModal(true);
+  }
+
+  const updateCustomerPaymentHandler = async (id, updatedData) => {
+    if(!id) return toast.error("PaymentID is required");
+
+    try {
+      const res = await dispatch(updateCustomerPayment({id , paymentData : updatedData})).unwrap();
+      
+      toast.success("Payment Updated successfully");
+
+      resetForm();
+
+      await getAllPayments();
+
+      return res;
+    } catch (error) {
+      toast.error(error?.message || "Failed to update payment");
+    }
+  }
+
   return {
     paymentFormData,
     setPaymentFormData,
@@ -111,7 +147,12 @@ const usePayment = () => {
     fetchCustomerPayments,
     getAllPayments,
     handleLoadMore,
-    deletePaymentHandler
+    deletePaymentHandler,
+    openEditPaymentHandler,
+    resetForm,
+    setIsEditMode,
+    isEditMode,
+    updateCustomerPaymentHandler
   };
 };
 

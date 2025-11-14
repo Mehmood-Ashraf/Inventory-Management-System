@@ -18,9 +18,21 @@ const AddPaymentModal = ({
   paymentData,
   handleClose,
   handleSubmit,
-  setPaymentData
+  setPaymentData,
+  isEditMode,
+  updateCustomerPaymentHandler
 }) => {
 
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    if(isEditMode){
+      updateCustomerPaymentHandler(paymentData._id, paymentData)
+    }else{
+      handleSubmit(e, paymentData)
+    }
+  }
 
   const handleChange = (e) => {
   const { name, value } = e.target;
@@ -37,11 +49,11 @@ const AddPaymentModal = ({
       title={"Add New Payment"}
       onClose={() => setShowAddPaymentModal(false)}
     >
-      <form className="space-y-6" onSubmit={(e) => handleSubmit(e, paymentData)}>
+      <form className="space-y-6" onSubmit={onSubmit}>
         <label className="block text-base font-semibold">Payment Type</label>
         <div className="grid grid-cols-2 gap-4">
           <Card
-            title={"Cutomer Payment"}
+            title={"Customer Payment"}
             Icon={TrendingUp}
             description={"Incoming Payment"}
             onClick={() => setPaymentData((prev) =>( {...prev, type : "customer"}))}
@@ -65,7 +77,7 @@ const AddPaymentModal = ({
               type="text"
               name={paymentData.type === "customer" ? "customerName" : "vendorName"} 
               className="flex h-10 w-full rounded-md px-3 py-2 border border-gray-900 text-base focus:ring-primary"
-              value={paymentData.type === "customer" ? paymentData.customerName : paymentData.vendorName}
+              value={paymentData.type === "customer" ? paymentData?.customerName : paymentData?.vendorName}
               placeholder={`Enter ${paymentData.type} name`}
               required
               onChange={handleChange}
@@ -135,7 +147,7 @@ const AddPaymentModal = ({
 
         <div className="flex justify-end gap-3 pt-4">
           <Button type="button" onClick={handleClose} variant="secondary">Cancel</Button>
-          <Button type="submit">Add Payment</Button>
+          <Button type="submit">{isEditMode ? "Save" : "Add Payment"}</Button>
         </div>
       </form>
     </Modal>

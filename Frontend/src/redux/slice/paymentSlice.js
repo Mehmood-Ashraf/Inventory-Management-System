@@ -55,11 +55,11 @@ export const addCustomerPayment = createAsyncThunk(
       const payment = res?.data?.data?.payment;
       const customer = res?.data?.data?.customer;
       return {
-        _id: payment._id,
-        date: payment.date || payment.createdAt,
-        amount: payment.amount,
-        method: payment.method,
-        name: customer.customerName,
+        _id: payment?._id,
+        date: payment?.date || payment?.createdAt,
+        amount: payment?.amount,
+        method: payment?.method,
+        name: customer?.customerName,
         type: "customer",
       };
     } catch (error) {
@@ -94,6 +94,29 @@ export const deletePayment = createAsyncThunk(
       return thunkAPI.rejectWithValue(
         error?.response?.data?.message ||
           "Something went wrong deleting payment"
+      );
+    }
+  }
+);
+
+export const updateCustomerPayment = createAsyncThunk(
+  "payment/updateCustomerPayment",
+  async ({ id, paymentData }, thunkAPI) => {
+    try {
+      const res = await api.put(`/customer-payment/update/${id}`, paymentData);
+      const updatedPayment = res?.data?.data;
+      return {
+        _id: updatedPayment._id,
+        date: updatedPayment.date || updatedPayment.createdAt,
+        amount: updatedPayment.amount,
+        method: updatedPayment.method,
+        note: updatedPayment.note,
+        name: updatedPayment.customerName || paymentData.customerName,
+        type: "customer",
+      };
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error?.response?.data?.message || "Error updating customer payment"
       );
     }
   }
@@ -169,6 +192,27 @@ const paymentSlice = createSlice({
         );
       })
       .addCase(deletePayment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateCustomerPayment.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateCustomerPayment.fulfilled, (state, action) => {
+        state.loading = false;
+        state.allPayments = state.allPayments.map((p) =>
+          p._id === action.payload._id ? action.payload : p
+        );
+
+        state.customerPayments = state.customerPayments.map((p) =>
+          p._id === action.payload._id ? action.payload : p
+        );
+
+        state.singleCustomerPayment = action.payload;
+        state.error = null;
+      })
+      .addCase(updateCustomerPayment.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

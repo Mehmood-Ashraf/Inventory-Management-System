@@ -23,7 +23,12 @@ const Payments = () => {
     fetchCustomerPayments,
     getAllPayments,
     handleLoadMore,
-    deletePaymentHandler
+    deletePaymentHandler,
+    openEditPaymentHandler,
+    resetForm,
+    setIsEditMode,
+    isEditMode,
+    updateCustomerPaymentHandler,
   } = usePayment();
 
   const {
@@ -91,7 +96,9 @@ const Payments = () => {
       data = data?.filter(
         (p) =>
           p.customerName?.toLowerCase().includes(searchInput.toLowerCase()) ||
-          p.vendorName?.toLowerCase().includes(searchInput?.toLocaleLowerCase()) ||
+          p.vendorName
+            ?.toLowerCase()
+            .includes(searchInput?.toLocaleLowerCase()) ||
           p.name?.toLowerCase().includes(searchInput.toLowerCase())
       );
     }
@@ -107,7 +114,6 @@ const Payments = () => {
     } else if (activeTab === "All Payments") {
       getAllPayments(searchInput);
     }
-    console.log(activeTab)
   }, [searchInput, activeTab]);
 
   return (
@@ -120,7 +126,13 @@ const Payments = () => {
           onChange={setSearchInput}
         />
 
-        <Button onClick={() => setShowAddPaymentModal(true)}>
+        <Button
+          onClick={() => {
+            resetForm();
+            setIsEditMode(false);
+            setShowAddPaymentModal(true);
+          }}
+        >
           <Plus className="h-4 w-4 mr-2" />
           Add Payment
         </Button>
@@ -163,6 +175,7 @@ const Payments = () => {
           showActions={true}
           loadMore={handleLoadMore}
           onDelete={deletePaymentHandler}
+          onEdit={(payment) => openEditPaymentHandler(payment)}
         />
       </div>
 
@@ -173,6 +186,8 @@ const Payments = () => {
           setPaymentData={setPaymentFormData}
           handleClose={handleClose}
           handleSubmit={handleFormSubmit}
+          isEditMode={isEditMode}
+          updateCustomerPaymentHandler={updateCustomerPaymentHandler}
         />
       )}
     </div>

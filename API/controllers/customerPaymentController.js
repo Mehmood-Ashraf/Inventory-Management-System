@@ -112,11 +112,14 @@ export const getAllCustomerPayments = async (req, res) => {
   }
 };
 
-
 export const updateCustomerPayment = async (req, res) => {
   try {
     const {id} = req.params;
     const {customerName, amount, method, note, date} = req.body;
+
+    if(amount === undefined || amount === null){
+      return errorHandler(res, 404, "Amount Missing")
+    };
 
     const payment = await CustomerPayments.findById(id);
 
@@ -129,16 +132,21 @@ export const updateCustomerPayment = async (req, res) => {
       return errorHandler(res, 404, "Customer not found");
     }
 
+    const newAmount = Number(amount);
+
+    //reverse old payment
     customer.currentBalance += payment.amount;
     customer.totalRecieved -= payment.amount;
 
-    payment.amount = amount ?? payment.amount;
+    //update fields
+    payment.amount = newAmount ?? payment.amount;
     payment.date = date ?? payment.date;
     payment.method = method ?? payment.method;
     payment.note = note ?? payment.note;
 
     await payment.save();
 
+    //apply new Payment
     customer.currentBalance -= amount;
     customer.totalRecieved += amount;
     await customer.save();
@@ -149,7 +157,6 @@ export const updateCustomerPayment = async (req, res) => {
     return errorHandler(res, 400, error?.message);
   }
 };
-
 
 export const deleteCustomerPayment = async (req, res) => {
   try {
